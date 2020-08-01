@@ -263,6 +263,3 @@
 	  (update-window-title *window*)
 	  (loop until (window-should-close-p) do (wait-events)))))))
 
-(defun test ()
-  (with-init-window (:title "" :width 500 :height 500 :client-api :no-gl-api)
-	(get-instance-extensions)))
