@@ -15,22 +15,6 @@
 (use-foreign-library libvulkan)
 (use-foreign-library libglfw3)
 
-#|
-(defctype pfn-allocation-function :pointer)
-(defctype pfn-reallocation-function :pointer)
-(defctype pfn-free-function :pointer)
-(defctype pfn-internal-allocation-notification :pointer)
-(defctype pfn-internal-free-notification :pointer)
-
-(defcstruct allocation-callbacks
-  (:p-user-data (:pointer :void))#|optional (true) opaque t|#
-  (:pfn-allocation pfn-allocation-function)
-  (:pfn-reallocation pfn-reallocation-function)
-  (:pfn-free pfn-free-function)
-  (:pfn-internal-allocation pfn-internal-allocation-notification)#|optional (true)|#
-  (:pfn-internal-free pfn-internal-free-notification)#|optional (true)|#)
-|#
-
 (defun get-surface-type ()
   (if (= 8 (foreign-type-size :pointer))
       :pointer
