@@ -8,29 +8,6 @@
 
 (defctype vk-handle (:pointer :void))
 
-(defcenum (surface-transform-flag-bits)
-  (:identity-bit #X00000001)
-  (:rotate-90-bit #X00000002)
-  (:rotate-180-bit #X00000004)
-  (:rotate-270-bit #X00000008)
-  (:horizontal-mirror-bit #X00000010)
-  (:horizontal-mirror-rotate-90-bit #X00000020)
-  (:horizontal-mirror-rotate-180-bit #X00000040)
-  (:horizontal-mirror-rotate-270-bit #X00000080)
-  (:inherit-bit #X00000100))
-
-(defcenum (image-usage-flag-bits)
-  (:transfer-src-bit #X00000001)
-  (:transfer-dst-bit #X00000002)
-  (:sampled-bit #X00000004)
-  (:storage-bit #X00000008)
-  (:color-attachment-bit #X00000010)
-  (:depth-stencil-attachment-bit #X00000020)
-  (:transient-attachment-bit #X00000040)
-  (:input-attachment-bit #X00000080)
-  (:shading-rate-image-bit-nv #X00000100)
-  (:fragment-density-map-bit-ext #X00000200))
-
 (defcstruct extent-2d
   (:width :uint32)
   (:height :uint32))
@@ -114,15 +91,3 @@
   (instance vk-handle)
   (physical-device vk-handle)
   (index :uint32))
-
-
-
-
-
-
-
-
-
-
-
-
