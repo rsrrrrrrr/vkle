@@ -28,4 +28,5 @@ in repl
 ```
 ## 3.Run The demo
 |function name|is ok|
+|:---|:---|
 |instance-demo|OK|
