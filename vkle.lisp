@@ -89,14 +89,8 @@
     (let* ((min-image-count (foreign-slot-value capability '(:struct surface-capabilities) :min-image-count))
 	   (max-image-count (foreign-slot-value capability '(:struct surface-capabilities) :max-image-count))
 	   (current-extent (foreign-slot-value capability '(:struct surface-capabilities) :current-extent))
-	   ;;(current-extent-w (foreign-slot-value current-extent '(:struct extent-2d) :width))
-	   ;;(current-extent-h (foreign-slot-value current-extent '(:struct extent-2d) :height))
 	   (min-image-extent (foreign-slot-value capability '(:struct surface-capabilities) :min-image-extent))
-	   ;;(min-image-extent-w (foreign-slot-value min-image-extent '(:struct extent-2d) :width))
-	   ;;(min-image-extent-h (foreign-slot-value min-image-extent '(:struct extent-2d) :height))
 	   (max-image-extent (foreign-slot-value capability '(:struct surface-capabilities) :max-image-extent))
-	   ;;(max-image-extent-w (foreign-slot-value max-image-extent '(:struct extent-2d) :width))
-	   ;;(max-image-extent-h (foreign-slot-value max-image-extent '(:struct extent-2d) :height))
 	   (max-image-array-layers (foreign-slot-value capability '(:struct surface-capabilities) :max-image-array-layers))
 	   (supported-transforms (foreign-slot-value capability '(:struct surface-capabilities) :supported-transforms))
 	   (current-transform (foreign-slot-value capability '(:struct surface-capabilities) :current-transform))
@@ -104,14 +98,6 @@
 	   (supported-usage-flags (foreign-slot-value capability '(:struct surface-capabilities) :supported-usage-flags)))
       (list :min-image-count min-image-count
 	    :max-image-count max-image-count
-#|	    
-	    :current-extent (list :current-extent-w current-extent-w
-				  :current-extent-h current-extent-h)
-	    :min-image-extent (list :min-image-extent-w min-image-extent-w
-				    :min-image-extent-h min-image-extent-h)
-	    :max-image-extend (list :max-image-extend-w max-image-extent-w
-				    :max-image-extend-h max-image-extent-h)
-	    |#
 	    :current-extent current-extent
 	    :min-image-extent min-image-extent
 	    :max-image-extend max-image-extent
