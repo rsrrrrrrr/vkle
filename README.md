@@ -27,9 +27,9 @@ in glfw-bindings.lisp add :no-gl-api in enum opengl-api
   (:opengl-es-api #X00030002))
   
 in cl-glfw3.lisp you should change function create-window
-	(if (eq client-api :no-gl-api)
-	    (setf *window* window)
-	    (make-context-current window)))))
+(if (eq client-api :no-gl-api)
+    (setf *window* window)
+    (make-context-current window)))))
 ```
 ## 2.Load vkel
 ```
