@@ -1,7 +1,5 @@
 (in-package :vkle-demo)
 
-(export '(instance-demo))
-
 (defmacro with-demo-instance ((instance &key
 					  (app "vkle-demo app")
 					  (app-version 0)
@@ -16,7 +14,7 @@
 		     :app-version ,app-version
 		     :engine ,engine
 		     :engine-version ,engine-version)
-       (setf (vk-info-instance info) ,instance)
+       (setf (vk-info-instance *info*) ,instance)
        (with-debug-report (,instance)
 	 ,@body))))
 

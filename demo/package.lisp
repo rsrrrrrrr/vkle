@@ -1,10 +1,16 @@
 (defpackage :vkle-demo
-  (:use :cl :cl-vulkan :cl-glfw3 :vkle))
+  (:use :cl :cl-vulkan :cl-glfw3 :vkle)
+  (:export :instance-demo
+	   :print-physical-devices-info-demo))
 
 (in-package :vkle-demo)
 
 (defstruct vk-info
-  (instance nil))
+  (instance nil)                      ;;The instance
+  (physical-devices nil)              ;;The list your gpus
+  (physical-devices-properties nil)   ;;The gpus's properties
+  (physical-devices-features nil))    ;;The gpus's features             
+                          
 
 (defparameter *validation-layers*
   (loop for l in '("VK_LAYER_LUNARG_threading"
@@ -24,4 +30,4 @@
     ("VK_LAYER_LUNARG_api_dump" :optional t)))
 
 
-(defparameter info (make-vk-info :instance nil))
+(defparameter *info* (make-vk-info))

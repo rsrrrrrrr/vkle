@@ -4,4 +4,5 @@
   :pathname "demo"
   :components ((:file "package")
 	       (:file "basic-window")
-	       (:file "instance")))
+	       (:file "instance")
+	       (:file "physical-device")))
