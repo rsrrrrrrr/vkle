@@ -9,8 +9,7 @@
   (declare (ignore window button action mod-keys)))
 
 (def-window-size-callback window-size-callback (window w h)
-  (declare (ignore window))
-  (setf *window-size* (list w h)))
+  (declare (ignore window w h)))
 
 (defmacro init-basic-glfw ((&key
 			      (title "Basic Window")
@@ -18,4 +17,4 @@
 			      (h 600))
 			   &body body)
   `(with-init-window (:title ,title :width ,w :height ,h :client-api :no-gl-api)
-     (progn ,@body)))
+     ,@body))

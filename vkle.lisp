@@ -31,12 +31,12 @@
 (defcfun ("glfwVulkanSupported" get-vulkan-support) :boolean
   "return true if vulkan is available")
 
-(defun queue-family-index-support-present-p (instance physical-device index)
-  (foreign-funcall "glfwGetPhysicalDevicePresentationSupport"
-		   :pointer instance
-		   :pointer physical-device
-		   :uint32 index
-		   :boolean))
+(defctype vk-handle (:pointer :void))
+
+(defcfun ("glfwGetPhysicalDevicePresentationSupport" queue-family-index-support-present-p) :boolean
+  (instance vk-handle)
+  (physical-device vk-handle)
+  (index :uint32))
 
 (defun get-instance-extensions ()
   (with-foreign-object (count :uint32)

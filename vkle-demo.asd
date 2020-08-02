@@ -6,4 +6,5 @@
 	       (:file "basic-window")
 	       (:file "instance")
 	       (:file "physical-device")
-	       (:file "surface")))
+	       (:file "surface")
+	       (:file "logic-device")))
