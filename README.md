@@ -18,6 +18,18 @@ in repl
 ```
 in repl 
 (ql:quickload :cl-glfw3)
+
+because cl-glfw3 use opengl for default, and not support vulkan, so you should add the follow things:
+in glfw-bindings.lisp add :no-gl-api in enum opengl-api
+(defcenum (opengl-api)
+  (:no-gl-api #X00000000)
+  (:opengl-api #X00030001)
+  (:opengl-es-api #X00030002))
+  
+in cl-glfw3.lisp you should change function create-window
+	(if (eq client-api :no-gl-api)
+	    (setf *window* window)
+	    (make-context-current window)))))
 ```
 ## 2.Load vkel
 ```
