@@ -42,3 +42,4 @@ in repl
 |function name|is ok|
 |:---|:---|
 |instance-demo|OK|
+|print-physical-devices-info-demo|OK|
