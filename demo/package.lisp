@@ -1,7 +1,8 @@
 (defpackage :vkle-demo
   (:use :cl :cl-vulkan :cl-glfw3 :vkle)
   (:export :instance-demo
-	   :print-physical-devices-info-demo))
+	   :print-physical-devices-info-demo
+	   :surface-demo))
 
 (in-package :vkle-demo)
 
@@ -9,7 +10,8 @@
   (instance nil)                      ;;The instance
   (physical-devices nil)              ;;The list your gpus
   (physical-devices-properties nil)   ;;The gpus's properties
-  (physical-devices-features nil))    ;;The gpus's features             
+  (physical-devices-features nil)     ;;The gpus's features             
+  (surface nil))                   ;;The vulkan surface
                           
 
 (defparameter *validation-layers*

@@ -1,0 +1,16 @@
+(in-package :vkle-demo)
+
+(defun surface-demo ()
+  (init-basic-glfw ()
+    (with-demo-instance (instance)
+      (princ "Create Instance Success")
+      (set-key-callback 'key-callback)
+      (set-mouse-button-callback 'mouse-callback)
+      (set-window-size-callback 'window-size-callback)
+      (get-physical-device-list)
+      (get-physical-device-info)
+      (print-physical-device-infos)
+      (with-surface (surface *window* instance)
+	(setf (vk-info-surface *info*) surface)
+	(loop until (window-should-close-p) do (wait-events))))))
+

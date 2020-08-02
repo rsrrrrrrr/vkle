@@ -5,4 +5,5 @@
   :components ((:file "package")
 	       (:file "basic-window")
 	       (:file "instance")
-	       (:file "physical-device")))
+	       (:file "physical-device")
+	       (:file "surface")))
