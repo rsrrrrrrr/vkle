@@ -1,5 +1,6 @@
 (in-package :vkle-demo)
 
+(export '(instance-demo))
 
 (defmacro with-demo-instance ((instance &key
 					  (app "vkle-demo app")
