@@ -3,7 +3,8 @@
   (:export :instance-demo
 	   :print-physical-devices-info-demo
 	   :surface-demo
-	   :logic-device-demo))
+	   :logic-device-demo
+	   :get-surface-capabilities))
 
 (in-package :vkle-demo)
 
@@ -23,7 +24,8 @@
   (queue-family-index nil)
   (queue-properties nil)
   (logic-device nil)
-  (surface nil))                      ;;The vulkan surface
+  (surface nil)                       ;;The vulkan surface
+  (surface-capabilities nil))
                           
 
 (defparameter *validation-layers*

@@ -44,4 +44,4 @@ in repl
 |instance-demo|OK|
 |print-physical-devices-info-demo|OK|
 |surface-demo|OK|
-|logic-device-demo|OK|
+|get-surface-capability|OK|

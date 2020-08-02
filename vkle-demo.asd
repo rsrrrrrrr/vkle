@@ -7,4 +7,5 @@
 	       (:file "instance")
 	       (:file "physical-device")
 	       (:file "surface")
-	       (:file "logic-device")))
+	       (:file "logic-device")
+	       (:file "swapchain")))
