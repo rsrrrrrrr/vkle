@@ -77,7 +77,7 @@
 	    :max-image-count max-image-count
 	    :current-extent current-extent
 	    :min-image-extent min-image-extent
-	    :max-image-extend max-image-extent
+	    :max-image-extent max-image-extent
 	    :max-image-array-layers max-image-array-layers
 	    :supported-transforms supported-transforms
 	    :current-transform current-transform

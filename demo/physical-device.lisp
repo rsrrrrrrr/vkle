@@ -18,7 +18,7 @@
 (defun print-physical-device-infos ()
   "used to print the gpu's info"
   (dolist (gpu-property (vk-info-physical-devices-properties *info*))
-    (format t "API Version:~A~% Driver Version:~A~% Vendor ID:~A~% Device ID:~A~% Device Type:~A~% Device Name:~A~%" (getf gpu-property :api-version)
+    (format t "API Version:~A~%Driver Version:~A~%Vendor ID:~A~%Device ID:~A~%Device Type:~A~%Device Name:~A~%~%" (getf gpu-property :api-version)
 	    (getf gpu-property :driver-version )
 	    (getf gpu-property :vendor-id)
 	    (getf gpu-property :device-id)

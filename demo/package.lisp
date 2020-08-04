@@ -1,10 +1,13 @@
 (defpackage :vkle-demo
   (:use :cl :cl-vulkan :cl-glfw3 :vkle)
-  (:export :instance-demo
-	   :print-physical-devices-info-demo
-	   :surface-demo
-	   :logic-device-demo
-	   :get-surface-capabilities))
+  (:export
+   :instance-demo
+   :print-physical-devices-info-demo
+   :surface-demo
+   :logic-device-demo
+   :get-surface-capabilities
+   :get-surface-formats
+   :get-surface-present-modes))
 
 (in-package :vkle-demo)
 
@@ -25,7 +28,9 @@
   (queue-properties nil)
   (logic-device nil)
   (surface nil)                       ;;The vulkan surface
-  (surface-capabilities nil))
+  (surface-capabilities nil)
+  (surface-formats nil)
+  (present-mode nil))
                           
 
 (defparameter *validation-layers*
