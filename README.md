@@ -12,7 +12,7 @@ git clone https://github.com/3b/cl-vulkan.git
 
 in repl 
 (push #P"you-cl-vulkan-path" asdf:*central-registry*)
-(ql:quickload :cl-glfw3)
+(ql:quickload :cl-vulkan)
 ```
 ### 1.3 Install cl-glfw3
 ```
@@ -45,3 +45,5 @@ in repl
 |print-physical-devices-info-demo|OK|
 |surface-demo|OK|
 |get-surface-capability|OK|
+|get-surface-formats|OK|
+|get-surface-present-modes|OK|
