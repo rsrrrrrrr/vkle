@@ -273,3 +273,61 @@
   (:filter-minmax-image-component-mapping vk-bool-32)
   (:max-timeline-semaphore-value-difference :uint64)
   (:framebuffer-integer-color-sample-counts vk-sample-count-flags))
+
+(defcstruct vk-physical-device-id-properties
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-uuid (:pointer :uint8))
+  (:driver-uuid (:pointer :uint8))
+  (:device-luid (:pointer :uint8))
+  (:device-node-mask :uint32)
+  (:device-luid-vaild vk-bool-32))
+
+(defcstruct vk-physical-device-driver-properties
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:driver-id VkDriverid)
+  (:driver-name :string)
+  (:driver-info :string)
+  (:conformance-version (:struct vk-conformance-version)))
+
+(defcstruct vk-physical-device-pci-bus-info-properties-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:pci-domain :uint32)
+  (:pci-bus :uint32)
+  (:pci-device :uint32)
+  (:pci-function :uint32))
+
+(defcstruct vk-queue-family-properties
+  (:queue-flags vk-queue-flags)
+  (:queue-count :uint32)
+  (:timestamp-valid-bits :uint32)
+  (:min-image-transfer-granularity (:struct vk-extent-3d)))
+
+(defcstruct vk-queue-family-properties-2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:queue-family-properties (:struct vk-queue-family-properties)))
+
+(defcstruct vk-queue-family-checkpoint-properties-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:checkpoint-execution-stage-mask vk-pipline-stage-flags))
+
+(defcstruct vk-performance-counter-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:unit VkPerformanceCounterunitkhr)
+  (:scope VkPerformanceCounterscopekhr)
+  (:storage VkPerformanceCounterStoragekhr)
+  (:uuid (:pointer :uint8)))
+
+(defcstruct vk-performance-counter-description-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-performance-counter-description-flags-khr)
+  (:name :string)
+  (:category :string)
+  (:description :string))
+

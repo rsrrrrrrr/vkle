@@ -11,3 +11,6 @@
 (defctype vk-instance-create-flags vk-flags)
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
+(defctype vk-queue-flags vk-flags)
+(defctype vk-pipline-stage-flags vk-flags)
+(defctype vk-performance-counter-description-flags-khr vk-flags)
