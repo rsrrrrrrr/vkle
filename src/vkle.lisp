@@ -1,5 +1,5 @@
 (in-package :vkle)
-
+#|
 (export
  '(with-surface
    queue-family-index-support-present-p
@@ -1201,3 +1201,4 @@
   (instance vk-handle)
   (physical-device vk-handle)
   (index :uint32))
+|#
