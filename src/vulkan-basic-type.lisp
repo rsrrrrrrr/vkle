@@ -10,3 +10,4 @@
 
 (defctype vk-instance-create-flags vk-flags)
 (defctype vk-sample-count-flags vk-flags)
+(defctype vk-reslove-mode-flags vk-flags)
