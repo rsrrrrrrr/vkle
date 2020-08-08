@@ -5,16 +5,7 @@
 in repl
 (ql:quickload :cffi)
 ```
-### 1.2 Install cl-vulkan
-```
-cd you-cl-vulkan-path
-git clone https://github.com/3b/cl-vulkan.git
-
-in repl 
-(push #P"you-cl-vulkan-path" asdf:*central-registry*)
-(ql:quickload :cl-glfw3)
-```
-### 1.3 Install cl-glfw3
+### 1.2 Install cl-glfw3
 ```
 in repl 
 (ql:quickload :cl-glfw3)
@@ -38,10 +29,10 @@ in repl
 (ql:quickload :vkel)
 (ql:quickload :vkel-demo)
 ```
-## 3.Run The demo
+## 3.Run The demo(not support now)
 |function name|is ok|
 |:---|:---|
-|instance-demo|OK|
-|print-physical-devices-info-demo|OK|
-|surface-demo|OK|
-|get-surface-capability|OK|
+|instance-demo|No|
+|print-physical-devices-info-demo|No|
+|surface-demo|No|
+|get-surface-capability|No|
