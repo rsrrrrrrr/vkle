@@ -14,6 +14,7 @@
   (setf (vk-info-present-mode *info*) (get-physical-device-surface-present-modes-khr (vk-info-gpu *info*) (vk-info-surface *info*)))
   (format t "~{~a ~%~}~%" (vk-info-present-mode *info*)))
 
+
 (defun init-swap-chain ()
   (init-basic-glfw ()
     (with-demo-instance (instance)
