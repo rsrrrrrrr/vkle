@@ -129,7 +129,7 @@
   (:max-viewport-dimensions (:pointer :uint32))
   (:viewport-bounds-range (:pointer :float))
   (:viewport-sub-pixel-bits :uint32)
-  (:min-memory-map-alignment :uint32)
+  (:min-memory-map-alignment :unsigned-int)
   (:min-texel-buffer-offset-alignment vk-device-size)
   (:min-uniform-buffer-offset-alignment vk-device-size)
   (:min-storage-buffer-offset-alignment vk-device-size)
@@ -908,3 +908,87 @@
   (:p-next (:pointer :void))
   (:attachment-image-info-count :uint32)
   (:attachment-image-infos (:pointer (:struct vk-framebuffer-attachment-image-info))))
+
+(defcunion vk-clear-color-value
+  (:f32 (:pointer :float))
+  (:i32 (:pointer :int32))
+  (:ui32 (:pointer :uint32)))
+
+(defcstruct vk-clear-depth-stencil-value
+  (:depth :float)
+  (:stencil :uint32))
+
+(defcunion vk-clear-value
+  (:color (:union vk-clear-color-value))
+  (:depth-stencil (:struct vk-clear-depth-stencil-value)))
+
+(defcstruct vk-render-pass-begin-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:render-pass vk-render-pass)
+  (:framebuffer vk-framebuffer)
+  (:render-area (:struct vk-rect-2d))
+  (:clear-value-count :uint32)
+  (:clear-values (:pointer (:union vk-clear-value))))
+
+(defcstruct vk-sample-location-ext
+  (:x :float)
+  (:y :float))
+
+(defcstruct vk-sample-locations-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:sample-locations-per-pixel VkSampleCountFlagbits)
+  (:sample-location-grid-size (:struct vk-extent-2d))
+  (:sample-locations-count :uint32)
+  (:sample-locations (:pointer (:struct vk-sample-location-ext))))
+
+(defcstruct vk-attachment-sample-locations-ext
+  (:attachment-index :uint32)
+  (:sample-locations-info (:struct vk-sample-locations-info-ext)))
+
+(defcstruct vk-subpass-sample-locations-ext
+  (:subpass-index :uint32)
+  (:sample-location-info (:struct vk-sample-locations-info-ext)))
+
+(defcstruct vk-render-pass-sample-locations-begin-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:attachment-initial-sample-locations-count :uint32)
+  (:attachment-initial-sample-locations (:pointer (:struct vk-attachment-sample-locations-ext)))
+  (:post-subpass-sample-locations-count :uint32)
+  (:post-subpass-sample-locations (:struct vk-subpass-sample-locations-ext)))
+
+(defcstruct vk-render-pass-transform-begin-info-qcom
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:transform VkSurfaceTransformFlagbitsKHR))
+
+(defcstruct vk-subpass-begin-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:contents VkSubpassContents))
+
+(defcstruct vk-device-group-render-pass-begin-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-mask :uint32)
+  (:device-render-area-count :uint32)
+  (:device-render-areas (:pointer (:struct vk-rect-2d))))
+
+(defcstruct vk-render-pass-attachment-begin-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:attachment-count :uint32)
+  (:attachment (:pointer vk-image-view)))
+
+(defcstruct vk-subpass-end-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void)))
+
+(defcstruct vk-shader-module-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-module-create-flags)
+  (:code-size :unsigned-int)
+  (:code :uint32))

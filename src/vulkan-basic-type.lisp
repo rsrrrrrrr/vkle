@@ -64,6 +64,7 @@
 (defctype vk-render-pass-create-flags vk-flags)
 (defctype vk-framebuffer-create-flags vk-flags)
 (defctype vk-image-create-flags vk-flags)
+(defctype vk-module-create-flags vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
