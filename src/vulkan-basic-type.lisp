@@ -62,7 +62,7 @@
 (defctype vk-semaphore-create-flags vk-flags)
 (defctype vk-event-create-flags vk-flags)
 (defctype vk-render-pass-create-flags vk-flags)
-(defctype vk-framebufferer-create-flags vk-flags)
+(defctype vk-framebuffer-create-flags vk-flags)
 (defctype vk-image-create-flags vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
