@@ -992,3 +992,155 @@
   (:flags vk-module-create-flags)
   (:code-size :unsigned-int)
   (:code :uint32))
+
+(defcstruct vk-shader-module-validation-cache-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:validation-cache vk-validation-cache-ext))
+
+(defcstruct vk-cooperative-matrix-properties-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:m-size :uint32)
+  (:n-size :uint32)
+  (:k-size :uint32)
+  (:a-type VkComponentTypeNV)
+  (:b-type VkComponentTypeNV)
+  (:c-type VkComponentTypeNV)
+  (:d-type VkComponentTypeNV)
+  (:scope VkScopeNV))
+
+(defcstruct vk-validation-cache-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-validation-cache-create-flags-ext)
+  (:initial-data-size :unsigned-int)
+  (:initial-data (:pointer :void)))
+
+(defcstruct vk-specialization-map-entry
+  (:constant-id :uint32)
+  (:offset :uint32)
+  (:size :unsigned-int))
+
+(defcstruct vk-specialization-info
+  (:map-entry-count :uint32)
+  (:map-entrys (:pointer (:struct vk-specialization-map-entry)))
+  (:data-size :unsigned-int)
+  (:data (:pointer :void)))
+
+(defcstruct vk-pipeline-shader-stage-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipline-stage-flags)
+  (:stage VkShaderStageflagbits)
+  (:module vk-shader-module)
+  (:name :string)
+  (:specialization-info (:pointer (:struct vk-specialization-info))))
+
+(defcstruct vk-compute-pipeline-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-create-flags)
+  (:stage (:struct vk-pipeline-shader-stage-create-info))
+  (:layout vk-pipeline-layout)
+  (:base-pipeline-handle vk-pipeline)
+  (:base-pipeline-index :uint32))
+
+(defcstruct vk-pipeline-shader-stage-required-subground-size-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:required-subground-size :uint32))
+
+(defcstruct vk-vertex-input-binding-description
+  (:binding :uint32)
+  (:stride :uint32)
+  (:input-rate VkVertexInputRate))
+
+(defcstruct vk-vertex-input-attribute-description
+  (:location :uint32)
+  (:binding :uint32)
+  (:format VkFormat)
+  (:offset :uint32))
+
+(defcstruct vk-pipeline-vertex-input-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-vertex-input-state-create-flags)
+  (:vertex-binding-description-count :uint32)
+  (:vertex-binding-description (:pointer (:struct vk-vertex-input-binding-description)))
+  (:vertex-attribute-description-count :uint32)
+  (:vertex-attribute-description (:pointer (:struct vk-vertex-input-attribute-description))))
+
+(defcstruct vk-pipeline-input-assembly-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-input-assembly-state-create-flags)
+  (:topology VkPrimitiveTopology)
+  (:primitive-restart-enable vk-bool-32))
+
+(defcstruct vk-pipeline-tessellation-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-tessellation-state-create-flags)
+  (:patch-control-points :uint32))
+
+(defcstruct vk-viewport
+  (:x :float)
+  (:y :float)
+  (:width :float)
+  (:height :float)
+  (:min-depth :float)
+  (:max-depth :float))
+
+(defcstruct vk-pipeline-viewport-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-viewport-state-create-flags)
+  (:viewport-count :uint32)
+  (:viewports (:pointer (:struct vk-viewport)))
+  (:scissor-count :uint32)
+  (:scissprs (:pointer (:struct vk-rect-2d))))
+
+(defcstruct vk-pipeline-rasterization-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-rasterization-state-create-flags)
+  (:depth-clamp-enable vk-bool-32)
+  (:rasterizer-discard-enable vk-bool-32)
+  (:polygon-mode VkPolygonMode)
+  (:cull-mode vk-cull-mode-flags)
+  (:front-face VkFrontface)
+  (:depth-bias-enable vk-bool-32)
+  (:depth-bias-constant-factor :float)
+  (:depth-bias-clamp :float)
+  (:depth-bias-slope-factor :float)
+  (:line-width :float))
+
+(defcstruct vk-pipeline-multisample-state-create-info)
+
+(defcstruct vk-pipeline-depth-stencil-state-create-info)
+
+(defcstruct vk-pipeline-color-blend-state-create-info)
+
+(defcstruct vk-pipeline-dynamic-state-create-info)
+
+(defcstruct vk-graphics-pipeline-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-create-flags)
+  (:stage-count :uint32)
+  (:stage (:pointer (:struct vk-pipeline-shader-stage-create-info)))
+  (:vertex-input-stage (:pointer (:struct vk-pipeline-vertex-input-state-create-info)))
+  (:input-assembly-stage (:pointer (:struct vk-pipeline-input-assembly-state-create-info)))
+  (:tessellation-stage (:pointer (:struct vk-pipeline-tessellation-state-create-info)))
+  (:viewport-stage (:pointer (:struct vk-pipeline-viewport-state-create-info)))
+  (:rasterization-stage (:pointer (:struct vk-pipeline-rasterization-state-create-info)))
+  (:multisample-stage (:pointer (:struct vk-pipeline-multisample-state-create-info)))
+  (:depth-stencil-stage (:pointer (:struct vk-pipeline-depth-stencil-state-create-info)))
+  (:color-blend-stage (:pointer (:struct vk-pipeline-color-blend-state-create-info)))
+  (:dynamic-stage (:pointer (:struct vk-pipeline-dynamic-state-create-info)))
+  (:layout vk-pipeline-layout)
+  (:render-pass vk-render-pass)
+  (:subpass :uint32)
+  (:base-pipeline-handle vk-pipeline)
+  (:base-pipeline-index :uint32))
