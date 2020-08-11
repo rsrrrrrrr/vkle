@@ -183,8 +183,8 @@
   (:vendor-id :uint32)
   (:device-id :uint32)
   (:device-type VkPhysicalDeviceType)
-  (:device-name :string)
-  (:pipeline-cache-uuid (:pointer :uint8))
+  (:device-name :char :count 256)
+  (:pipeline-cache-uuid :uint8 :count 16)
   (:limits  (:struct vk-physical-device-limits))
   (:spare-properties (:struct vk-physical-device-sparse-properties)))
 
@@ -196,9 +196,9 @@
 (defcstruct vk-physical-device-vulkan-11-properties
   (:type VkStructureType)
   (:p-next (:pointer :void))
-  (:device-uuid (:pointer :uint8))
-  (:driver-uuid (:pointer :uint8))
-  (:driver-luid (:pointer :uint8))
+  (:device-uuid :uint8 :count 16)
+  (:driver-uuid :uint8 :count 16)
+  (:driver-luid :uint8 :count 16)
   (:device-node-mask :uint32)
   (:device-luid-vaild vk-bool-32)
   (:sub-group-size :uint32)
@@ -222,8 +222,8 @@
   (:type VkStructureType)
   (:p-next (:pointer :void))
   (:driver-id VkDriverId)
-  (:driver-name :string)
-  (:driver-info :string)
+  (:driver-name :char :count 256)
+  (:driver-info :char :count 256)
   (:conformance-version (:struct vk-conformance-version))
   (:denorm-behavior-independence vkshaderfloatcontrolsindependence)
   (:rounding-mode-independence vkshaderfloatcontrolsindependence)
@@ -277,9 +277,9 @@
 (defcstruct vk-physical-device-id-properties
   (:type VkStructureType)
   (:p-next (:pointer :void))
-  (:device-uuid (:pointer :uint8))
-  (:driver-uuid (:pointer :uint8))
-  (:device-luid (:pointer :uint8))
+  (:device-uuid :uint8 :count 16)
+  (:driver-uuid :uint8 :count 16)
+  (:device-luid :uint8 :count 16)
   (:device-node-mask :uint32)
   (:device-luid-vaild vk-bool-32))
 
@@ -287,8 +287,8 @@
   (:type VkStructureType)
   (:p-next (:pointer :void))
   (:driver-id VkDriverid)
-  (:driver-name :string)
-  (:driver-info :string)
+  (:driver-name :char :count 256)
+  (:driver-info :char :count 256)
   (:conformance-version (:struct vk-conformance-version)))
 
 (defcstruct vk-physical-device-pci-bus-info-properties-ext
@@ -321,15 +321,22 @@
   (:unit VkPerformanceCounterunitkhr)
   (:scope VkPerformanceCounterscopekhr)
   (:storage VkPerformanceCounterStoragekhr)
-  (:uuid (:pointer :uint8)))
+  (:uuid :uint8 :count 16))
 
 (defcstruct vk-performance-counter-description-khr
   (:type VkStructureType)
   (:p-next (:pointer :void))
   (:flags vk-performance-counter-description-flags-khr)
-  (:name :string)
-  (:category :string)
-  (:description :string))
+  (:name :char :count 256)
+  (:category :char :count 256)
+  (:description :char :count 256))
+
+(defcstruct vk-physical-device-group-properties
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:physical-device-count :uint32)
+  (:physical-devices vk-physical-device :count 32)
+  (:subset-allocation vk-bool-32))
 
 (defcstruct vk-device-queue-create-info
   (:type VkStructureType)
@@ -1116,13 +1123,66 @@
   (:depth-bias-slope-factor :float)
   (:line-width :float))
 
-(defcstruct vk-pipeline-multisample-state-create-info)
+(defcstruct vk-pipeline-multisample-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-multisample-state-create-flags)
+  (:rasterization-sample VkSampleCountFlagbits)
+  (:sample-shading-enable vk-bool-32)
+  (:min-sample-shading :float)
+  (:sample-mask (:pointer vk-sample-mask))
+  (:alpha-to-coverage-enable vk-bool-32)
+  (:alpha-to-one-enable vk-bool-32))
 
-(defcstruct vk-pipeline-depth-stencil-state-create-info)
+(defcstruct vk-stencil-op-state
+  (:fail-op VkStencilop)
+  (:pass-op VkStencilop)
+  (:depth-fail-op VkStencilop)
+  (:compare-op VkCompareop)
+  (:compare-mask :uint32)
+  (:write-mask :uint32)
+  (:references :uint32))
 
-(defcstruct vk-pipeline-color-blend-state-create-info)
+(defcstruct vk-pipeline-depth-stencil-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-depth-stencil-state-create-flags)
+  (:depth-test-enable vk-bool-32)
+  (:depth-write-enable vk-bool-32)
+  (:depth-compare-op VkCompareop)
+  (:depth-bounds-test-enable vk-bool-32)
+  (:stencil-test-enable vk-bool-32)
+  (:front (:struct vk-stencil-op-state))
+  (:back (:struct vk-stencil-op-state))
+  (:min-depth-bounds :float)
+  (:max-depth-bounds :float))
 
-(defcstruct vk-pipeline-dynamic-state-create-info)
+(defcstruct vk-pipeline-color-blend-attachment-state
+  (:blend-enable vk-bool-32)
+  (:src-color-blend-factor VkBlendFactor)
+  (:dst-color-blend-factor VkBlendFactor)
+  (:color-blend-op VkBlendop)
+  (:src-alpha-blend-factor VkBlendFactor)
+  (:dst-alpha-blend-factor VkBlendFactor)
+  (:alpha-blend-op VkBlendop)
+  (:color-write-mask vk-color-component-flags))
+
+(defcstruct vk-pipeline-color-blend-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-color-blend-state-create-flags)
+  (:logic-op-enable vk-bool-32)
+  (:logic-op VkLogicop)
+  (:attachment-count :uint32)
+  (:attachments (:pointer (:struct vk-pipeline-color-blend-attachment-state)))
+  (:blend-constants :float :count 4))
+
+(defcstruct vk-pipeline-dynamic-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-dynamic-state-create-flags)
+  (:dynamic-state-count :uint32)
+  (:dynamic-states (:pointer VkDynamicState)))
 
 (defcstruct vk-graphics-pipeline-create-info
   (:type VkStructureType)
@@ -1144,3 +1204,187 @@
   (:subpass :uint32)
   (:base-pipeline-handle vk-pipeline)
   (:base-pipeline-index :uint32))
+
+(defcstruct vk-graphics-shader-group-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:stage-count :uint32)
+  (:stages (:pointer (:struct vk-pipeline-shader-stage-create-info)))
+  (:vetex-input-state (:pointer (:struct vk-pipeline-vertex-input-state-create-info)))
+  (:tessellation-stage (:pointer (:struct vk-pipeline-tessellation-state-create-info))))
+
+(defcstruct vk-graphics-pipeline-shader-groups-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:group-count :uint32)
+  (:groups (:pointer (:struct vk-graphics-shader-group-create-info-nv)))
+  (:pipeline-count :uint32)
+  (:pipelines (:pointer vk-pipeline)))
+
+(defcstruct vk-pipeline-cache-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-cache-create-flags)
+  (:initial-date-size :unsigned-int)
+  (:init-data (:pointer :void)))
+
+(defcstruct vk-pipeline-library-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:library-count :uint32)
+  (:libraries (:pointer vk-pipeline)))
+
+(defcstruct vk-pipeline-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:pipeline vk-pipeline))
+
+(defcstruct vk-pipeline-executable-properties-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:stage vk-shader-stage-flags)
+  (:name :char :count 256)
+  (:description :char :count 256)
+  (:subgroup-size :uint32))
+
+(defcstruct vk-pipeline-executable-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:pipeline vk-pipeline)
+  (:executable-index :uint32))
+
+(defcunion vk-pipeline-executable-statistic-value-khr
+  (:b32 vk-bool-32)
+  (:i64 :int64)
+  (:u64 :uint64)
+  (:f64 :double))
+
+(defcstruct vk-pipeline-executable-statistic-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:name :char :count 256)
+  (:descripton :char :count 256)
+  (:format VkPipelineExecutableStatisticFormatKHR)
+  (:value (:union vk-pipeline-executable-statistic-value-khr)))
+
+(defcstruct vk-pipeline-executable-internal-representation-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:name :char :count 256)
+  (:description :char :count 256)
+  (:is-text vk-bool-32)
+  (:data-size :unsigned-int)
+  (:data (:pointer :void)))
+
+(defcstruct vk-shader-resource-usage-amd
+  (:num-used-vgprs :uint32)
+  (:num-used-sgprs :uint32)
+  (:lds-size-per-local-work-group :uint32)
+  (:lds-usage-size-in-bytes :unsigned-int)
+  (:scratch-mem-usage-in-bytes :unsigned-int))
+
+(defcstruct vk-shader-statistics-info-amd
+  (:shader-stage-mask vk-shader-stage-flags)
+  (:resource-usage (:struct vk-shader-resource-usage-amd))
+  (:num-physical-vgprs :uint32)
+  (:num-physical-sgprs :uint32)
+  (:num-available-vgprs :uint32)
+  (:num-available-sgprs :uint32)
+  (:computeWorkGroupSize :uint32 :count 3))
+
+(defcstruct vk-pipeline-compiler-control-create-info-amd
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:compiler-control-flags vk-pipeline-compiler-control-flags-amd))
+
+(defcstruct vk-ray-tracing-shader-group-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkRayTracingShaderGroupTypeKHR)
+  (:general-shader :uint32)
+  (:closes-hit-shader :uint32)
+  (:any-hit-shader :uint32)
+  (:intersection-shader :uint32))
+
+(defcstruct vk-ray-tracing-pipeline-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-create-flags)
+  (:stage-count :uint32)
+  (:stages (:pointer (:struct vk-pipeline-shader-stage-create-info)))
+  (:group-count :uint32)
+  (:groups (:pointer (:struct vk-ray-tracing-shader-group-create-info-nv)))
+  (:layout vk-pipeline-layout)
+  (:base-pipeline-handle vk-pipeline)
+  (:base-pipeline-index :uint32))
+
+(defcstruct vk-ray-tracing-shader-group-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkRayTracingShaderGroupTypeKHR)
+  (:general-shader :uint32)
+  (:closes-hit-shader :uint32)
+  (:any-hit-shader :uint32)
+  (:intersection-shader :uint32)
+  (:shader-group-capture-replay-handle (:pointer :void)))
+
+(defcstruct vk-pipeline-library-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:library-count :uint32)
+  (:library (:pointer vk-pipeline)))
+
+(defcstruct vk-ray-tracing-pipeline-interface-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:max-payload-size :uint32)
+  (:max-attribute-size :uint32)
+  (:max-callable-size :uint32))
+
+(defcstruct vk-ray-tracing-pipeline-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-create-flags)
+  (:stage-count :uint32)
+  (:stages (:pointer (:struct vk-pipeline-shader-stage-create-info)))
+  (:group-count :uint32)
+  (:groups (:pointer (:struct vk-ray-tracing-shader-group-create-info-khr)))
+  (:max-recursion-depth :uint32)
+  (:library (:struct vk-pipeline-library-create-info-khr))
+  (:library-interface (:pointer (:struct vk-ray-tracing-pipeline-interface-create-info-khr)))
+  (:layout vk-pipeline-layout)
+  (:base-pipeline-handle vk-pipeline)
+  (:base-pipeline-index :uint32))
+
+(defcstruct vk-pipeline-creation-feedback-ext
+  (:flags vk-pipeline-creation-feedback-flags-ext)
+  (:duration :uint64))
+
+(defcstruct vk-pipeline-creation-feedback-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:pipeline-creation-feedback (:pointer (:struct vk-pipeline-creation-feedback-ext)))
+  (:pipeline-stage-creation-feedback-count :uint32)
+  (:pipeline-stage-creation-feedbacks (:pointer (:struct vk-pipeline-creation-feedback-ext))))
+
+(defcstruct vk-allocation-callback
+  (:user-data (:pointer :void))
+  (:fn-allocation vk-allocation-function)
+  (:fn-reallocation vk-reallocation-function)
+  (:fn-free vk-free-function)
+  (:fn-internal-allocation vk-internal-allocation-notification)
+  (:fn-internal-free vk-internal-free-notification))
+
+(defcstruct vk-memory-type
+  (:property-flags vk-memory-property-flags)
+  (:hape-index :uint32))
+
+(defcstruct vk-memory-heap
+  (:size vk-device-size)
+  (:flags vk-memory-heap-flags))
+
+(defcstruct vk-physical-device-memory-properties
+  (:memory-type-count :uint32)
+  (:memory-types (:pointer (:struct vk-memory-type)))    ;;here should be array
+  (:memory-heap-count :uint32)
+  (:memory-heaps (:pointer (:struct vk-memory-heap))))   ;;here should be array

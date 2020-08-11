@@ -51,8 +51,14 @@
 
 (defctype vk-device-size :uint64)
 (defctype vk-device-address :uint64)
+(defctype vk-sample-mask :uint32)
 
 (defctype vk-void-function :pointer)
+(defctype vk-allocation-function :pointer)
+(defctype vk-reallocation-function :pointer)
+(defctype vk-free-function :pointer)
+(defctype vk-internal-allocation-notification :pointer)
+(defctype vk-internal-free-notification :pointer)
 
 (defctype vk-instance-create-flags vk-flags)
 (defctype vk-device-create-flags vk-flags)
@@ -73,6 +79,11 @@
 (defctype vk-pipeline-tessellation-state-create-flags vk-flags)
 (defctype vk-pipeline-viewport-state-create-flags vk-flags)
 (defctype vk-pipeline-rasterization-state-create-flags vk-flags)
+(defctype vk-pipeline-multisample-state-create-flags vk-flags)
+(defctype vk-pipeline-depth-stencil-state-create-flags vk-flags)
+(defctype vk-pipeline-color-blend-state-create-flags vk-flags)
+(defctype vk-pipeline-dynamic-state-create-flags vk-flags)
+(defctype vk-pipeline-cache-create-flags vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
@@ -96,4 +107,10 @@
 (defctype vk-dependency-flags vk-flags)
 (defctype vk-image-usage-flags vk-flags)
 (defctype vk-cull-mode-flags vk-flags)
-
+(defctype vk-color-component-flags vk-flags)
+(defctype vk-shader-stage-flags vk-flags)
+(defctype vk-shader-stage-flags vk-flags)
+(defctype vk-pipeline-compiler-control-flags-amd vk-flags)
+(defctype vk-pipeline-creation-feedback-flags-ext vk-flags)
+(defctype vk-memory-property-flags vk-flags)
+(defctype vk-memory-heap-flags vk-flags)
