@@ -313,7 +313,7 @@
 (defcstruct vk-queue-family-checkpoint-properties-nv
   (:type VkStructureType)
   (:p-next (:pointer :void))
-  (:checkpoint-execution-stage-mask vk-pipline-stage-flags))
+  (:checkpoint-execution-stage-mask vk-pipeline-stage-flags))
 
 (defcstruct vk-performance-counter-khr
   (:type VkStructureType)
@@ -486,7 +486,7 @@
   (:p-next (:pointer :void))
   (:wait-semaphore-count :uint32)
   (:wait-semaphore (:pointer vk-semaphore))
-  (:wait-dst-stage-mask (:pointer vk-pipline-stage-flags))
+  (:wait-dst-stage-mask (:pointer vk-pipeline-stage-flags))
   (:command-buffer-count :uint32)
   (:command-buffer (:pointer vk-command-buffer))
   (:signal-semaphore-count :uint32)
@@ -760,8 +760,8 @@
 (defcstruct vk-subpass-dependency
   (:src-subpass :uint32)
   (:dst-subpass :uint32)
-  (:src-stage-mask vk-pipline-stage-flags)
-  (:dst-stage-mask vk-pipline-stage-flags)
+  (:src-stage-mask vk-pipeline-stage-flags)
+  (:dst-stage-mask vk-pipeline-stage-flags)
   (:src-access-mask vk-access-flags)
   (:dst-access-mask vk-access-flags)
   (:dependency-flags vk-dependency-flags))
@@ -843,8 +843,8 @@
   (:p-next (:pointer :void))
   (:src-subpass :uint32)
   (:dst-subpass :uint32)
-  (:src-stage-mask vk-pipline-stage-flags)
-  (:dst-stage-mask vk-pipline-stage-flags)
+  (:src-stage-mask vk-pipeline-stage-flags)
+  (:dst-stage-mask vk-pipeline-stage-flags)
   (:src-access-mask vk-access-flags)
   (:dst-access-mask vk-access-flags)
   (:dependency-flags vk-dependency-flags)
@@ -1031,7 +1031,7 @@
 (defcstruct vk-pipeline-shader-stage-create-info
   (:type VkStructureType)
   (:p-next (:pointer :void))
-  (:flags vk-pipline-stage-flags)
+  (:flags vk-pipeline-stage-flags)
   (:stage VkShaderStageflagbits)
   (:module vk-shader-module)
   (:name :string)
