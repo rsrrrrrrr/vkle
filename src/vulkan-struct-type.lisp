@@ -1385,6 +1385,242 @@
 
 (defcstruct vk-physical-device-memory-properties
   (:memory-type-count :uint32)
-  (:memory-types (:pointer (:struct vk-memory-type)))    ;;here should be array
+  (:memory-types (:struct vk-memory-type) :count 32) 
   (:memory-heap-count :uint32)
-  (:memory-heaps (:pointer (:struct vk-memory-heap))))   ;;here should be array
+  (:memory-heaps (:struct vk-memory-heap) :count 16))
+
+(defcstruct vk-physical-device-memory-properties2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory-properties (:struct vk-physical-device-properties)))
+
+(defcstruct vk-physical-device-memory-budget-properties-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:heap-budget vk-device-size :count 32)
+  (:heap-usage vk-device-size :count 32))
+
+(defcstruct vk-memory-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:allocation-size vk-device-size)
+  (:memory-type-index :uint32))
+
+(defcstruct vk-memory-dedicated-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:image vk-image)
+  (:buffer vk-buffer))
+
+(defcstruct vk-dedicated-allocation-memory-allocate-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:image vk-image)
+  (:buffer vk-buffer))
+
+(defcstruct vk-memory-priority-allocate-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:priority :float))
+
+(defcstruct vk-export-memory-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-type vk-external-memory-handle-type-flags))
+
+(defcstruct vk-export-memory-win32-handle-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:attributes (:pointer (:struct security-attributes)))
+  (:dw-access :uint32)
+  (:name (:pointer :uint16)))
+
+(defcstruct vk-import-memory-win32-handle-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-type VkExternalMemoryHandleTypeFlagBits)
+  (:handle (:pointer :void))
+  (:name (:pointer :uint16)))
+
+(defcstruct vk-memory-get-win32-handle-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory vk-device-memory)
+  (:handle-type VkExternalMemoryHandleTypeFlagBits))
+
+(defcstruct vk-memory-win32-handle-properties-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory-type-bits :uint32))
+
+(defcstruct vk-import-memory-fd-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-type VkExternalMemoryHandleTypeFlagBits)
+  (:fd :int))
+
+(defcstruct vk-memory-get-fd-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory vk-device-memory)
+  (:handle-type VkExternalMemoryHandleTypeFlagBits))
+
+(defcstruct vk-memory-fd-properties-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory-type-bits :uint32))
+
+(defcstruct vk-import-memory-host-pointer-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-type VkExternalMemoryHandleTypeFlagBits)
+  (:host-pointer (:pointer :void)))
+
+(defcstruct vk-memory-host-pointer-properties-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory-type-bits :uint32))
+
+#|
+i don't know how to set up android in lisp
+(defcstruct vk-import-android-hardware-buffer-info-android
+  (:type VkStructureType)
+  (:p-next (:pointer :void)))
+
+(defcstuct vk-memory-get-android-hardware-buffer-info-android
+  (:type VkStructureType)
+  (:p-next (:pointer :void)))
+
+(defcstruct vk-android-hardware-buffer-properties-android
+  (:type VkStructureType)
+  (:p-next (:pointer :void)))
+
+(defcstruct vk-android-hardware-buffer-format-properties-android
+  (:type VkStructureType)
+  (:p-next (:pointer :void)))
+
+(defcstruct vk-external-format-android
+  (:type VkStructureType)
+  (:p-next (:pointer :void)))
+|#
+
+(defcstruct vk-export-memory-allocate-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-type vk-external-memory-handle-type-flags-nv))
+
+(defcstruct vk-export-memory-win32-handle-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:attributes (:pointer (:struct security-attributes)))
+  (:dw-access :uint32))
+
+(defcstruct vk-import-memory-win32-handle-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-type vk-external-memory-handle-type-flags-nv)
+  (:handle (:pointer :void)))
+
+(defcstruct vk-memory-allocate-flags-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-memory-allocate-flags)
+  (:device-mask :uint32))
+
+(defcstruct vk-memory-opaque-capture-address-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:opaque-capture-address :uint64))
+
+(defcstruct vk-memory-opaque-capture-address-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:opaque-capture-address :uint64))
+
+(defcstruct vk-mapped-memory-range
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory vk-device-memory)
+  (:offset vk-device-size)
+  (:size vk-device-size))
+
+(defcstruct vk-device-memory-opaque-capture-address-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory vk-device-memory))
+
+(defcstruct vk-buffer-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-buffer-create-flags)
+  (:size vk-device-size)
+  (:usage vk-buffer-usage-flags)
+  (:sharing-mode VkSharingMode)
+  (:queue-family-count :uint32)
+  (:queue-family-indices (:pointer :uint32)))
+
+(defcstruct vk-dedicated-allocation-buffer-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:dedicated-allocation vk-bool-32))
+
+(defcstruct vk-external-memory-buffer-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-types vk-external-memory-handle-type-flags))
+
+(defcstruct vk-buffer-opaque-capture-address-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:opaque-capture-address :uint64))
+
+(defcstruct vk-buffer-device-address-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-address vk-device-address))
+
+(defcstruct vk-buffer-view-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-buffer-view-create-flags)
+  (:buffer vk-buffer)
+  (:format VkFormat)
+  (:offset vk-device-size)
+  (:range vk-device-size))
+
+(defcstruct vk-image-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-image-create-flags)
+  (:image-type VkImageType)
+  (:foramt VkFormat)
+  (:extent (:struct vk-extent-3d))
+  (:mop-levels :uint32)
+  (:array-layers :uint32)
+  (:samples VkSampleCountFlagBits)
+  (:tiling VkImageTiling)
+  (:usage vk-image-usage-flags)
+  (:sharing-mode VkSharingMode)
+  (:queue-family-index-count :uint32)
+  (:queue-family-indices (:pointer :uint32))
+  (:initial-layout VkImageLayout))
+
+(defcstruct vk-image-stencil-usage-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:stencil-usage vk-image-usage-flags))
+
+(defcstruct vk-dedicated-allocation-image-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:dedicated-allocation vk-bool-32))
+
+(defcstruct vk-external-memory-image-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-types vk-external-memory-handle-type-flags))
+
+(defcstruct vk-external-memory-image-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:handle-type vk-external-memory-handle-type-flags-nv))

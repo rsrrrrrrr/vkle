@@ -84,6 +84,8 @@
 (defctype vk-pipeline-color-blend-state-create-flags vk-flags)
 (defctype vk-pipeline-dynamic-state-create-flags vk-flags)
 (defctype vk-pipeline-cache-create-flags vk-flags)
+(defctype vk-buffer-create-flags vk-flags)
+(defctype vk-buffer-view-create-flags vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
@@ -114,3 +116,7 @@
 (defctype vk-pipeline-creation-feedback-flags-ext vk-flags)
 (defctype vk-memory-property-flags vk-flags)
 (defctype vk-memory-heap-flags vk-flags)
+(defctype vk-external-memory-handle-type-flags vk-flags)
+(defctype vk-external-memory-handle-type-flags-nv vk-flags)
+(defctype vk-memory-allocate-flags vk-flags)
+(defctype vk-buffer-usage-flags vk-flags)
