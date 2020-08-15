@@ -86,6 +86,7 @@
 (defctype vk-pipeline-cache-create-flags vk-flags)
 (defctype vk-buffer-create-flags vk-flags)
 (defctype vk-buffer-view-create-flags vk-flags)
+(defctype vk-image-view-create-flags vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
@@ -120,3 +121,7 @@
 (defctype vk-external-memory-handle-type-flags-nv vk-flags)
 (defctype vk-memory-allocate-flags vk-flags)
 (defctype vk-buffer-usage-flags vk-flags)
+(defctype vk-image-aspect-flags Vk-flags)
+(defctype vk-build-acceleration-structure-flags-nv vk-flags)
+(defctype vk-geometry-flags-khr vk-flags)
+(defctype vk-build-acceleration-structure-flags-khr vk-flags)

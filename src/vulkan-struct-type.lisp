@@ -1624,3 +1624,237 @@ i don't know how to set up android in lisp
   (:type VkStructureType)
   (:p-next (:pointer :void))
   (:handle-type vk-external-memory-handle-type-flags-nv))
+
+(defcstruct vk-image-swapchain-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:swapchain vk-swapchain-khr))
+
+(defcstruct vk-image-format-list-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:view-format-count :uint32)
+  (:view-format (:pointer VkFormat)))
+
+(defcstruct vk-image-drm-format-modifier-list-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:drm-format-modifier-count :uint32)
+  (:drm-format-modifiers (:pointer :uint64)))
+
+(defcstruct vk-subresource-layout
+  (:offset vk-device-size)
+  (:size vk-device-size)
+  (:row-pitch vk-device-size)
+  (:array-pitch vk-device-size)
+  (:depth-pitch vk-device-size))
+
+(defcstruct vk-image-drm-format-modifier-explicit-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:drm-format-modifier :uint64)
+  (:drm-format-modifier-plane-count :uint32)
+  (:plane-layouts (:pointer (:struct vk-subresource-layout))))
+
+(defcstruct vk-image-subresource
+  (:aspect-mask vk-image-aspect-flags)
+  (:mip-level :Uint32)
+  (:array-layer :uint32))
+
+(defcstruct vk-image-drm-format-modifier-properties-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:drm-format-modifier :uint64))
+
+(defcstruct vk-component-mapping
+  (:r VkComponentSwizzle)
+  (:g VkComponentSwizzle)
+  (:b VkComponentSwizzle)
+  (:a VkComponentSwizzle))
+
+(defcstruct vk-image-view-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-image-view-create-flags)
+  (:image vk-image)
+  (:view-type VkImageViewtype)
+  (:format VkFormat)
+  (:components (:struct vk-component-mapping))
+  (:subresource-range (:struct vk-image-subresource-range)))
+
+(defcstruct vk-image-view-usage-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:usage vk-image-usage-flags))
+
+(defcstruct vk-image-view-a-s-t-c-decode-mode-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:decode-mode VkFormat))
+
+(defcstruct vk-image-view-handle-info-nvx
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:image-view vk-image-view)
+  (:descriptor-type VkDescriptorType)
+  (:sampler vk-sampler))
+
+(defcstruct vk-image-view-address-properties-nvx
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-address vk-device-address)
+  (:size vk-device-size))
+
+(defcstruct vk-memory-requirements
+  (:size vk-device-size)
+  (:alignment vk-device-size)
+  (:memory-type-bits :uint32))
+
+(defcstruct vk-buffer-memory-requirements-info2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer))
+
+(defcstruct vk-image-memory-requirements-info2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:image vk-image))
+
+(defcstruct vk-image-plane-memory-requirements-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:plane-aspect VkImageAspectFlagBits))
+
+(defcstruct vk-memory-requirements2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory-requirements (:struct vk-memory-requirements)))
+
+(defcstruct vk-memory-dedicated-requirements
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:prefers-dedicated-allocation vk-bool-32)
+  (:requires-dedicated-allocation vk-bool-32))
+
+(defcstruct vk-bind-buffer-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size))
+
+(defcstruct vk-bind-buffer-memory-device-group-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32)))
+
+(defcstruct vk-bind-image-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:imaeg vk-image)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size))
+
+(defcstruct vk-bind-image-memory-device-group-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32))
+  (:split-instance-bind-region-count :uint32)
+  (:split-instance-bind-regions (:pointer (:struct vk-rect-2d))))
+
+(defcstruct vk-bind-image-memory-swapchain-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:swapchain vk-swapchain-khr)
+  (:image-index :uint32))
+
+(defcstruct vk-bind-image-plane-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:plane-aspect VkImageAspectFlagBits))
+
+(defcstruct vk-geometry-triangles-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:vertex-data vk-buffer)
+  (:veretex-offset vk-device-size)
+  (:vertex-count :uint32)
+  (:vertex-stride vk-device-size)
+  (:vertex-format VkFormat)
+  (:index-data vk-buffer)
+  (:index-offset vk-device-size)
+  (:index-count :uint32)
+  (:index-type VkIndexType)
+  (:transform-data vk-buffer)
+  (:transform-offset vk-device-size))
+
+(defcstruct vk-geometry-aabb-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:aabb-data vk-buffer)
+  (:num-aabbs :uint32)
+  (:stride :uint32)
+  (:offset vk-device-size))
+
+(defcstruct vk-geometry-data-nv
+  (:triangles (:struct vk-geometry-triangles-nv))
+  (:aabbs (:struct vk-geometry-aabb-nv)))
+
+(defcstruct vk-geometry-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:geometry-type VkGeometryTypeKHR)
+  (:geometry-data (:struct vk-geometry-data-nv))
+  (:flags vk-geometry-flags-khr))
+
+(defcstruct vk-acceleration-structure-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureTypeKHR)
+  (:flags vk-build-acceleration-structure-flags-nv)
+  (:instance-count :uint32)
+  (:geometry-count :uint32)
+  (:geometries (:pointer (:struct vk-geometry-nv))))
+
+(defcstruct vk-acceleration-structure-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:compacted-size vk-device-size)
+  (:info (:struct vk-acceleration-structure-info-nv)))
+
+(defcstruct vk-acceleration-structure-create-geometry-type-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:geometry-type VkGeometryTypeKHR)
+  (:max-primitive-count :uint32)
+  (:index-type VkIndexType)
+  (:max-vertex-count :uint32)
+  (:vertex-format VkFormat)
+  (:allows-transforms vk-bool-32))
+
+(defcstruct vk-acceleration-structure-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:compacted-size vk-device-size)
+  (:type VkAccelerationStructureTypeKHR)
+  (:flags vk-build-acceleration-structure-flags-khr)
+  (:max-geometry-count :uint32)
+  (:geometry-infos (:pointer (:struct vk-acceleration-structure-create-geometry-type-info-khr)))
+  (:device-address vk-device-address))
+
+(defcstruct vk-acceleration-structure-memory-requirements-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-acceleration-structure-memory-requirements-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
+  (:build-type VkAccelerationStructureBuildTypeKHR)
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+
