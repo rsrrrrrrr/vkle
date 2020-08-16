@@ -2715,3 +2715,233 @@ i don't know how to set up android in lisp
   (:rect (:struct vk-rect-2d))
   (:base-array-layer :uint32)
   (:layer-count :uint32))
+
+(defcstruct vk-clear-attachment
+  (:aspect-mask vk-image-aspect-flags)
+  (:color-attachment :uint32)
+  (:clear-values (:union vk-clear-value)))
+
+(defcstruct vk-buffer-copy
+  (:src-offset vk-device-size)
+  (:dst-offset vk-device-size)
+  (:size vk-device-size))
+
+(defcstruct vk-image-subresource-layers
+  (:aspect-mask vk-image-aspect-flags)
+  (:mip-level :uint32)
+  (:base-array-layer :uint32)
+  (:layers-count :uint32))
+
+(defcstruct vk-image-copy
+  (:src-subresource (:struct vk-image-subresource-layers))
+  (:src-offset (:struct vk-off-set-3d))
+  (:dst-subresource (:struct vk-image-subresource-layers))
+  (:dst-offset (:struct vk-off-set-3d))
+  (:extent (:struct vk-extent-3d)))
+
+(defcstruct vk-buffer-image-copy
+  (:buffer-offset vk-device-size)
+  (:buffer-row-length :uint32)
+  (:buffer-image-height :uint32)
+  (:image-subresource (:struct vk-image-subresource-layers))
+  (:image-offset (:struct vk-off-set-3d))
+  (:image-extent (:struct vk-extent-3d)))
+
+(defcstruct vk-image-blit
+  (:src-subresource (:struct vk-image-subresource-layers))
+  (:src-offsets (:struct vk-off-set-3d) :count 2)
+  (:dst-subresource (:struct vk-image-subresource-layers))
+  (:dst-offsets (:struct vk-off-set-3d) :count 2))
+
+(defcstruct vk-image-resloved
+  (:src-subresource (:struct vk-image-subresource-layers))
+  (:src-offset (:struct vk-off-set-3d))
+  (:dst-subresource (:struct vk-image-subresource-layers))
+  (:dst-offset (:struct vk-off-set-3d))
+  (:extent (:struct vk-extent-3d)))
+
+(defcstruct vk-draw-indirect-command
+  (:vertex-count :uint32)
+  (:instance-count :uint32)
+  (:firset-vertex :uint32)
+  (:firset-instance :uint32))
+
+(defcstruct vk-draw-indexed-indirect-command
+  (:index-count :uint32)
+  (:instance-count :uint32)
+  (:firset-index :uint32)
+  (:vertex-offset :int32)
+  (:firset-instance :uint32))
+
+(defcstruct vk-conditional-rendering-begin-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer)
+  (:offset vk-device-size)
+  (:flags vk-conditional-rendering-flags-ext))
+
+(defcstruct vk-draw-mesh-tasks-indirect-command-nv
+  (:task-count :uint32)
+  (:first-task :uint32))
+
+(defcstruct vk-pipeline-vertex-input-divisor-state-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:vertex-binding-divisor-count :uint32)
+  (:vertex-binding-divisors (:pointer vk-conditional-rendering-flags-ext)))
+
+(defcstruct vk-vertex-input-binding-divisor-description-ext
+  (:binding :uint32)
+  (:divisor :uint32))
+
+(defcstruct vk-pipeline-tessellation-domain-origin-state-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:domain-origin VkTessellationDomainOrigin))
+
+(defcstruct vk-viewport-swizzle-nv
+  (:x VkViewportCoordinateSwizzleNV)
+  (:y VkViewportCoordinateSwizzleNV)
+  (:z VkViewportCoordinateSwizzleNV)
+  (:w VkViewportCoordinateSwizzleNV))
+
+(defcstruct vk-pipeline-viewport-swizzle-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-viewport-swizzle-state-create-flags-nv)
+  (:view-port-count :uint32)
+  (:view-port-swizzles (:pointer (:struct vk-viewport-swizzle-nv))))
+
+(defcstruct vk-viewport-w-scaling
+  (:xcoeff :float)
+  (:ycoeff :float))
+
+(defcstruct vk-pipeline-viewport-w-scaling-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:view-port-w-scaling-enable vk-bool-32)
+  (:view-port-count :uint32)
+  (:view-port-w-scalings (:pointer (:struct vk-viewport-w-scaling))))
+
+(defcstruct vk-pipeline-rasterization-depth-clip-state-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-rasterization-depth-clip-state-create-flags-ext)
+  (:depth-clip-enable vk-bool-32))
+
+(defcstruct vk-pipeline-rasterization-state-stream-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-rasterization-state-stream-create-flags-ext)
+  (:rasterization-stream :uint32))
+
+(defcstruct vk-pipeline-rasterization-state-rasterization-order-amd
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:rasterization-order VkRasterizationOrderAMD))
+
+(defcstruct vk-pipeline-sample-locations-state-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:sampler-locations-enable vk-bool-32)
+  (:sampler-locations-info (:struct vk-sample-locations-info-ext)))
+
+(defcstruct vk-shading-rate-palette-nv
+  (:shading-rate-palette-entry-count :uint32)
+  (:shading-rate-palette-entries (:pointer VkShadingRatePaletteEntryNV)))
+
+(defcstruct vk-pipeline-viewport-shading-rate-image-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:shading-rate-image-enable vk-bool-32)
+  (:view-port-count :uint32)
+  (:shading-rate-palettes (:pointer (:struct vk-shading-rate-palette-nv))))
+
+(defcstruct vk-coarse-sample-location-nv
+  (:pixel-x :uint32)
+  (:pixel-y :uint32)
+  (:sample :uint32))
+
+(defcstruct vk-coarse-sample-order-custom-nv
+  (:shading-rate VkShadingRatePaletteEntryNV)
+  (:sample-count :uint32)
+  (:sample-location-count :uint32)
+  (:sample-locations (:pointer (:struct vk-coarse-sample-location-nv))))
+
+(defcstruct vk-pipeline-viewport-coarse-sample-order-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:sample-order-type VkCoarseSampleOrderTypeNV)
+  (:custom-sample-order-count :uint32)
+  (:custom-sample-orders (:pointer (:struct vk-coarse-sample-order-custom-nv))))
+
+(defcstruct vk-pipeline-rasterization-line-state-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:line-rasterization-mode VkLineRasterizationModeEXT)
+  (:stippled-line-enable vk-bool-32)
+  (:line-stipple-factor :uint32)
+  (:line-stipple-pattern :uint16))
+
+(defcstruct vk-pipeline-rasterization-conservative-state-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-rasterization-conservative-state-create-flags-ext)
+  (:conservative-rasterization-mode VkConservativeRasterizationModeEXT)
+  (:extra-primitive-overestimation-size :float))
+
+(defcstruct vk-pipeline-discard-rectangle-state-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-discard-rectangle-state-create-flags-ext)
+  (:discard-rectangle-mode VkDiscardRectangleModeEXT)
+  (:discard-rectangle-count :uint32)
+  (:discard-rectangles (:pointer (:struct vk-rect-2d))))
+
+(defcstruct vk-pipeline-viewport-exclusive-scissor-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:exclusive-scissor-count :uint32)
+  (:discard-rectangle-count (:pointer (:struct vk-rect-2d))))
+
+(defcstruct vk-pipeline-representative-fragment-test-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:representative-fragment-test-enable vk-bool-32))
+
+(defcstruct vk-pipeline-coverage-to-color-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-coverage-to-color-state-create-flags-nv)
+  (:coverage-to-color-enable vk-bool-32)
+  (:coverage-to-color-location :uint32))
+
+(defcstruct vk-pipeline-coverage-reduction-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-coverage-reduction-state-create-flags-nv)
+  (:coverage-reduction-mode VkCoverageReductionModeNV))
+
+(defcstruct vk-framebuffer-mixed-samples-combination-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:coverage-reduction-mode VkCoverageReductionModeNV)
+  (:rasterization-samples VkSampleCountFlagBits)
+  (:depth-stencil-samples vk-sample-count-flags)
+  (:color-samples vk-sample-count-flags))
+
+(defcstruct vk-pipeline-coverage-modulation-state-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-coverage-modulation-state-create-flags-nv)
+  (:coverage-modulation-mod VkCoverageModulationModeNV)
+  (:coverage-modulation-table-enable vk-bool-32)
+  (:coverage-modulation-table-count :uint32)
+  (:coverage-modulation-table (:pointer :float)))
+
+(defcstruct vk-pipeline-color-blend-advanced-state-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:src-premultiplied vk-bool-32)
+  (:dst-premultiplied vk-bool-32)
+  (:blend-overlap VkBlendOverlapEXT))
