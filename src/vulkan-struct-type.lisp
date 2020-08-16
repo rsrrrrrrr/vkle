@@ -1857,4 +1857,861 @@ i don't know how to set up android in lisp
   (:build-type VkAccelerationStructureBuildTypeKHR)
   (:acceleration-structure vk-acceleration-structure-khr))
 
+(defcstruct vk-bind-acceleration-structure-memory-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:acceleration-structure vk-acceleration-structure-khr)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size)
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32)))
 
+(defcstruct vk-acceleration-structure-device-address-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-sampler-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-sampler-create-flags)
+  (:mag-filter VkFilter)
+  (:min-filter VkFilter)
+  (:mipmap-mode VkSamplerMipmapMode)
+  (:address-mode-u VkSamplerAddressMode)
+  (:address-mode-v VkSamplerAddressMode)
+  (:address-mode-w VkSamplerAddressMode)
+  (:mip-load-bias :float)
+  (:anisotropy-enable vk-bool-32)
+  (:max-anisotropy vk-bool-32)
+  (:compare-enable vk-bool-32)
+  (:compare-op VkCompareOp)
+  (:min-lod :float)
+  (:max-lod :float)
+  (:border-color VkBorderColor)
+  (:unnormalized-coordinates vk-bool-32))
+
+(defcstruct vk-sampler-reduction-mode-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:reduction-mode VkSamplerReductionMode))
+
+(defcstruct vk-sampler-ycbcr-conversion-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:conversion vk-sampler-ycbcr-conversion))
+
+(defcstruct vk-sampler-ycbcr-conversion-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:format VkFormat)
+  (:ycbcr-model VkSamplerYcbcrModelConversion)
+  (:ycbcr-range VkSamplerYcbcrRange)
+  (:components (:struct vk-component-mapping))
+  (:x-chroma-offset VkChromaLocation)
+  (:y-chroma-offset VkChromaLocation)
+  (:chroma-filter VkFilter)
+  (:force-explicit-reconstruction vk-bool-32))
+
+(defcstruct vk-sampler-custom-border-color-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:custom-border-color (:union vk-clear-value))
+  (:format VkFormat))
+
+(defcstruct vk-descriptor-set-layout-binding
+  (:binding :uint32)
+  (:descriptor-type VkDescriptorType)
+  (:descriptor-count :uint32)
+  (:stage-flags vk-shader-stage-flags)
+  (:immutable-samplers (:pointer vk-sampler)))
+
+(defcstruct vk-descriptor-set-layout-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-descriptor-set-layout-create-flags)
+  (:binding-count :uint32)
+  (:bindings (:pointer (:struct vk-descriptor-set-layout-binding))))
+
+(defcstruct vk-descriptor-set-layout-binding-flags-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:binding-count :uint32)
+  (:binding-flags (:pointer vk-descriptor-binding-flags)))
+
+(defcstruct vk-descriptor-set-layout-support
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:supported vk-bool-32))
+
+(defcstruct vk-descriptor-set-variable-descriptor-count-layout-support
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:max-variable-descriptor-count :uint32))
+
+(defcstruct vk-push-constant-range
+  (:stage-flags vk-shader-stage-flags)
+  (:offset :uint32)
+  (:size :uint32))
+
+(defcstruct vk-pipeline-layout-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-layout-create-flags)
+  (:set-layout-count :uint32)
+  (:set-layout (:pointer vk-descriptor-set-layout))
+  (:push-constant-range-count :uint32)
+  (:push-constant-ranges (:pointer (:struct vk-push-constant-range))))
+
+(defcstruct vk-descriptor-pool-size
+  (:type VkDescriptorType)
+  (:descriptor-count :uint32))
+
+(defcstruct vk-descriptor-pool-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-descriptor-pool-create-flags)
+  (:max-sets :uint32)
+  (:pool-size-count :uint32)
+  (:pool-sizes (:pointer (:struct vk-descriptor-pool-size))))
+
+(defcstruct vk-descriptor-pool-inline-uniform-block-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:max-inline-uniform-block-bindings :uint32))
+
+(defcstruct vk-descriptor-set-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:descript-pool vk-descriptor-pool)
+  (:descript-set-count :uint32)
+  (:set-layouts vk-descriptor-set-layout))
+
+(defcstruct vk-descriptor-set-variable-descriptor-count-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:descriptor-set-count :uint32)
+  (:descriptor-counts (:pointer :uint32)))
+
+(defcstruct vk-memory-requirements
+  (:size vk-device-size)
+  (:alignment vk-device-size)
+  (:memory-type-bits :uint32))
+
+(defcstruct vk-buffer-memory-requirements-info2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer))
+
+(defcstruct vk-image-memory-requirements-info2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:image vk-image))
+
+(defcstruct vk-image-plane-memory-requirements-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:plane-aspect VkImageAspectFlagBits))
+
+(defcstruct vk-memory-requirements2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory-requirements (:struct vk-memory-requirements)))
+
+(defcstruct vk-memory-dedicated-requirements
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:prefers-dedicated-allocation vk-bool-32)
+  (:requires-dedicated-allocation vk-bool-32))
+
+(defcstruct vk-bind-buffer-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size))
+
+(defcstruct vk-bind-buffer-memory-device-group-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32)))
+
+(defcstruct vk-bind-image-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:imaeg vk-image)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size))
+
+(defcstruct vk-bind-image-memory-device-group-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32))
+  (:split-instance-bind-region-count :uint32)
+  (:split-instance-bind-regions (:pointer (:struct vk-rect-2d))))
+
+(defcstruct vk-bind-image-memory-swapchain-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:swapchain vk-swapchain-khr)
+  (:image-index :uint32))
+
+(defcstruct vk-bind-image-plane-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:plane-aspect VkImageAspectFlagBits))
+
+(defcstruct vk-geometry-triangles-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:vertex-data vk-buffer)
+  (:veretex-offset vk-device-size)
+  (:vertex-count :uint32)
+  (:vertex-stride vk-device-size)
+  (:vertex-format VkFormat)
+  (:index-data vk-buffer)
+  (:index-offset vk-device-size)
+  (:index-count :uint32)
+  (:index-type VkIndexType)
+  (:transform-data vk-buffer)
+  (:transform-offset vk-device-size))
+
+(defcstruct vk-geometry-aabb-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:aabb-data vk-buffer)
+  (:num-aabbs :uint32)
+  (:stride :uint32)
+  (:offset vk-device-size))
+
+(defcstruct vk-geometry-data-nv
+  (:triangles (:struct vk-geometry-triangles-nv))
+  (:aabbs (:struct vk-geometry-aabb-nv)))
+
+(defcstruct vk-geometry-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:geometry-type VkGeometryTypeKHR)
+  (:geometry-data (:struct vk-geometry-data-nv))
+  (:flags vk-geometry-flags-khr))
+
+(defcstruct vk-acceleration-structure-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureTypeKHR)
+  (:flags vk-build-acceleration-structure-flags-nv)
+  (:instance-count :uint32)
+  (:geometry-count :uint32)
+  (:geometries (:pointer (:struct vk-geometry-nv))))
+
+(defcstruct vk-acceleration-structure-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:compacted-size vk-device-size)
+  (:info (:struct vk-acceleration-structure-info-nv)))
+
+(defcstruct vk-acceleration-structure-create-geometry-type-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:geometry-type VkGeometryTypeKHR)
+  (:max-primitive-count :uint32)
+  (:index-type VkIndexType)
+  (:max-vertex-count :uint32)
+  (:vertex-format VkFormat)
+  (:allows-transforms vk-bool-32))
+
+(defcstruct vk-acceleration-structure-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:compacted-size vk-device-size)
+  (:type VkAccelerationStructureTypeKHR)
+  (:flags vk-build-acceleration-structure-flags-khr)
+  (:max-geometry-count :uint32)
+  (:geometry-infos (:pointer (:struct vk-acceleration-structure-create-geometry-type-info-khr)))
+  (:device-address vk-device-address))
+
+(defcstruct vk-acceleration-structure-memory-requirements-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-acceleration-structure-memory-requirements-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
+  (:build-type VkAccelerationStructureBuildTypeKHR)
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-bind-acceleration-structure-memory-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:acceleration-structure vk-acceleration-structure-khr)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size)
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32)))
+
+(defcstruct vk-acceleration-structure-device-address-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-sampler-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-sampler-create-flags)
+  (:mag-filter VkFilter)
+  (:min-filter VkFilter)
+  (:mipmap-mode VkSamplerMipmapMode)
+  (:address-mode-u VkSamplerAddressMode)
+  (:address-mode-v VkSamplerAddressMode)
+  (:address-mode-w VkSamplerAddressMode)
+  (:mip-load-bias :float)
+  (:anisotropy-enable vk-bool-32)
+  (:max-anisotropy vk-bool-32)
+  (:compare-enable vk-bool-32)
+  (:compare-op VkCompareOp)
+  (:min-lod :float)
+  (:max-lod :float)
+  (:border-color VkBorderColor)
+  (:unnormalized-coordinates vk-bool-32))
+
+(defcstruct vk-sampler-reduction-mode-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:reduction-mode VkSamplerReductionMode))
+
+(defcstruct vk-sampler-ycbcr-conversion-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:conversion vk-sampler-ycbcr-conversion))
+
+(defcstruct vk-sampler-ycbcr-conversion-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:format VkFormat)
+  (:ycbcr-model VkSamplerYcbcrModelConversion)
+  (:ycbcr-range VkSamplerYcbcrRange)
+  (:components (:struct vk-component-mapping))
+  (:x-chroma-offset VkChromaLocation)
+  (:y-chroma-offset VkChromaLocation)
+  (:chroma-filter VkFilter)
+  (:force-explicit-reconstruction vk-bool-32))
+
+(defcstruct vk-sampler-custom-border-color-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:custom-border-color (:union vk-clear-value))
+  (:format VkFormat))
+
+(defcstruct vk-descriptor-set-layout-binding
+  (:binding :uint32)
+  (:descriptor-type VkDescriptorType)
+  (:descriptor-count :uint32)
+  (:stage-flags vk-shader-stage-flags)
+  (:immutable-samplers (:pointer vk-sampler)))
+
+(defcstruct vk-descriptor-set-layout-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-descriptor-set-layout-create-flags)
+  (:binding-count :uint32)
+  (:bindings (:pointer (:struct vk-descriptor-set-layout-binding))))
+
+(defcstruct vk-descriptor-set-layout-binding-flags-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:binding-count :uint32)
+  (:binding-flags (:pointer vk-descriptor-binding-flags)))
+
+(defcstruct vk-descriptor-set-layout-support
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:supported vk-bool-32))
+
+(defcstruct vk-descriptor-set-variable-descriptor-count-layout-support
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:max-variable-descriptor-count :uint32))
+
+(defcstruct vk-push-constant-range
+  (:stage-flags vk-shader-stage-flags)
+  (:offset :uint32)
+  (:size :uint32))
+
+(defcstruct vk-pipeline-layout-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-layout-create-flags)
+  (:set-layout-count :uint32)
+  (:set-layout (:pointer vk-descriptor-set-layout))
+  (:push-constant-range-count :uint32)
+  (:push-constant-ranges (:pointer (:struct vk-push-constant-range))))
+
+(defcstruct vk-descriptor-pool-size
+  (:type VkDescriptorType)
+  (:descriptor-count :uint32))
+
+(defcstruct vk-descriptor-pool-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-descriptor-pool-create-flags)
+  (:max-sets :uint32)
+  (:pool-size-count :uint32)
+  (:pool-sizes (:pointer (:struct vk-descriptor-pool-size))))
+
+(defcstruct vk-descriptor-pool-inline-uniform-block-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:max-inline-uniform-block-bindings :uint32))
+
+(defcstruct vk-descriptor-set-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:descript-pool vk-descriptor-pool)
+  (:descript-set-count :uint32)
+  (:set-layouts vk-descriptor-set-layout))
+
+(defcstruct vk-descriptor-set-variable-descriptor-count-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:descriptor-set-count :uint32)
+  (:descriptor-counts (:pointer :uint32)))
+
+(defcstruct vk-memory-requirements
+  (:size vk-device-size)
+  (:alignment vk-device-size)
+  (:memory-type-bits :uint32))
+
+(defcstruct vk-buffer-memory-requirements-info2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer))
+
+(defcstruct vk-image-memory-requirements-info2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:image vk-image))
+
+(defcstruct vk-image-plane-memory-requirements-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:plane-aspect VkImageAspectFlagBits))
+
+(defcstruct vk-memory-requirements2
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:memory-requirements (:struct vk-memory-requirements)))
+
+(defcstruct vk-memory-dedicated-requirements
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:prefers-dedicated-allocation vk-bool-32)
+  (:requires-dedicated-allocation vk-bool-32))
+
+(defcstruct vk-bind-buffer-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size))
+
+(defcstruct vk-bind-buffer-memory-device-group-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32)))
+
+(defcstruct vk-bind-image-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:imaeg vk-image)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size))
+
+(defcstruct vk-bind-image-memory-device-group-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32))
+  (:split-instance-bind-region-count :uint32)
+  (:split-instance-bind-regions (:pointer (:struct vk-rect-2d))))
+
+(defcstruct vk-bind-image-memory-swapchain-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:swapchain vk-swapchain-khr)
+  (:image-index :uint32))
+
+(defcstruct vk-bind-image-plane-memory-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:plane-aspect VkImageAspectFlagBits))
+
+(defcstruct vk-geometry-triangles-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:vertex-data vk-buffer)
+  (:veretex-offset vk-device-size)
+  (:vertex-count :uint32)
+  (:vertex-stride vk-device-size)
+  (:vertex-format VkFormat)
+  (:index-data vk-buffer)
+  (:index-offset vk-device-size)
+  (:index-count :uint32)
+  (:index-type VkIndexType)
+  (:transform-data vk-buffer)
+  (:transform-offset vk-device-size))
+
+(defcstruct vk-geometry-aabb-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:aabb-data vk-buffer)
+  (:num-aabbs :uint32)
+  (:stride :uint32)
+  (:offset vk-device-size))
+
+(defcstruct vk-geometry-data-nv
+  (:triangles (:struct vk-geometry-triangles-nv))
+  (:aabbs (:struct vk-geometry-aabb-nv)))
+
+(defcstruct vk-geometry-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:geometry-type VkGeometryTypeKHR)
+  (:geometry-data (:struct vk-geometry-data-nv))
+  (:flags vk-geometry-flags-khr))
+
+(defcstruct vk-acceleration-structure-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureTypeKHR)
+  (:flags vk-build-acceleration-structure-flags-nv)
+  (:instance-count :uint32)
+  (:geometry-count :uint32)
+  (:geometries (:pointer (:struct vk-geometry-nv))))
+
+(defcstruct vk-acceleration-structure-create-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:compacted-size vk-device-size)
+  (:info (:struct vk-acceleration-structure-info-nv)))
+
+(defcstruct vk-acceleration-structure-create-geometry-type-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:geometry-type VkGeometryTypeKHR)
+  (:max-primitive-count :uint32)
+  (:index-type VkIndexType)
+  (:max-vertex-count :uint32)
+  (:vertex-format VkFormat)
+  (:allows-transforms vk-bool-32))
+
+(defcstruct vk-acceleration-structure-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:compacted-size vk-device-size)
+  (:type VkAccelerationStructureTypeKHR)
+  (:flags vk-build-acceleration-structure-flags-khr)
+  (:max-geometry-count :uint32)
+  (:geometry-infos (:pointer (:struct vk-acceleration-structure-create-geometry-type-info-khr)))
+  (:device-address vk-device-address))
+
+(defcstruct vk-acceleration-structure-memory-requirements-info-nv
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-acceleration-structure-memory-requirements-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
+  (:build-type VkAccelerationStructureBuildTypeKHR)
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-bind-acceleration-structure-memory-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:acceleration-structure vk-acceleration-structure-khr)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size)
+  (:device-index-count :uint32)
+  (:device-indices (:pointer :uint32)))
+
+(defcstruct vk-acceleration-structure-device-address-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:acceleration-structure vk-acceleration-structure-khr))
+
+(defcstruct vk-sampler-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-sampler-create-flags)
+  (:mag-filter VkFilter)
+  (:min-filter VkFilter)
+  (:mipmap-mode VkSamplerMipmapMode)
+  (:address-mode-u VkSamplerAddressMode)
+  (:address-mode-v VkSamplerAddressMode)
+  (:address-mode-w VkSamplerAddressMode)
+  (:mip-load-bias :float)
+  (:anisotropy-enable vk-bool-32)
+  (:max-anisotropy vk-bool-32)
+  (:compare-enable vk-bool-32)
+  (:compare-op VkCompareOp)
+  (:min-lod :float)
+  (:max-lod :float)
+  (:border-color VkBorderColor)
+  (:unnormalized-coordinates vk-bool-32))
+
+(defcstruct vk-sampler-reduction-mode-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:reduction-mode VkSamplerReductionMode))
+
+(defcstruct vk-sampler-ycbcr-conversion-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:conversion vk-sampler-ycbcr-conversion))
+
+(defcstruct vk-sampler-ycbcr-conversion-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:format VkFormat)
+  (:ycbcr-model VkSamplerYcbcrModelConversion)
+  (:ycbcr-range VkSamplerYcbcrRange)
+  (:components (:struct vk-component-mapping))
+  (:x-chroma-offset VkChromaLocation)
+  (:y-chroma-offset VkChromaLocation)
+  (:chroma-filter VkFilter)
+  (:force-explicit-reconstruction vk-bool-32))
+
+(defcstruct vk-sampler-custom-border-color-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:custom-border-color (:union vk-clear-value))
+  (:format VkFormat))
+
+(defcstruct vk-descriptor-set-layout-binding
+  (:binding :uint32)
+  (:descriptor-type VkDescriptorType)
+  (:descriptor-count :uint32)
+  (:stage-flags vk-shader-stage-flags)
+  (:immutable-samplers (:pointer vk-sampler)))
+
+(defcstruct vk-descriptor-set-layout-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-descriptor-set-layout-create-flags)
+  (:binding-count :uint32)
+  (:bindings (:pointer (:struct vk-descriptor-set-layout-binding))))
+
+(defcstruct vk-descriptor-set-layout-binding-flags-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:binding-count :uint32)
+  (:binding-flags (:pointer vk-descriptor-binding-flags)))
+
+(defcstruct vk-descriptor-set-layout-support
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:supported vk-bool-32))
+
+(defcstruct vk-descriptor-set-variable-descriptor-count-layout-support
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:max-variable-descriptor-count :uint32))
+
+(defcstruct vk-push-constant-range
+  (:stage-flags vk-shader-stage-flags)
+  (:offset :uint32)
+  (:size :uint32))
+
+(defcstruct vk-pipeline-layout-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-pipeline-layout-create-flags)
+  (:set-layout-count :uint32)
+  (:set-layout (:pointer vk-descriptor-set-layout))
+  (:push-constant-range-count :uint32)
+  (:push-constant-ranges (:pointer (:struct vk-push-constant-range))))
+
+(defcstruct vk-descriptor-pool-size
+  (:type VkDescriptorType)
+  (:descriptor-count :uint32))
+
+(defcstruct vk-descriptor-pool-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-descriptor-pool-create-flags)
+  (:max-sets :uint32)
+  (:pool-size-count :uint32)
+  (:pool-sizes (:pointer (:struct vk-descriptor-pool-size))))
+
+(defcstruct vk-descriptor-pool-inline-uniform-block-create-info-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:max-inline-uniform-block-bindings :uint32))
+
+(defcstruct vk-descriptor-set-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:descript-pool vk-descriptor-pool)
+  (:descript-set-count :uint32)
+  (:set-layouts vk-descriptor-set-layout))
+
+(defcstruct vk-descriptor-set-variable-descriptor-count-allocate-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:descriptor-set-count :uint32)
+  (:descriptor-counts (:pointer :uint32)))
+
+(defcstruct vk-descriptor-image-info
+  (:sampler vk-sampler)
+  (:image-view vk-image-view)
+  (:image-layout VkImageLayout))
+
+(defcstruct vk-descriptor-buffer-info
+  (:buffer vk-buffer)
+  (:offset vk-device-size)
+  (:range vk-device-size))
+
+(defcstruct vk-write-descriptor-set
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:dst-set vk-descriptor-set)
+  (:dst-binding :uint32)
+  (:dst-array-element :uint32)
+  (:descript-count :uint32)
+  (:descriptor-type VkDescriptorType)
+  (:image-info (:pointer (:struct vk-descriptor-image-info)))
+  (:buffer-info (:pointer (:struct vk-descriptor-buffer-info)))
+  (:texel-buffer-view (:pointer vk-buffer-view)))
+
+(defcstruct vk-write-descriptor-set-inline-uniform-block-ext
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:data-size :uint32)
+  (:data (:pointer :void)))
+
+(defcstruct vk-write-descriptor-set-acceleration-structure-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:acceleration-structure-count :uint32)
+  (:acceleration-structures vk-acceleration-structure-khr))
+
+(defcstruct vk-copy-descriptor-set
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:src-set vk-descriptor-set)
+  (:src-binding :uint32)
+  (:src-array-element :uint32)
+  (:dst-set vk-descriptor-set)
+  (:dst-binding :uint32)
+  (:dst-array-element :uint32)
+  (:descriptor-count :uint32))
+
+(defcstruct vk-descriptor-update-template-entry
+  (:dst-binding :uint32)
+  (:dst-array-element :uint32)
+  (:descript-count :uint32)
+  (:descriptor-type VkDescriptorType)
+  (:offset :unsigned-int)
+  (:stride :unsigned-int))
+
+(defcstruct vk-descriptor-update-template-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-descriptor-update-template-create-flags)
+  (:descriptor-update-entry-count :uint32)
+  (:descriptor-update-entries (:pointer (:struct vk-descriptor-update-template-entry)))
+  (:template-type VkDescriptorUpdateTemplateType)
+  (:descriptor-set-layout vk-descriptor-set-layout)
+  (:pipeline-bind-point VkPipelineBindPoint)
+  (:pipeline-layout vk-pipeline-layout)
+  (:set :uint32))
+
+(defcstruct vk-buffer-device-address-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:buffer vk-buffer))
+
+(defcstruct vk-query-pool-create-info
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-query-pool-create-flags)
+  (:query-type VkQueryType)
+  (:query-count :uint32)
+  (:pipeline-statistics vk-query-pipeline-statistic-flags))
+
+(defcstruct vk-query-pool-performance-create-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:queue-family-index :uint32)
+  (:counter-index-count :uint32)
+  (:counter-indices (:pointer :uint32)))
+
+(defcunion vk-performance-counter-result-khr
+  (:i32 :uint32)
+  (:i64 :uint64)
+  (:u32 :uint32)
+  (:u64 :uint64)
+  (:f :float)
+  (:d :double))
+
+(defcstruct vk-acquire-profiling-lock-info-khr
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:flags vk-acquire-profiling-lock-flags-khr)
+  (:timeout :uint64))
+
+(defcstruct vk-initialize-performance-api-info-intel
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:user-data (:pointer :void)))
+
+(defcunion vk-performance-value-data-intel
+  (:value32 :uint32)
+  (:value64 :uint64)
+  (:value-float :float)
+  (:value-bool vk-bool-32)
+  (:value-string :string))
+
+(defcstruct vk-performance-value-intel
+  (:type VkPerformanceValueTypeINTEL)
+  (:data (:union vk-performance-value-data-intel)))
+
+(defcstruct vk-query-pool-performance-query-create-info-intel
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:performance-counters-sampling VkQueryPoolSamplingModeINTEL))
+
+(defcstruct vk-performance-marker-info-intel
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:marker :uint64))
+
+(defcstruct vk-performance-stream-marker-info-intel
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:marker :uint32))
+
+(defcstruct vk-performance-override-info-intel
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkPerformanceOverrideTypeINTEL)
+  (:enable vk-bool-32)
+  (:parameter :uint64))
+
+(defcstruct vk-performance-configuration-acquire-info-intel
+  (:type VkStructureType)
+  (:p-next (:pointer :void))
+  (:type VkPerformanceConfigurationTypeINTEL))
+
+(defcstruct vk-clrear-rect
+  (:rect (:struct vk-rect-2d))
+  (:base-array-layer :uint32)
+  (:layer-count :uint32))
