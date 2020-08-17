@@ -2,11 +2,11 @@
 
 (defcstruct vk-basic-structure
   (:type VkStructureType)
-  (:p-next (:pointer (:struct vk-basic-structure))))
+  (:next (:pointer (:struct vk-basic-structure))))
 
 (defcstruct vk-basic-out-structure
   (:type VkStructureType)
-  (:p-next (:pointer (:struct vk-basic-structure))))
+  (:next (:pointer (:struct vk-basic-structure))))
 
 (defcstruct vk-off-set-2d
   (:x :uint32)
@@ -32,7 +32,7 @@
 
 (defcstruct vk-application-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:app-name :string)
   (:app-version :uint32)
   (:engine-name :string)
@@ -41,7 +41,7 @@
 
 (defcstruct vk-instance-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags (vk-instance-create-flags))
   (:info (:pointer (:struct vk-application-info)))
   (:layer-count :uint32)
@@ -51,12 +51,12 @@
 
 (defcstruct vk-validation-flag-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:p-disable-validation-checks (:pointer VkValidationcheckext)))
 
 (defcstruct vk-validation-features-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:enable-validation-feature-count :uint32)
   (:enable-validation-features (:pointer VkValidationFeatureEnableEXT))
   (:disable-validation-feature-count :uint32)
@@ -190,12 +190,12 @@
 
 (defcstruct vk-physical-device-properties-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:properties (:struct vk-physical-device-properties)))
 
 (defcstruct vk-physical-device-vulkan-11-properties
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-uuid :uint8 :count 16)
   (:driver-uuid :uint8 :count 16)
   (:driver-luid :uint8 :count 16)
@@ -220,7 +220,7 @@
 
 (defcstruct vk-physical-device-vulkan-12-properties
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:driver-id VkDriverId)
   (:driver-name :char :count 256)
   (:driver-info :char :count 256)
@@ -276,7 +276,7 @@
 
 (defcstruct vk-physical-device-id-properties
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-uuid :uint8 :count 16)
   (:driver-uuid :uint8 :count 16)
   (:device-luid :uint8 :count 16)
@@ -285,7 +285,7 @@
 
 (defcstruct vk-physical-device-driver-properties
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:driver-id VkDriverid)
   (:driver-name :char :count 256)
   (:driver-info :char :count 256)
@@ -293,7 +293,7 @@
 
 (defcstruct vk-physical-device-pci-bus-info-properties-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:pci-domain :uint32)
   (:pci-bus :uint32)
   (:pci-device :uint32)
@@ -307,17 +307,17 @@
 
 (defcstruct vk-queue-family-properties-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:queue-family-properties (:struct vk-queue-family-properties)))
 
 (defcstruct vk-queue-family-checkpoint-properties-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:checkpoint-execution-stage-mask vk-pipeline-stage-flags))
 
 (defcstruct vk-performance-counter-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:unit VkPerformanceCounterunitkhr)
   (:scope VkPerformanceCounterscopekhr)
   (:storage VkPerformanceCounterStoragekhr)
@@ -325,7 +325,7 @@
 
 (defcstruct vk-performance-counter-description-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-performance-counter-description-flags-khr)
   (:name :char :count 256)
   (:category :char :count 256)
@@ -333,14 +333,14 @@
 
 (defcstruct vk-physical-device-group-properties
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:physical-device-count :uint32)
   (:physical-devices vk-physical-device :count 32)
   (:subset-allocation vk-bool-32))
 
 (defcstruct vk-device-queue-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-device-queue-create-flags)
   (:queue-family-index :uint32)
   (:queue-count :uint32)
@@ -405,7 +405,7 @@
 
 (defcstruct vk-device-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-device-create-flags)
   (:queue-create-info-counter :uint32)
   (:p-queue-create-info (:pointer (:struct vk-device-queue-create-info)))
@@ -417,53 +417,53 @@
 
 (defcstruct vk-device-group-device-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:physical-device-count :uint32)
   (:physical-device (:pointer vk-physical-device)))
 
 (defcstruct vk-device-memory-overallocation-create-info-amd
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:overallocation-behavior VkMemoryOverallocationbehavioramd))
 
 (defcstruct vk-device-diagnostics-config-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-device-diagnostics-config-flags-nv))
 
 (defcstruct vk-device-private-data-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:private-data-slot-request-count :uint32))
 
 (defcstruct vk-device-queue-global-priority-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:global-priority VkQueueGlobalPriorityExt))
 
 (defcstruct vk-device-queue-info-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-device-queue-create-flags)
   (:queue-family-index :uint32)
   (:queue-index :uint32))
 
 (defcstruct vk-command-pool-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-command-pool-create-flags)
   (:queue-family-index :uint32))
 
 (defcstruct vk-command-buffer-allocate-infp
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:command-pool vk-command-pool)
   (:level VKCommandbufferlevel)
   (:command-buffer-count :uint32))
 
 (defcstruct vk-command-buffer-inheritance-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:render-pass vk-render-pass)
   (:sub-pass :uint32)
   (:framebuffer vk-framebuffer)
@@ -473,24 +473,24 @@
 
 (defcstruct vk-command-buffer-begin-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-command-buffer-usage-flags)
   (:inheritance-info (:pointer (:struct vk-command-buffer-inheritance-info))))
 
 (defcstruct vk-command-buffer-inheritance-conditional-rendering-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:conditional-rendering-enable vk-bool-32))
 
 (defcstruct vk-command-buffer-inheritance-render-pass-transform-info-qcom
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:transform VkSurfaceTransformflagbitskhr)
   (:render-area (:struct vk-rect-2d)))
 
 (defcstruct vk-submit-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:wait-semaphore-count :uint32)
   (:wait-semaphore (:pointer vk-semaphore))
   (:wait-dst-stage-mask (:pointer vk-pipeline-stage-flags))
@@ -501,7 +501,7 @@
 
 (defcstruct vk-timeline-semaphore-submit-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:wait-semaphore-value-count :uint32)
   (:wait-semaphore-values (:pointer :uint64))
   (:signal-semaphore-count :uint32)
@@ -509,7 +509,7 @@
 
 (defcstruct vk-d3d12-fence-submit-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:wait-semaphore-value-count :uint32)
   (:wait-semaphore-values (:pointer :uint64))
   (:signal-semaphore-count :uint32)
@@ -517,7 +517,7 @@
 
 (defcstruct vk-win32-keyed-mutex-acquire-release-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acquire-count :uint32)
   (:acquire-syncs vk-device-memory)
   (:acquire-keys (:pointer :uint64))
@@ -528,7 +528,7 @@
 
 (defcstruct vk-win32-keyed-mutex-acquire-release-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acquire-count :uint32)
   (:acquire-syncs vk-device-memory)
   (:acquire-keys (:pointer :uint64))
@@ -539,12 +539,12 @@
 
 (defcstruct vk-protected-submit-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:protected-submit vk-bool-32))
 
 (defcstruct vk-device-group-submit-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:wait-semaphore-count :uint32)
   (:wait-semaphore-device-indices (:pointer :uint32))
   (:command-buffer-count :uint32)
@@ -554,22 +554,22 @@
 
 (defcstruct vk-performance-query-submit-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:count-pass-index :uint32))
 
 (defcstruct vk-device-group-command-buffer-begin-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-mask :uint32))
 
 (defcstruct vk-fence-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-fence-create-flags))
 
 (defcstruct vk-export-fence-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-external-fence-handle-type-flags))
 
 ;;in windows 
@@ -580,37 +580,37 @@
 
 (defcstruct vk-export-fence-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attributes (:pointer (:struct security-attributes)))
   (:dw-access :uint32)
   (:name (:pointer :uint16)))
 
 (defcstruct vk-fence-get-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:fence vk-fence)
   (:handle-type VkExternalFenceHandleTypeFlagBits))
 ;;end windows
 
 (defcstruct vk-fence-get-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:fence vk-fence)
   (:handle-type VkExternalFenceHandleTypeFlagBits))
 
 (defcstruct vk-device-event-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-event VkDeviceEventTypeExt))
 
 (defcstruct vk-display-event-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:display-event VkDisplayEventTypeExt))
 
 (defcstruct vk-import-fence-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:fence vk-fence)
   (:flags vk-fence-import-flags)
   (:handle-type VkExternalFenceFeatureFlagBits)
@@ -619,7 +619,7 @@
 
 (defcstruct vk-import-fence-fd-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:fence vk-fence)
   (:flags vk-fence-import-flags)
   (:handle-type VkExternalFenceFeatureFlagBits)
@@ -627,42 +627,42 @@
 
 (defcstruct vk-semaphore-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-semaphore-create-flags))
 
 (defcstruct vk-semaphore-type-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:semaphore-type VkSemaphoreType)
   (:initial-value :uint64))
 
 (defcstruct vk-export-semaphore-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type vk-external-semaphore-handle-type-flags))
 
 (defcstruct vk-export-semaphore-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attributes (:pointer (:struct security-attributes)))
   (:dw-access :uint32)
   (:name (:pointer :uint16)))
 
 (defcstruct vk-semaphore-get-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:semaphore vk-semaphore)
   (:handle-type VkExternalSemaphoreHandleTypeFlagbits))
 
 (defcstruct vk-semaphore-get-fd-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:semaphore vk-semaphore)
   (:handle-type VkExternalSemaphoreHandleTypeFlagbits))
 
 (defcstruct vk-semaphore-wait-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-semaphore-wait-flags)
   (:semaphore-count :uint32)
   (:semaphores (:pointer vk-semaphore))
@@ -670,13 +670,13 @@
 
 (defcstruct vk-semaphore-signal-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:semaphore vk-semaphore)
   (:value :uint64))
 
 (defcstruct vk-import-semaphore-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:semaphore vk-semaphore)
   (:flags vk-semaphore-import-flags)
   (:handle-type VkExternalSemaphoreHandleTypeFlagBits)
@@ -685,7 +685,7 @@
 
 (defcstruct vk-import-semaphore-fd-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:semaphore vk-semaphore)
   (:flags vk-semaphore-import-flags)
   (:handle-type VkExternalSemaphoreHandleTypeFlagBits)
@@ -693,18 +693,18 @@
 
 (defcstruct vk-event-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-event-create-flags))
 
 (defcstruct vk-memory-barrier
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:src-access-mask vk-access-flags)
   (:dst-access-mask vk-access-flags))
 
 (defcstruct vk-buffer-memory-barrier
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:src-access-mask vk-access-flags)
   (:dst-access-mask vk-access-flags)
   (:src-queue-family-index :uint32)
@@ -722,7 +722,7 @@
 
 (defcstruct vk-buffer-memory-barrier
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:src-access-mask vk-access-flags)
   (:dst-access-mask vk-access-flags)
   (:old-layout VkImageLayout)
@@ -734,7 +734,7 @@
 
 (defcstruct vk-calibrated-timestamp-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:time-domain VkTimedomainext))
 
 (defcstruct vk-attachment-description
@@ -775,7 +775,7 @@
 
 (defcstruct vk-render-pass-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-render-pass-create-flags)
   (:attachment-count :uint32)
   (:attachment (:pointer (:struct vk-attachment-description)))
@@ -786,7 +786,7 @@
 
 (defcstruct vk-render-pass-multiview-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:subpass-count :uint32)
   (:view-mask (:pointer :uint32))
   (:dependency-count :uint32)
@@ -796,7 +796,7 @@
 
 (defcstruct vk-render-pass-fragment-density-map-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:fragment-density-map-attachment (:struct vk-attachment-reference)))
 
 (defcstruct vk-input-attachment-aspect-reference
@@ -806,13 +806,13 @@
 
 (defcstruct vk-render-pass-input-attachment-aspect-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:aspect-reference-count :uint32)
   (:aspect-reference (:pointer (:struct vk-input-attachment-aspect-reference))))
 
 (defcstruct vk-attachment-description-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-attachment-description-flags)
   (:format VkFormat)
   (:samples VkSampleCountFlagbits)
@@ -825,14 +825,14 @@
 
 (defcstruct vk-attachment-reference-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attachment :uint32)
   (:layout VkImageLayout)
   (:aspect-mask vk-image-aspect-flags))
 
 (defcstruct vk-subpass-description-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-subpass-description-flags)
   (:pipeline-bind-point VkPipelineBindpoint)
   (:view-mask :uint32)
@@ -847,7 +847,7 @@
 
 (defcstruct vk-subpass-dependency-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:src-subpass :uint32)
   (:dst-subpass :uint32)
   (:src-stage-mask vk-pipeline-stage-flags)
@@ -859,7 +859,7 @@
 
 (defcstruct vk-render-pass-create-info-2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-render-pass-create-flags)
   (:attachment-count :uint32)
   (:attachment (:pointer (:struct vk-attachment-description-2)))
@@ -872,25 +872,25 @@
 
 (defcstruct vk-attachment-description-stenci-layout
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:stencil-initial-layout VkImageLayout)
   (:stencil-final-layout VkImageLayout))
 
 (defcstruct vk-subpass-description-depth-stencil-reslove
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:depth-reslove-mode VkResolveModeFlagbits)
   (:stencil-reslove-mode VkResolveModeFlagbits)
   (:depth-stencil-resolve-attachment (:struct vk-attachment-reference-2)))
 
 (defcstruct vk-attachment-reference-stencil-layout
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:stencil-layout VkImageLayout))
 
 (defcstruct vk-framebuffer-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-framebuffer-create-flags)
   (:render-pass vk-render-pass)
   (:attachment-count :uint32)
@@ -901,7 +901,7 @@
 
 (defcstruct vk-framebuffer-attachment-image-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-image-create-flags)
   (:usage vk-image-usage-flags)
   (:width :uint32)
@@ -912,7 +912,7 @@
 
 (defcstruct vk-framebuffer-attachments-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attachment-image-info-count :uint32)
   (:attachment-image-infos (:pointer (:struct vk-framebuffer-attachment-image-info))))
 
@@ -931,7 +931,7 @@
 
 (defcstruct vk-render-pass-begin-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:render-pass vk-render-pass)
   (:framebuffer vk-framebuffer)
   (:render-area (:struct vk-rect-2d))
@@ -944,7 +944,7 @@
 
 (defcstruct vk-sample-locations-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:sample-locations-per-pixel VkSampleCountFlagbits)
   (:sample-location-grid-size (:struct vk-extent-2d))
   (:sample-locations-count :uint32)
@@ -960,7 +960,7 @@
 
 (defcstruct vk-render-pass-sample-locations-begin-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attachment-initial-sample-locations-count :uint32)
   (:attachment-initial-sample-locations (:pointer (:struct vk-attachment-sample-locations-ext)))
   (:post-subpass-sample-locations-count :uint32)
@@ -968,46 +968,46 @@
 
 (defcstruct vk-render-pass-transform-begin-info-qcom
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:transform VkSurfaceTransformFlagbitsKHR))
 
 (defcstruct vk-subpass-begin-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:contents VkSubpassContents))
 
 (defcstruct vk-device-group-render-pass-begin-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-mask :uint32)
   (:device-render-area-count :uint32)
   (:device-render-areas (:pointer (:struct vk-rect-2d))))
 
 (defcstruct vk-render-pass-attachment-begin-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attachment-count :uint32)
   (:attachment (:pointer vk-image-view)))
 
 (defcstruct vk-subpass-end-info
   (:type VkStructureType)
-  (:p-next (:pointer :void)))
+  (:next (:pointer :void)))
 
 (defcstruct vk-shader-module-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-module-create-flags)
   (:code-size :unsigned-int)
   (:code :uint32))
 
 (defcstruct vk-shader-module-validation-cache-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:validation-cache vk-validation-cache-ext))
 
 (defcstruct vk-cooperative-matrix-properties-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:m-size :uint32)
   (:n-size :uint32)
   (:k-size :uint32)
@@ -1019,7 +1019,7 @@
 
 (defcstruct vk-validation-cache-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-validation-cache-create-flags-ext)
   (:initial-data-size :unsigned-int)
   (:initial-data (:pointer :void)))
@@ -1037,7 +1037,7 @@
 
 (defcstruct vk-pipeline-shader-stage-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-stage-flags)
   (:stage VkShaderStageflagbits)
   (:module vk-shader-module)
@@ -1046,7 +1046,7 @@
 
 (defcstruct vk-compute-pipeline-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-create-flags)
   (:stage (:struct vk-pipeline-shader-stage-create-info))
   (:layout vk-pipeline-layout)
@@ -1055,7 +1055,7 @@
 
 (defcstruct vk-pipeline-shader-stage-required-subground-size-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:required-subground-size :uint32))
 
 (defcstruct vk-vertex-input-binding-description
@@ -1071,7 +1071,7 @@
 
 (defcstruct vk-pipeline-vertex-input-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-vertex-input-state-create-flags)
   (:vertex-binding-description-count :uint32)
   (:vertex-binding-description (:pointer (:struct vk-vertex-input-binding-description)))
@@ -1080,14 +1080,14 @@
 
 (defcstruct vk-pipeline-input-assembly-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-input-assembly-state-create-flags)
   (:topology VkPrimitiveTopology)
   (:primitive-restart-enable vk-bool-32))
 
 (defcstruct vk-pipeline-tessellation-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-tessellation-state-create-flags)
   (:patch-control-points :uint32))
 
@@ -1101,7 +1101,7 @@
 
 (defcstruct vk-pipeline-viewport-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-viewport-state-create-flags)
   (:viewport-count :uint32)
   (:viewports (:pointer (:struct vk-viewport)))
@@ -1110,7 +1110,7 @@
 
 (defcstruct vk-pipeline-rasterization-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-rasterization-state-create-flags)
   (:depth-clamp-enable vk-bool-32)
   (:rasterizer-discard-enable vk-bool-32)
@@ -1125,7 +1125,7 @@
 
 (defcstruct vk-pipeline-multisample-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-multisample-state-create-flags)
   (:rasterization-sample VkSampleCountFlagbits)
   (:sample-shading-enable vk-bool-32)
@@ -1145,7 +1145,7 @@
 
 (defcstruct vk-pipeline-depth-stencil-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-depth-stencil-state-create-flags)
   (:depth-test-enable vk-bool-32)
   (:depth-write-enable vk-bool-32)
@@ -1169,7 +1169,7 @@
 
 (defcstruct vk-pipeline-color-blend-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-color-blend-state-create-flags)
   (:logic-op-enable vk-bool-32)
   (:logic-op VkLogicop)
@@ -1179,14 +1179,14 @@
 
 (defcstruct vk-pipeline-dynamic-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-dynamic-state-create-flags)
   (:dynamic-state-count :uint32)
   (:dynamic-states (:pointer VkDynamicState)))
 
 (defcstruct vk-graphics-pipeline-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-create-flags)
   (:stage-count :uint32)
   (:stage (:pointer (:struct vk-pipeline-shader-stage-create-info)))
@@ -1207,7 +1207,7 @@
 
 (defcstruct vk-graphics-shader-group-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:stage-count :uint32)
   (:stages (:pointer (:struct vk-pipeline-shader-stage-create-info)))
   (:vetex-input-state (:pointer (:struct vk-pipeline-vertex-input-state-create-info)))
@@ -1215,7 +1215,7 @@
 
 (defcstruct vk-graphics-pipeline-shader-groups-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:group-count :uint32)
   (:groups (:pointer (:struct vk-graphics-shader-group-create-info-nv)))
   (:pipeline-count :uint32)
@@ -1223,25 +1223,25 @@
 
 (defcstruct vk-pipeline-cache-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-cache-create-flags)
   (:initial-date-size :unsigned-int)
   (:init-data (:pointer :void)))
 
 (defcstruct vk-pipeline-library-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:library-count :uint32)
   (:libraries (:pointer vk-pipeline)))
 
 (defcstruct vk-pipeline-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:pipeline vk-pipeline))
 
 (defcstruct vk-pipeline-executable-properties-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:stage vk-shader-stage-flags)
   (:name :char :count 256)
   (:description :char :count 256)
@@ -1249,7 +1249,7 @@
 
 (defcstruct vk-pipeline-executable-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:pipeline vk-pipeline)
   (:executable-index :uint32))
 
@@ -1261,7 +1261,7 @@
 
 (defcstruct vk-pipeline-executable-statistic-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:name :char :count 256)
   (:descripton :char :count 256)
   (:format VkPipelineExecutableStatisticFormatKHR)
@@ -1269,7 +1269,7 @@
 
 (defcstruct vk-pipeline-executable-internal-representation-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:name :char :count 256)
   (:description :char :count 256)
   (:is-text vk-bool-32)
@@ -1294,12 +1294,12 @@
 
 (defcstruct vk-pipeline-compiler-control-create-info-amd
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:compiler-control-flags vk-pipeline-compiler-control-flags-amd))
 
 (defcstruct vk-ray-tracing-shader-group-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkRayTracingShaderGroupTypeKHR)
   (:general-shader :uint32)
   (:closes-hit-shader :uint32)
@@ -1308,7 +1308,7 @@
 
 (defcstruct vk-ray-tracing-pipeline-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-create-flags)
   (:stage-count :uint32)
   (:stages (:pointer (:struct vk-pipeline-shader-stage-create-info)))
@@ -1320,7 +1320,7 @@
 
 (defcstruct vk-ray-tracing-shader-group-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkRayTracingShaderGroupTypeKHR)
   (:general-shader :uint32)
   (:closes-hit-shader :uint32)
@@ -1330,20 +1330,20 @@
 
 (defcstruct vk-pipeline-library-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:library-count :uint32)
   (:library (:pointer vk-pipeline)))
 
 (defcstruct vk-ray-tracing-pipeline-interface-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:max-payload-size :uint32)
   (:max-attribute-size :uint32)
   (:max-callable-size :uint32))
 
 (defcstruct vk-ray-tracing-pipeline-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-create-flags)
   (:stage-count :uint32)
   (:stages (:pointer (:struct vk-pipeline-shader-stage-create-info)))
@@ -1362,7 +1362,7 @@
 
 (defcstruct vk-pipeline-creation-feedback-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:pipeline-creation-feedback (:pointer (:struct vk-pipeline-creation-feedback-ext)))
   (:pipeline-stage-creation-feedback-count :uint32)
   (:pipeline-stage-creation-feedbacks (:pointer (:struct vk-pipeline-creation-feedback-ext))))
@@ -1391,167 +1391,167 @@
 
 (defcstruct vk-physical-device-memory-properties2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory-properties (:struct vk-physical-device-properties)))
 
 (defcstruct vk-physical-device-memory-budget-properties-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:heap-budget vk-device-size :count 32)
   (:heap-usage vk-device-size :count 32))
 
 (defcstruct vk-memory-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:allocation-size vk-device-size)
   (:memory-type-index :uint32))
 
 (defcstruct vk-memory-dedicated-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:image vk-image)
   (:buffer vk-buffer))
 
 (defcstruct vk-dedicated-allocation-memory-allocate-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:image vk-image)
   (:buffer vk-buffer))
 
 (defcstruct vk-memory-priority-allocate-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:priority :float))
 
 (defcstruct vk-export-memory-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type vk-external-memory-handle-type-flags))
 
 (defcstruct vk-export-memory-win32-handle-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attributes (:pointer (:struct security-attributes)))
   (:dw-access :uint32)
   (:name (:pointer :uint16)))
 
 (defcstruct vk-import-memory-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type VkExternalMemoryHandleTypeFlagBits)
   (:handle (:pointer :void))
   (:name (:pointer :uint16)))
 
 (defcstruct vk-memory-get-win32-handle-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory vk-device-memory)
   (:handle-type VkExternalMemoryHandleTypeFlagBits))
 
 (defcstruct vk-memory-win32-handle-properties-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory-type-bits :uint32))
 
 (defcstruct vk-import-memory-fd-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type VkExternalMemoryHandleTypeFlagBits)
   (:fd :int))
 
 (defcstruct vk-memory-get-fd-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory vk-device-memory)
   (:handle-type VkExternalMemoryHandleTypeFlagBits))
 
 (defcstruct vk-memory-fd-properties-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory-type-bits :uint32))
 
 (defcstruct vk-import-memory-host-pointer-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type VkExternalMemoryHandleTypeFlagBits)
   (:host-pointer (:pointer :void)))
 
 (defcstruct vk-memory-host-pointer-properties-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory-type-bits :uint32))
 
 #|
 i don't know how to set up android in lisp
 (defcstruct vk-import-android-hardware-buffer-info-android
   (:type VkStructureType)
-  (:p-next (:pointer :void)))
+  (:next (:pointer :void)))
 
 (defcstuct vk-memory-get-android-hardware-buffer-info-android
   (:type VkStructureType)
-  (:p-next (:pointer :void)))
+  (:next (:pointer :void)))
 
 (defcstruct vk-android-hardware-buffer-properties-android
   (:type VkStructureType)
-  (:p-next (:pointer :void)))
+  (:next (:pointer :void)))
 
 (defcstruct vk-android-hardware-buffer-format-properties-android
   (:type VkStructureType)
-  (:p-next (:pointer :void)))
+  (:next (:pointer :void)))
 
 (defcstruct vk-external-format-android
   (:type VkStructureType)
-  (:p-next (:pointer :void)))
+  (:next (:pointer :void)))
 |#
 
 (defcstruct vk-export-memory-allocate-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type vk-external-memory-handle-type-flags-nv))
 
 (defcstruct vk-export-memory-win32-handle-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:attributes (:pointer (:struct security-attributes)))
   (:dw-access :uint32))
 
 (defcstruct vk-import-memory-win32-handle-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type vk-external-memory-handle-type-flags-nv)
   (:handle (:pointer :void)))
 
 (defcstruct vk-memory-allocate-flags-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-memory-allocate-flags)
   (:device-mask :uint32))
 
 (defcstruct vk-memory-opaque-capture-address-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:opaque-capture-address :uint64))
 
 (defcstruct vk-memory-opaque-capture-address-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:opaque-capture-address :uint64))
 
 (defcstruct vk-mapped-memory-range
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory vk-device-memory)
   (:offset vk-device-size)
   (:size vk-device-size))
 
 (defcstruct vk-device-memory-opaque-capture-address-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory vk-device-memory))
 
 (defcstruct vk-buffer-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-buffer-create-flags)
   (:size vk-device-size)
   (:usage vk-buffer-usage-flags)
@@ -1561,27 +1561,27 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-dedicated-allocation-buffer-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:dedicated-allocation vk-bool-32))
 
 (defcstruct vk-external-memory-buffer-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-types vk-external-memory-handle-type-flags))
 
 (defcstruct vk-buffer-opaque-capture-address-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:opaque-capture-address :uint64))
 
 (defcstruct vk-buffer-device-address-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-address vk-device-address))
 
 (defcstruct vk-buffer-view-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-buffer-view-create-flags)
   (:buffer vk-buffer)
   (:format VkFormat)
@@ -1590,7 +1590,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-image-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-image-create-flags)
   (:image-type VkImageType)
   (:foramt VkFormat)
@@ -1607,38 +1607,38 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-image-stencil-usage-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:stencil-usage vk-image-usage-flags))
 
 (defcstruct vk-dedicated-allocation-image-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:dedicated-allocation vk-bool-32))
 
 (defcstruct vk-external-memory-image-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-types vk-external-memory-handle-type-flags))
 
 (defcstruct vk-external-memory-image-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:handle-type vk-external-memory-handle-type-flags-nv))
 
 (defcstruct vk-image-swapchain-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:swapchain vk-swapchain-khr))
 
 (defcstruct vk-image-format-list-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:view-format-count :uint32)
   (:view-format (:pointer VkFormat)))
 
 (defcstruct vk-image-drm-format-modifier-list-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:drm-format-modifier-count :uint32)
   (:drm-format-modifiers (:pointer :uint64)))
 
@@ -1651,7 +1651,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-image-drm-format-modifier-explicit-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:drm-format-modifier :uint64)
   (:drm-format-modifier-plane-count :uint32)
   (:plane-layouts (:pointer (:struct vk-subresource-layout))))
@@ -1663,7 +1663,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-image-drm-format-modifier-properties-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:drm-format-modifier :uint64))
 
 (defcstruct vk-component-mapping
@@ -1674,7 +1674,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-image-view-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-image-view-create-flags)
   (:image vk-image)
   (:view-type VkImageViewtype)
@@ -1684,24 +1684,24 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-image-view-usage-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:usage vk-image-usage-flags))
 
 (defcstruct vk-image-view-a-s-t-c-decode-mode-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:decode-mode VkFormat))
 
 (defcstruct vk-image-view-handle-info-nvx
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:image-view vk-image-view)
   (:descriptor-type VkDescriptorType)
   (:sampler vk-sampler))
 
 (defcstruct vk-image-view-address-properties-nvx
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-address vk-device-address)
   (:size vk-device-size))
 
@@ -1712,53 +1712,53 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-buffer-memory-requirements-info2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer))
 
 (defcstruct vk-image-memory-requirements-info2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:image vk-image))
 
 (defcstruct vk-image-plane-memory-requirements-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:plane-aspect VkImageAspectFlagBits))
 
 (defcstruct vk-memory-requirements2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory-requirements (:struct vk-memory-requirements)))
 
 (defcstruct vk-memory-dedicated-requirements
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:prefers-dedicated-allocation vk-bool-32)
   (:requires-dedicated-allocation vk-bool-32))
 
 (defcstruct vk-bind-buffer-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size))
 
 (defcstruct vk-bind-buffer-memory-device-group-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-index-count :uint32)
   (:device-indices (:pointer :uint32)))
 
 (defcstruct vk-bind-image-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:imaeg vk-image)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size))
 
 (defcstruct vk-bind-image-memory-device-group-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-index-count :uint32)
   (:device-indices (:pointer :uint32))
   (:split-instance-bind-region-count :uint32)
@@ -1766,18 +1766,18 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-bind-image-memory-swapchain-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:swapchain vk-swapchain-khr)
   (:image-index :uint32))
 
 (defcstruct vk-bind-image-plane-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:plane-aspect VkImageAspectFlagBits))
 
 (defcstruct vk-geometry-triangles-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:vertex-data vk-buffer)
   (:veretex-offset vk-device-size)
   (:vertex-count :uint32)
@@ -1792,7 +1792,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-geometry-aabb-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:aabb-data vk-buffer)
   (:num-aabbs :uint32)
   (:stride :uint32)
@@ -1804,14 +1804,14 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-geometry-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:geometry-type VkGeometryTypeKHR)
   (:geometry-data (:struct vk-geometry-data-nv))
   (:flags vk-geometry-flags-khr))
 
 (defcstruct vk-acceleration-structure-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureTypeKHR)
   (:flags vk-build-acceleration-structure-flags-nv)
   (:instance-count :uint32)
@@ -1820,13 +1820,13 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:compacted-size vk-device-size)
   (:info (:struct vk-acceleration-structure-info-nv)))
 
 (defcstruct vk-acceleration-structure-create-geometry-type-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:geometry-type VkGeometryTypeKHR)
   (:max-primitive-count :uint32)
   (:index-type VkIndexType)
@@ -1836,7 +1836,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:compacted-size vk-device-size)
   (:type VkAccelerationStructureTypeKHR)
   (:flags vk-build-acceleration-structure-flags-khr)
@@ -1846,20 +1846,20 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-memory-requirements-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-acceleration-structure-memory-requirements-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
   (:build-type VkAccelerationStructureBuildTypeKHR)
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-bind-acceleration-structure-memory-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acceleration-structure vk-acceleration-structure-khr)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size)
@@ -1868,12 +1868,12 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-device-address-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-sampler-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-sampler-create-flags)
   (:mag-filter VkFilter)
   (:min-filter VkFilter)
@@ -1893,17 +1893,17 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-sampler-reduction-mode-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:reduction-mode VkSamplerReductionMode))
 
 (defcstruct vk-sampler-ycbcr-conversion-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:conversion vk-sampler-ycbcr-conversion))
 
 (defcstruct vk-sampler-ycbcr-conversion-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:format VkFormat)
   (:ycbcr-model VkSamplerYcbcrModelConversion)
   (:ycbcr-range VkSamplerYcbcrRange)
@@ -1915,7 +1915,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-sampler-custom-border-color-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:custom-border-color (:union vk-clear-value))
   (:format VkFormat))
 
@@ -1928,25 +1928,25 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-set-layout-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-descriptor-set-layout-create-flags)
   (:binding-count :uint32)
   (:bindings (:pointer (:struct vk-descriptor-set-layout-binding))))
 
 (defcstruct vk-descriptor-set-layout-binding-flags-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:binding-count :uint32)
   (:binding-flags (:pointer vk-descriptor-binding-flags)))
 
 (defcstruct vk-descriptor-set-layout-support
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:supported vk-bool-32))
 
 (defcstruct vk-descriptor-set-variable-descriptor-count-layout-support
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:max-variable-descriptor-count :uint32))
 
 (defcstruct vk-push-constant-range
@@ -1956,7 +1956,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-layout-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-layout-create-flags)
   (:set-layout-count :uint32)
   (:set-layout (:pointer vk-descriptor-set-layout))
@@ -1969,7 +1969,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-pool-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-descriptor-pool-create-flags)
   (:max-sets :uint32)
   (:pool-size-count :uint32)
@@ -1977,19 +1977,19 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-pool-inline-uniform-block-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:max-inline-uniform-block-bindings :uint32))
 
 (defcstruct vk-descriptor-set-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:descript-pool vk-descriptor-pool)
   (:descript-set-count :uint32)
   (:set-layouts vk-descriptor-set-layout))
 
 (defcstruct vk-descriptor-set-variable-descriptor-count-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:descriptor-set-count :uint32)
   (:descriptor-counts (:pointer :uint32)))
 
@@ -2000,53 +2000,53 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-buffer-memory-requirements-info2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer))
 
 (defcstruct vk-image-memory-requirements-info2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:image vk-image))
 
 (defcstruct vk-image-plane-memory-requirements-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:plane-aspect VkImageAspectFlagBits))
 
 (defcstruct vk-memory-requirements2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory-requirements (:struct vk-memory-requirements)))
 
 (defcstruct vk-memory-dedicated-requirements
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:prefers-dedicated-allocation vk-bool-32)
   (:requires-dedicated-allocation vk-bool-32))
 
 (defcstruct vk-bind-buffer-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size))
 
 (defcstruct vk-bind-buffer-memory-device-group-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-index-count :uint32)
   (:device-indices (:pointer :uint32)))
 
 (defcstruct vk-bind-image-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:imaeg vk-image)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size))
 
 (defcstruct vk-bind-image-memory-device-group-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-index-count :uint32)
   (:device-indices (:pointer :uint32))
   (:split-instance-bind-region-count :uint32)
@@ -2054,18 +2054,18 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-bind-image-memory-swapchain-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:swapchain vk-swapchain-khr)
   (:image-index :uint32))
 
 (defcstruct vk-bind-image-plane-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:plane-aspect VkImageAspectFlagBits))
 
 (defcstruct vk-geometry-triangles-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:vertex-data vk-buffer)
   (:veretex-offset vk-device-size)
   (:vertex-count :uint32)
@@ -2080,7 +2080,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-geometry-aabb-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:aabb-data vk-buffer)
   (:num-aabbs :uint32)
   (:stride :uint32)
@@ -2092,14 +2092,14 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-geometry-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:geometry-type VkGeometryTypeKHR)
   (:geometry-data (:struct vk-geometry-data-nv))
   (:flags vk-geometry-flags-khr))
 
 (defcstruct vk-acceleration-structure-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureTypeKHR)
   (:flags vk-build-acceleration-structure-flags-nv)
   (:instance-count :uint32)
@@ -2108,13 +2108,13 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:compacted-size vk-device-size)
   (:info (:struct vk-acceleration-structure-info-nv)))
 
 (defcstruct vk-acceleration-structure-create-geometry-type-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:geometry-type VkGeometryTypeKHR)
   (:max-primitive-count :uint32)
   (:index-type VkIndexType)
@@ -2124,7 +2124,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:compacted-size vk-device-size)
   (:type VkAccelerationStructureTypeKHR)
   (:flags vk-build-acceleration-structure-flags-khr)
@@ -2134,20 +2134,20 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-memory-requirements-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-acceleration-structure-memory-requirements-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
   (:build-type VkAccelerationStructureBuildTypeKHR)
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-bind-acceleration-structure-memory-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acceleration-structure vk-acceleration-structure-khr)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size)
@@ -2156,12 +2156,12 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-device-address-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-sampler-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-sampler-create-flags)
   (:mag-filter VkFilter)
   (:min-filter VkFilter)
@@ -2181,17 +2181,17 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-sampler-reduction-mode-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:reduction-mode VkSamplerReductionMode))
 
 (defcstruct vk-sampler-ycbcr-conversion-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:conversion vk-sampler-ycbcr-conversion))
 
 (defcstruct vk-sampler-ycbcr-conversion-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:format VkFormat)
   (:ycbcr-model VkSamplerYcbcrModelConversion)
   (:ycbcr-range VkSamplerYcbcrRange)
@@ -2203,7 +2203,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-sampler-custom-border-color-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:custom-border-color (:union vk-clear-value))
   (:format VkFormat))
 
@@ -2216,25 +2216,25 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-set-layout-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-descriptor-set-layout-create-flags)
   (:binding-count :uint32)
   (:bindings (:pointer (:struct vk-descriptor-set-layout-binding))))
 
 (defcstruct vk-descriptor-set-layout-binding-flags-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:binding-count :uint32)
   (:binding-flags (:pointer vk-descriptor-binding-flags)))
 
 (defcstruct vk-descriptor-set-layout-support
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:supported vk-bool-32))
 
 (defcstruct vk-descriptor-set-variable-descriptor-count-layout-support
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:max-variable-descriptor-count :uint32))
 
 (defcstruct vk-push-constant-range
@@ -2244,7 +2244,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-layout-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-layout-create-flags)
   (:set-layout-count :uint32)
   (:set-layout (:pointer vk-descriptor-set-layout))
@@ -2257,7 +2257,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-pool-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-descriptor-pool-create-flags)
   (:max-sets :uint32)
   (:pool-size-count :uint32)
@@ -2265,19 +2265,19 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-pool-inline-uniform-block-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:max-inline-uniform-block-bindings :uint32))
 
 (defcstruct vk-descriptor-set-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:descript-pool vk-descriptor-pool)
   (:descript-set-count :uint32)
   (:set-layouts vk-descriptor-set-layout))
 
 (defcstruct vk-descriptor-set-variable-descriptor-count-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:descriptor-set-count :uint32)
   (:descriptor-counts (:pointer :uint32)))
 
@@ -2288,53 +2288,53 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-buffer-memory-requirements-info2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer))
 
 (defcstruct vk-image-memory-requirements-info2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:image vk-image))
 
 (defcstruct vk-image-plane-memory-requirements-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:plane-aspect VkImageAspectFlagBits))
 
 (defcstruct vk-memory-requirements2
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:memory-requirements (:struct vk-memory-requirements)))
 
 (defcstruct vk-memory-dedicated-requirements
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:prefers-dedicated-allocation vk-bool-32)
   (:requires-dedicated-allocation vk-bool-32))
 
 (defcstruct vk-bind-buffer-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size))
 
 (defcstruct vk-bind-buffer-memory-device-group-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-index-count :uint32)
   (:device-indices (:pointer :uint32)))
 
 (defcstruct vk-bind-image-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:imaeg vk-image)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size))
 
 (defcstruct vk-bind-image-memory-device-group-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:device-index-count :uint32)
   (:device-indices (:pointer :uint32))
   (:split-instance-bind-region-count :uint32)
@@ -2342,18 +2342,18 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-bind-image-memory-swapchain-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:swapchain vk-swapchain-khr)
   (:image-index :uint32))
 
 (defcstruct vk-bind-image-plane-memory-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:plane-aspect VkImageAspectFlagBits))
 
 (defcstruct vk-geometry-triangles-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:vertex-data vk-buffer)
   (:veretex-offset vk-device-size)
   (:vertex-count :uint32)
@@ -2368,7 +2368,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-geometry-aabb-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:aabb-data vk-buffer)
   (:num-aabbs :uint32)
   (:stride :uint32)
@@ -2380,14 +2380,14 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-geometry-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:geometry-type VkGeometryTypeKHR)
   (:geometry-data (:struct vk-geometry-data-nv))
   (:flags vk-geometry-flags-khr))
 
 (defcstruct vk-acceleration-structure-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureTypeKHR)
   (:flags vk-build-acceleration-structure-flags-nv)
   (:instance-count :uint32)
@@ -2396,13 +2396,13 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:compacted-size vk-device-size)
   (:info (:struct vk-acceleration-structure-info-nv)))
 
 (defcstruct vk-acceleration-structure-create-geometry-type-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:geometry-type VkGeometryTypeKHR)
   (:max-primitive-count :uint32)
   (:index-type VkIndexType)
@@ -2412,7 +2412,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:compacted-size vk-device-size)
   (:type VkAccelerationStructureTypeKHR)
   (:flags vk-build-acceleration-structure-flags-khr)
@@ -2422,20 +2422,20 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-memory-requirements-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-acceleration-structure-memory-requirements-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkAccelerationStructureMemoryRequirementsTypeKHR)
   (:build-type VkAccelerationStructureBuildTypeKHR)
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-bind-acceleration-structure-memory-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acceleration-structure vk-acceleration-structure-khr)
   (:memory vk-device-memory)
   (:memory-offset vk-device-size)
@@ -2444,12 +2444,12 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acceleration-structure-device-address-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acceleration-structure vk-acceleration-structure-khr))
 
 (defcstruct vk-sampler-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-sampler-create-flags)
   (:mag-filter VkFilter)
   (:min-filter VkFilter)
@@ -2469,17 +2469,17 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-sampler-reduction-mode-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:reduction-mode VkSamplerReductionMode))
 
 (defcstruct vk-sampler-ycbcr-conversion-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:conversion vk-sampler-ycbcr-conversion))
 
 (defcstruct vk-sampler-ycbcr-conversion-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:format VkFormat)
   (:ycbcr-model VkSamplerYcbcrModelConversion)
   (:ycbcr-range VkSamplerYcbcrRange)
@@ -2491,7 +2491,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-sampler-custom-border-color-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:custom-border-color (:union vk-clear-value))
   (:format VkFormat))
 
@@ -2504,25 +2504,25 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-set-layout-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-descriptor-set-layout-create-flags)
   (:binding-count :uint32)
   (:bindings (:pointer (:struct vk-descriptor-set-layout-binding))))
 
 (defcstruct vk-descriptor-set-layout-binding-flags-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:binding-count :uint32)
   (:binding-flags (:pointer vk-descriptor-binding-flags)))
 
 (defcstruct vk-descriptor-set-layout-support
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:supported vk-bool-32))
 
 (defcstruct vk-descriptor-set-variable-descriptor-count-layout-support
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:max-variable-descriptor-count :uint32))
 
 (defcstruct vk-push-constant-range
@@ -2532,7 +2532,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-layout-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-layout-create-flags)
   (:set-layout-count :uint32)
   (:set-layout (:pointer vk-descriptor-set-layout))
@@ -2545,7 +2545,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-pool-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-descriptor-pool-create-flags)
   (:max-sets :uint32)
   (:pool-size-count :uint32)
@@ -2553,19 +2553,19 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-pool-inline-uniform-block-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:max-inline-uniform-block-bindings :uint32))
 
 (defcstruct vk-descriptor-set-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:descript-pool vk-descriptor-pool)
   (:descript-set-count :uint32)
   (:set-layouts vk-descriptor-set-layout))
 
 (defcstruct vk-descriptor-set-variable-descriptor-count-allocate-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:descriptor-set-count :uint32)
   (:descriptor-counts (:pointer :uint32)))
 
@@ -2581,7 +2581,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-write-descriptor-set
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:dst-set vk-descriptor-set)
   (:dst-binding :uint32)
   (:dst-array-element :uint32)
@@ -2593,19 +2593,19 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-write-descriptor-set-inline-uniform-block-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:data-size :uint32)
   (:data (:pointer :void)))
 
 (defcstruct vk-write-descriptor-set-acceleration-structure-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:acceleration-structure-count :uint32)
   (:acceleration-structures vk-acceleration-structure-khr))
 
 (defcstruct vk-copy-descriptor-set
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:src-set vk-descriptor-set)
   (:src-binding :uint32)
   (:src-array-element :uint32)
@@ -2624,7 +2624,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-descriptor-update-template-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-descriptor-update-template-create-flags)
   (:descriptor-update-entry-count :uint32)
   (:descriptor-update-entries (:pointer (:struct vk-descriptor-update-template-entry)))
@@ -2636,12 +2636,12 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-buffer-device-address-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer))
 
 (defcstruct vk-query-pool-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-query-pool-create-flags)
   (:query-type VkQueryType)
   (:query-count :uint32)
@@ -2649,7 +2649,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-query-pool-performance-create-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:queue-family-index :uint32)
   (:counter-index-count :uint32)
   (:counter-indices (:pointer :uint32)))
@@ -2664,13 +2664,13 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-acquire-profiling-lock-info-khr
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-acquire-profiling-lock-flags-khr)
   (:timeout :uint64))
 
 (defcstruct vk-initialize-performance-api-info-intel
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:user-data (:pointer :void)))
 
 (defcunion vk-performance-value-data-intel
@@ -2686,29 +2686,29 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-query-pool-performance-query-create-info-intel
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:performance-counters-sampling VkQueryPoolSamplingModeINTEL))
 
 (defcstruct vk-performance-marker-info-intel
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:marker :uint64))
 
 (defcstruct vk-performance-stream-marker-info-intel
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:marker :uint32))
 
 (defcstruct vk-performance-override-info-intel
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkPerformanceOverrideTypeINTEL)
   (:enable vk-bool-32)
   (:parameter :uint64))
 
 (defcstruct vk-performance-configuration-acquire-info-intel
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:type VkPerformanceConfigurationTypeINTEL))
 
 (defcstruct vk-clrear-rect
@@ -2775,7 +2775,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-conditional-rendering-begin-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:buffer vk-buffer)
   (:offset vk-device-size)
   (:flags vk-conditional-rendering-flags-ext))
@@ -2786,7 +2786,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-vertex-input-divisor-state-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:vertex-binding-divisor-count :uint32)
   (:vertex-binding-divisors (:pointer vk-conditional-rendering-flags-ext)))
 
@@ -2796,7 +2796,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-tessellation-domain-origin-state-create-info
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:domain-origin VkTessellationDomainOrigin))
 
 (defcstruct vk-viewport-swizzle-nv
@@ -2807,7 +2807,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-viewport-swizzle-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-viewport-swizzle-state-create-flags-nv)
   (:view-port-count :uint32)
   (:view-port-swizzles (:pointer (:struct vk-viewport-swizzle-nv))))
@@ -2818,31 +2818,31 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-viewport-w-scaling-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:view-port-w-scaling-enable vk-bool-32)
   (:view-port-count :uint32)
   (:view-port-w-scalings (:pointer (:struct vk-viewport-w-scaling))))
 
 (defcstruct vk-pipeline-rasterization-depth-clip-state-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-rasterization-depth-clip-state-create-flags-ext)
   (:depth-clip-enable vk-bool-32))
 
 (defcstruct vk-pipeline-rasterization-state-stream-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-rasterization-state-stream-create-flags-ext)
   (:rasterization-stream :uint32))
 
 (defcstruct vk-pipeline-rasterization-state-rasterization-order-amd
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:rasterization-order VkRasterizationOrderAMD))
 
 (defcstruct vk-pipeline-sample-locations-state-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:sampler-locations-enable vk-bool-32)
   (:sampler-locations-info (:struct vk-sample-locations-info-ext)))
 
@@ -2852,7 +2852,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-viewport-shading-rate-image-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:shading-rate-image-enable vk-bool-32)
   (:view-port-count :uint32)
   (:shading-rate-palettes (:pointer (:struct vk-shading-rate-palette-nv))))
@@ -2870,14 +2870,14 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-viewport-coarse-sample-order-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:sample-order-type VkCoarseSampleOrderTypeNV)
   (:custom-sample-order-count :uint32)
   (:custom-sample-orders (:pointer (:struct vk-coarse-sample-order-custom-nv))))
 
 (defcstruct vk-pipeline-rasterization-line-state-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:line-rasterization-mode VkLineRasterizationModeEXT)
   (:stippled-line-enable vk-bool-32)
   (:line-stipple-factor :uint32)
@@ -2885,14 +2885,14 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-rasterization-conservative-state-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-rasterization-conservative-state-create-flags-ext)
   (:conservative-rasterization-mode VkConservativeRasterizationModeEXT)
   (:extra-primitive-overestimation-size :float))
 
 (defcstruct vk-pipeline-discard-rectangle-state-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-discard-rectangle-state-create-flags-ext)
   (:discard-rectangle-mode VkDiscardRectangleModeEXT)
   (:discard-rectangle-count :uint32)
@@ -2900,31 +2900,31 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-viewport-exclusive-scissor-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:exclusive-scissor-count :uint32)
   (:discard-rectangle-count (:pointer (:struct vk-rect-2d))))
 
 (defcstruct vk-pipeline-representative-fragment-test-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:representative-fragment-test-enable vk-bool-32))
 
 (defcstruct vk-pipeline-coverage-to-color-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-coverage-to-color-state-create-flags-nv)
   (:coverage-to-color-enable vk-bool-32)
   (:coverage-to-color-location :uint32))
 
 (defcstruct vk-pipeline-coverage-reduction-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-coverage-reduction-state-create-flags-nv)
   (:coverage-reduction-mode VkCoverageReductionModeNV))
 
 (defcstruct vk-framebuffer-mixed-samples-combination-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:coverage-reduction-mode VkCoverageReductionModeNV)
   (:rasterization-samples VkSampleCountFlagBits)
   (:depth-stencil-samples vk-sample-count-flags)
@@ -2932,7 +2932,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-coverage-modulation-state-create-info-nv
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:flags vk-pipeline-coverage-modulation-state-create-flags-nv)
   (:coverage-modulation-mod VkCoverageModulationModeNV)
   (:coverage-modulation-table-enable vk-bool-32)
@@ -2941,7 +2941,119 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-pipeline-color-blend-advanced-state-create-info-ext
   (:type VkStructureType)
-  (:p-next (:pointer :void))
+  (:next (:pointer :void))
   (:src-premultiplied vk-bool-32)
   (:dst-premultiplied vk-bool-32)
   (:blend-overlap VkBlendOverlapEXT))
+
+(defcstruct vk-dispatch-indirect-command
+  (:x :uint32)
+  (:y :uint32)
+  (:z :uint32))
+
+(defcstruct vk-indirect-commands-layout-token-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:token-type VkIndirectCommandsTokenTypeNV)
+  (:stream :uint32)
+  (:offset :uint32)
+  (:vertex-binding-unit :uint32)
+  (:vertex-dynamic-stride :uint32)
+  (:pushconstant-pipeline-layout vk-pipeline-layout)
+  (:pushconstant-shader-stage-flags vk-shader-stage-flags)
+  (:pushconstant-offset :uint32)
+  (:pushconstant-size :uint32)
+  (:indirect-state-flags vk-indirect-state-flags-nv)
+  (:index-type-count :uint32)
+  (:index-type (:pointer VkIndexType))
+  (:index-type-value (:pointer :uint32)))
+
+(defcstruct vk-indirect-commands-layout-create-info-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-indirect-commands-layout-usage-flags-nv)
+  (:pipeline-bind-point VkPipelineBindPoint)
+  (:token-count :uint32)
+  (:tokens (:pointer (:struct vk-indirect-commands-layout-token-nv)))
+  (:stream-count :uint32)
+  (:stream-strides (:pointer :uint32)))
+
+(defcstruct vk-indirect-commands-stream-nv
+  (:buffer vk-buffer)
+  (:offset vk-device-size))
+
+(defcstruct vk-bind-shader-group-indirect-command-nv
+  (:group-index :uint32))
+
+(defcstruct vk-bind-index-buffer-indirect-command-nv
+  (:buffer-address vk-device-address)
+  (:size :uint32)
+  (:index-type VkIndexType))
+
+(defcstruct vk-bind-vertex-buffer-indirect-command-nv
+  (:buffer-address vk-device-address)
+  (:size :uint32)
+  (:stride :uint32))
+
+(defcstruct vk-set-state-flags-indirect-command-nv
+  (:data :uint32))
+
+(defcstruct vk-generated-commands-memory-requirements-info-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:pipeline-bind-point VkPipelineBindPoint)
+  (:pipeline vk-pipeline)
+  (:indirect-commands-layout vk-indirect-commands-layout-nv)
+  (:max-sequences-count :uint32))
+
+(defcstruct vk-generated-commands-info-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:pipeline-bind-point VkPipelineBindPoint)
+  (:pipeline vk-pipeline)
+  (:indirect-commands-layout vk-indirect-commands-layout-nv)
+  (:stream-count :uint32)
+  (:streams (:pointer (:struct vk-indirect-commands-stream-nv)))
+  (:sequence-count :uint32)
+  (:preprocess-buffer vk-buffer)
+  (:preprocess-offset vk-device-size)
+  (:preprocess-size vk-device-size)
+  (:sequences-count-buffer vk-buffer)
+  (:sequences-count-offset vk-device-size)
+  (:sequences-index-buffer vk-buffer)
+  (:sequences-index-offset vk-device-size))
+
+(defcstruct vk-physical-device-sparse-properties
+  (:residency-standard2-d-block-shape vk-bool-32)
+  (:residency-standard2-d-multisample-block-shape vk-bool-32)
+  (:residency-standard3-d-block-shape vk-bool-32)
+  (:residency-aligned-mip-size vk-bool-32)
+  (:residency-non-resident-strict vk-bool-32))
+
+(defcstruct vk-sparse-image-format-properties
+  (:aspect-mask vk-image-aspect-flags)
+  (:image-granularity (:struct vk-extent-3d))
+  (:flags vk-sparse-image-format-flags))
+
+(defcstruct vk-physical-device-sparse-image-format-info2
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:format VkFormat)
+  (:type VkImageType)
+  (:samples VkSampleCountFlagBits)
+  (:usage vk-image-usage-flags)
+  (:tiling VkImageTiling))
+
+(defcstruct vk-sparse-image-format-properties2
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:properties (:struct vk-sparse-image-format-properties)))
+
+(defcstruct vk-sparse-image-memory-requirements
+  (:format-properties (:struct vk-sparse-image-format-properties))
+  (:image-mip-tail-first-lod :uint32)
+  (:image-mip-tail-size vk-device-size)
+  (:image-mip-tail-offset vk-device-size)
+  (:image-mip-tail-stride vk-device-size))
+
+
