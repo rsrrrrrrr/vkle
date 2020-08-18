@@ -146,3 +146,5 @@
 (defctype vk-indirect-commands-layout-usage-flags-nv vk-flags)
 (defctype vk-indirect-state-flags-nv vk-flags)
 (defctype vk-sparse-image-format-flags vk-flags)
+(defctype vk-sparse-memory-bind-flags vk-flags)
+(defctype vk-surface-transform-flags-khr vk-flags)

@@ -1502,6 +1502,11 @@ i don't know how to set up android in lisp
 (defcstruct vk-external-format-android
   (:type VkStructureType)
   (:next (:pointer :void)))
+
+(defcstruct vk-android-surface-create-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void)))
+
 |#
 
 (defcstruct vk-export-memory-allocate-info-nv
@@ -3056,4 +3061,107 @@ i don't know how to set up android in lisp
   (:image-mip-tail-offset vk-device-size)
   (:image-mip-tail-stride vk-device-size))
 
+(defcstruct vk-image-sparse-memory-requirements-info2
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:image vk-image))
 
+(defcstruct vk-sparse-image-memory-requirements2
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:memory-requirements (:struct vk-sparse-image-memory-requirements)))
+
+(defcstruct vk-sparse-memory-bind
+  (:resource-offset vk-device-size)
+  (:size vk-device-size)
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size)
+  (:flags vk-sparse-memory-bind-flags))
+
+(defcstruct vk-sparse-buffer-memory-bind-info
+  (:buffer vk-buffer)
+  (:bind-count :uint32)
+  (:binds (:pointer (:struct vk-sparse-memory-bind))))
+
+(defcstruct vk-sparse-image-opaque-memory-bind-info
+  (:image vk-image)
+  (:bind-count :uint32)
+  (:binds (:pointer (:struct vk-sparse-memory-bind))))
+
+(defcstruct vk-sparse-image-memory-bind
+  (:subresource (:struct vk-image-subresource))
+  (:offset (:struct vk-off-set-3d))
+  (:extent (:struct vk-extent-3d))
+  (:memory vk-device-memory)
+  (:memory-offset vk-device-size)
+  (:flags vk-sparse-memory-bind-flags))
+
+(defcstruct vk-sparse-image-memory-bind-info
+  (:image vk-image)
+  (:bind-count :uint32)
+  (:binds (:pointer (:struct vk-sparse-image-memory-bind))))
+
+(defcstruct vk-bind-sparse-info
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:wait-semaphore-count :uint32)
+  (:wait-semaphores (:pointer vk-semaphore))
+  (:buffer-bind-count :uint32)
+  (:buffer-binds (:pointer (:struct vk-sparse-buffer-memory-bind-info)))
+  (:image-opaque-bind-count :uint32)
+  (:image-opaque-binds (:pointer (:struct vk-sparse-image-opaque-memory-bind-info)))
+  (:image-bind-count :uint32)
+  (:image-binds (:pointer (:struct vk-sparse-image-memory-bind-info)))
+  (:signal-semaphore-count :uint32)
+  (:signal-semaphores (:pointer vk-semaphore)))
+
+(defcstruct vk-device-group-bind-sparse-info
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:resource-device-index :uint32)
+  (:memory-device-index :uint32))
+
+#|
+(defcstruct vk-wayland-surface-create-info-khr)
+(defcstruct vk-win32-surface-create-info-khr)
+(defcstruct vk-xcb-surface-create-info-khr)
+(defcstruct vk-xlib-surface-create-info-khr)
+(defcstruct vk-direct-f-b-surface-create-info-ext)
+(defcstruct vk-image-pipe-surface-create-info-fuchsia)
+(defcstruct vk-stream-descriptor-surface-create-info-ggp)
+(defcstruct vk-ios-surface-create-info-mvk)
+(defcstruct vk-macos-surface-create-info-mvk)
+(defcstruct vk-vi-surface-create-info-nn)
+(defcstruct vk-metal-surface-create-info-ext)
+|#
+
+(defcstruct vk-display-properties-khr
+  (:display vk-display-khr)
+  (:display-name :string)
+  (:physical-dimensions (:struct vk-extent-2d))
+  (:physical-resolution (:struct vk-extent-2d))
+  (:supported-transforms vk-surface-transform-flags-khr)
+  (:plane-reorder-possible vk-bool-32)
+  (:persistent-content vk-bool-32))
+
+(defcstruct vk-display-properties2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:display-properties (:struct vk-display-properties-khr)))
+
+(defcstruct vk-display-plane-properties-khr
+  (:current-display vk-display-khr)
+  (:current-stack-index :uint32))
+
+(defcstruct vk-display-plane-properties2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:display-plane-properties (:struct vk-display-plane-properties-khr)))
+
+(defcstruct vk-display-mode-parameters-khr
+  (:visible-region (:struct vk-extent-2d))
+  (:refresh-rate :uint32))
+
+(defcstruct vk-display-mode-properties-khr
+  (:display-mode vk-display-mode-khr)
+  (:parameter (:struct vk-display-mode-parameters-khr)))
