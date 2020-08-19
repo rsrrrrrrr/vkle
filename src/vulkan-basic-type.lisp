@@ -98,6 +98,7 @@
 (defctype vk-pipeline-discard-rectangle-state-create-flags-ext vk-flags)
 (defctype vk-pipeline-coverage-to-color-state-create-flags-nv vk-flags)
 (defctype vk-pipeline-coverage-reduction-state-create-flags-nv vk-flags)
+(defctype vk-display-mode-create-flags-khr vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
@@ -148,3 +149,4 @@
 (defctype vk-sparse-image-format-flags vk-flags)
 (defctype vk-sparse-memory-bind-flags vk-flags)
 (defctype vk-surface-transform-flags-khr vk-flags)
+(defctype vk-display-plane-alpha-flags-khr vk-flags)

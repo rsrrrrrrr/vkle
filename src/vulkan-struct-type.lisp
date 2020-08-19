@@ -3165,3 +3165,46 @@ i don't know how to set up android in lisp
 (defcstruct vk-display-mode-properties-khr
   (:display-mode vk-display-mode-khr)
   (:parameter (:struct vk-display-mode-parameters-khr)))
+
+(defcstruct vk-display-mode-properties2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:display-mode-properties (:struct vk-display-mode-properties-khr)))
+
+(defcstruct vk-display-mode-parameters-khr
+  (:visible-region (:struct vk-extent-2d))
+  (:refresh-rate :uint32))
+
+(defcstruct vk-display-mode-create-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-display-mode-create-flags-khr)
+  (:parameters (:struct vk-display-mode-parameters-khr)))
+
+(defcstruct vk-display-plane-capabilities-khr
+  (:supported-alpha vk-display-plane-alpha-flags-khr)
+  (:min-src-position (:struct vk-off-set-2d))
+  (:max-src-position (:struct vk-off-set-2d))
+  (:min-src-extent (:struct vk-extent-2d))
+  (:max-src-extent (:struct vk-extent-2d))
+  (:min-dst-position (:struct vk-off-set-2d))
+  (:max-dst-position (:struct vk-off-set-2d))
+  (:min-dst-extent (:struct vk-extent-2d))
+  (:max-dst-extent (:struct vk-extent-2d)))
+
+(defcstruct vk-display-plane-info2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:mode vk-display-mode-khr)
+  (:plane-index :uint32))
+
+(defcstruct vk-display-plane-capabilities2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:capability (:struct vk-display-plane-capabilities-khr)))
+
+(defcstruct vk-display-power-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:power-state VkDisplayPowerStateEXT))
+
