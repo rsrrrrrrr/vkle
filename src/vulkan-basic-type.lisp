@@ -99,6 +99,9 @@
 (defctype vk-pipeline-coverage-to-color-state-create-flags-nv vk-flags)
 (defctype vk-pipeline-coverage-reduction-state-create-flags-nv vk-flags)
 (defctype vk-display-mode-create-flags-khr vk-flags)
+(defctype vk-display-surface-create-flags-khr vk-flags)
+(defctype vk-headless-surface-create-flags-ext vk-flags)
+(defctype vk-swapchain-create-flags vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
@@ -150,3 +153,6 @@
 (defctype vk-sparse-memory-bind-flags vk-flags)
 (defctype vk-surface-transform-flags-khr vk-flags)
 (defctype vk-display-plane-alpha-flags-khr vk-flags)
+(defctype vk-composite-alpha-flags-khr vk-flags)
+(defctype vk-surface-counter-flags-ext vk-flags)
+(defctype vk-device-group-present-mode-flags-khr vk-flags)

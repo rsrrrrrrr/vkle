@@ -3208,3 +3208,157 @@ i don't know how to set up android in lisp
   (:next (:pointer :void))
   (:power-state VkDisplayPowerStateEXT))
 
+(defcstruct vk-display-surface-create-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-display-surface-create-flags-khr)
+  (:display-mode vk-display-mode-khr)
+  (:plane-index :uint32)
+  (:plane-stack-index :uint32)
+  (:transform VkSurfaceTransformFlagBitsKHR)
+  (:global-alpha :float)
+  (:alpha-mode VkDisplayPlaneAlphaFlagBitsKHR)
+  (:image-extent (:struct vk-extent-2d)))
+
+(defcstruct vk-headless-surface-create-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-headless-surface-create-flags-ext))
+
+(defcstruct vk-surface-capabilities-khr
+  (:min-image-count :uint32)
+  (:max-image-count :uint32)
+  (:current-extent (:struct vk-extent-2d))
+  (:min-image-extent (:struct vk-extent-2d))
+  (:max-image-extent (:struct vk-extent-2d))
+  (:max-image-array-layers :uint32)
+  (:supported-transforms :uint32)
+  (:current-transform :uint32)
+  (:supported-composite-alpha :uint32)
+  (:supported-usage-flags :uint32))
+
+(defcstruct vk-physical-device-surface-info2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:surface vk-surface-khr))
+
+(defcstruct vk-surface-full-screen-exclusive-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:full-screen-exclusive VkFullScreenExclusiveEXT))
+
+(defcstruct vk-surface-full-screen-exclusive-win32-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:hmonitor (:pointer :void)))
+
+(defcstruct vk-surface-capabilities2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:surface-capabilities (:struct vk-surface-capabilities-khr)))
+
+(defcstruct vk-surface-protected-capabilities-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:supports-protected vk-bool-32))
+
+(defcstruct vk-shared-present-surface-capabilities-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shared-present-supported-usage-flags vk-image-usage-flags))
+
+(defcstruct vk-display-native-hdr-surface-capabilities-amd
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:local-dimming-support vk-bool-32))
+
+(defcstruct vk-surface-capabilities-full-screen-exclusive-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:full-screen-exclusive-supported vk-bool-32))
+
+(defcstruct vk-surface-capabilities2-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:min-image-count :uint32)
+  (:max-image-count :uint32)
+  (:current-extent (:struct vk-extent-2d))
+  (:min-image-extent (:struct vk-extent-2d))
+  (:max-image-extent (:struct vk-extent-2d))
+  (:max-image-array-layers :uint32)
+  (:supported-transforms vk-surface-transform-flags-khr)
+  (:current-transform VkSurfaceTransformFlagBitsKHR)
+  (:supported-composite-alpha vk-composite-alpha-flags-khr)
+  (:supported-usage-flags vk-image-usage-flags)
+  (:supported-surface-counters vk-surface-counter-flags-ext))
+
+(defcstruct vk-surface-format-khr
+  (:format VkFormat)
+  (:color-space VkColorSpaceKHR))
+
+(defcstruct vk-surface-format2-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:surface-format (:struct vk-surface-format-khr)))
+
+(defcstruct vk-device-group-present-capabilities-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:present-mask :uint32 :count 32)
+  (:modes vk-device-group-present-mode-flags-khr))
+
+(defcstruct vk-refresh-cycle-duration-google
+  (:refresh-duration :uint64))
+
+(defcstruct vk-past-presentation-timing-google
+  (:present-id :uint32)
+  (:desired-present-time :uint64)
+  (:actual-present-time :uint64)
+  (:earliest-present-time :uint64)
+  (:present-margin :uint64))
+
+(defcstruct vk-swapchain-create-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-swapchain-create-flags)
+  (:surface vk-surface-khr)
+  (:min-image-count :uint32)
+  (:image-format VkFormat)
+  (:image-color-space VkColorSpaceKHR)
+  (:image-extent (:struct vk-extent-2d))
+  (:image-array-layers :uint32)
+  (:image-usage vk-image-usage-flags)
+  (:image-sharing-mode VkSharingMode)
+  (:queue-family-index-count :uint32)
+  (:queue-family-indices (:pointer :uint32))
+  (:pre-transform VkSurfaceTransformFlagBitsKHR)
+  (:composite-alpha VkCompositeAlphaFlagBitsKHR)
+  (:present-mode VkPresentModeKHR)
+  (:clipped vk-bool-32)
+  (:old-swapchain vk-swapchain-khr))
+
+(defcstruct vk-device-group-swapchain-create-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:modes vk-device-group-present-mode-flags-khr))
+
+(defcstruct vk-swapchain-display-native-hdr-create-info-amd
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:local-dimming-enable vk-bool-32))
+
+(defcstruct vk-swapchain-counter-create-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:surface-counters vk-surface-counter-flags-ext))
+
+(defcstruct vk-acquire-next-image-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:swapchain vk-swapchain-khr)
+  (:timeout :uint64)
+  (:semaphore vk-semaphore)
+  (:fence vk-fence)
+  (:device-mask :uint32))
+
+
