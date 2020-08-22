@@ -3767,3 +3767,451 @@ i don't know how to set up android in lisp
   (:next (:pointer :void))
   (:transform-feedback vk-bool-32)
   (:geometry-streams vk-bool-32))
+
+(defcstruct vk-physical-device-vulkan-memory-model-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:vulkan-memory-model vk-bool-32)
+  (:vulkan-memory-model-device-scope vk-bool-32)
+  (:vulkan-memory-model-availability-visibility-chains vk-bool-32))
+
+(defcstruct vk-physical-device-inline-uniform-block-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:inline-uniform-block vk-bool-32)
+  (:descriptor-binding-inline-uniform-block-update-after-bind vk-bool-32))
+
+(defcstruct vk-physical-device-representative-fragment-test-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:representative-fragment-test vk-bool-32))
+
+(defcstruct vk-physical-device-exclusive-scissor-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:exclusive-scissor vk-bool-32))
+
+(defcstruct vk-physical-device-corner-sampled-image-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:corner-sampled-image vk-bool-32))
+
+(defcstruct vk-physical-device-compute-shader-derivatives-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:compute-derivative-group-quads vk-bool-32)
+  (:compute-derivative-group-linear vk-bool-32))
+
+(defcstruct vk-physical-device-fragment-shader-barycentric-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:fragment-shader-barycentric vk-bool-32))
+
+(defcstruct vk-physical-device-shader-image-footprint-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:imaeg-footprint vk-bool-32))
+
+(defcstruct vk-physical-device-shading-rate-image-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shading-rate-image vk-bool-32)
+  (:shading-rate-coarse-sample-order vk-bool-32))
+
+(defcstruct vk-physical-device-fragment-density-map-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:fragment-density-map vk-bool-32)
+  (:fragment-density-map-dynamic vk-bool-32)
+  (:fragment-density-map-non-subsampled-images vk-bool-32))
+
+(defcstruct vk-physical-device-fragment-density-map2-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:fragment-density-map-deferred vk-bool-32))
+
+(defcstruct vk-physical-device-scalar-block-layout-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:scalar-block-layout vk-bool-32))
+
+(defcstruct vk-physical-device-uniform-buffer-standard-layout-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:uniform-buffer-standard-layout vk-bool-32))
+
+(defcstruct vk-physical-device-depth-clip-enable-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:depth-clip-enable vk-bool-32))
+
+(defcstruct vk-physical-device-memory-priority-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:memory-prioryity vk-bool-32))
+
+(defcstruct vk-physical-device-buffer-device-address-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:buffer-device-address vk-bool-32)
+  (:buffer-device-address-capture-replay vk-bool-32)
+  (:buffer-device-address-multi-device vk-bool-32))
+
+(defcstruct vk-physical-device-buffer-device-address-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:buffer-device-address vk-bool-32)
+  (:buffer-device-address-capture-replay vk-bool-32)
+  (:buffer-device-address-multi-device vk-bool-32))
+
+(defcstruct vk-physical-device-dedicated-allocation-image-aliasing-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:dedicated-allocation-image-aliasing vk-bool-32))
+
+(defcstruct vk-physical-device-imageless-framebuffer-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:imageless-framebuffer vk-bool-32))
+
+(defcstruct vk-physical-device-fragment-shader-interlock-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:fragment-shader-sample-interlock vk-bool-32)
+  (:fragment-shader-pixel-interlock vk-bool-32)
+  (:fragment-shader-shading-rate-interlock vk-bool-32))
+
+(defcstruct vk-physical-device-cooperative-matrix-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:cooperative-matrix vk-bool-32)
+  (:cooperative-matrix-robust-buffer-access vk-bool-32))
+
+(defcstruct vk-physical-device-ycbcr-image-arrays-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:ycbcr-image-arrays vk-bool-32))
+
+(defcstruct vk-physical-device-shader-subgroup-extended-types-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-subgroup-extended-types vk-bool-32))
+
+(defcstruct vk-physical-device-host-query-reset-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:host-query-reset vk-bool-32))
+
+(defcstruct vk-physical-device-shader-integer-functions2-features-intel
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-integer-functions2 vk-bool-32))
+
+(defcstruct vk-physical-device-coverage-reduction-mode-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:coverage-reduction-mode vk-bool-32))
+
+(defcstruct vk-physical-device-timeline-semaphore-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:timeline-semaphore vk-bool-32))
+
+(defcstruct vk-physical-device-index-type-uint8-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:index-type-uint8 vk-bool-32))
+
+(defcstruct vk-physical-device-shader-sm-builtins-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-sm-builtins vk-bool-32))
+
+(defcstruct vk-physical-device-separate-depth-stencil-layouts-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:separate-depth-stencil-layouts vk-bool-32))
+
+(defcstruct vk-physical-device-pipeline-executable-properties-features-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:pipeline-executable-info vk-bool-32))
+
+(defcstruct vk-physical-device-shader-demote-to-helper-invocation-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-demote-to-helper-invocation vk-bool-32))
+
+(defcstruct vk-physical-device-texel-buffer-alignment-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:texel-buffer-alignment vk-bool-32))
+
+(defcstruct vk-physical-device-texture-compression-astchdr-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:texture-compression-astc-hdr vk-bool-32))
+
+(defcstruct vk-physical-device-line-rasterization-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:rectangular-lines vk-bool-32)
+  (:bresenham-lines vk-bool-32)
+  (:smooth-lines vk-bool-32)
+  (:stippled-rectangular-lines vk-bool-32)
+  (:stippled-bresenham-lines vk-bool-32)
+  (:stippled-smooth-lines vk-bool-32))
+
+(defcstruct vk-physical-device-subgroup-size-control-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:subgroup-size-control vk-bool-32)
+  (:compute-full-subgroups vk-bool-32))
+
+(defcstruct vk-physical-device-coherent-memory-features-amd
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:device-coherent-memory vk-bool-32))
+
+(defcstruct vk-physical-device-ray-tracing-features-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:ray-tracing vk-bool-32)
+  (:ray-tracing-shader-group-handle-capture-replay vk-bool-32)
+  (:ray-tracing-shader-group-handle-capture-replay-mixed vk-bool-32)
+  (:ray-tracing-acceleration-structure-capture-replay vk-bool-32)
+  (:ray-tracing-indirect-trace-rays vk-bool-32)
+  (:ray-tracing-indirect-acceleration-structure-build vk-bool-32)
+  (:ray-tracing-host-acceleration-structure-commands vk-bool-32)
+  (:ray-query vk-bool-32)
+  (:ray-tracing-primitive-culling vk-bool-32))
+
+(defcstruct vk-physical-device-extended-dynamic-state-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:extended-dynamic-state vk-bool-32))
+
+(defcstruct vk-physical-device-device-generated-commands-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:device-generated-commands vk-bool-32))
+
+(defcstruct vk-physical-device-diagnostics-config-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:diagnostics-config vk-bool-32))
+
+(defcstruct vk-physical-device-pipeline-creation-cache-control-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:pipeline-creation-cache-control vk-bool-32))
+
+(defcstruct vk-physical-device-private-data-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:private-data vk-bool-32))
+
+(defcstruct vk-physical-device-robustness2-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:robust-buffer-access2 vk-bool-32)
+  (:robust-image-access2 vk-bool-32)
+  (:null-descriptor vk-bool-32))
+
+(defcstruct vk-physical-device-image-robustness-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:robust-image-access vk-bool-32))
+
+(defcstruct vk-physical-device-custom-border-color-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:custom-border-colors vk-bool-32)
+  (:custom-border-color-without-format vk-bool-32))
+
+(defcstruct vk-physical-device-performance-query-features-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:performance-counter-query-pools vk-bool-32)
+  (:performance-counter-multiple-query-pools vk-bool-32))
+
+(defcstruct vk-physical-device-4444-formats-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:format-a4-r4-g4-b4 vk-bool-32)
+  (:format-a4-b4-g4-r4 vk-bool-32))
+
+(defcstruct vk-physical-device-push-descriptor-properties-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-push-descriptors :uint32))
+
+(defcstruct vk-physical-device-multiview-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-multiview-view-count :uint32)
+  (:max-multiview-instance-index :uint32))
+
+(defcstruct vk-physical-device-float-controls-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:denorm-behavior-independence VkShaderFloatControlsIndependence)
+  (:rounding-mode-independence VkShaderFloatControlsIndependence)
+  (:shader-signed-zero-inf-nan-preserve-float16 vk-bool-32)
+  (:shader-signed-zero-inf-nan-preserve-float32 vk-bool-32)
+  (:shader-signed-zero-inf-nan-preserve-float64 vk-bool-32)
+  (:shader-denorm-preserve-float16 vk-bool-32)
+  (:shader-denorm-preserve-float32 vk-bool-32)
+  (:shader-denorm-preserve-float64 vk-bool-32)
+  (:shader-denorm-flush-to-zero-float16 vk-bool-32)
+  (:shader-denorm-flush-to-zero-float32 vk-bool-32)
+  (:shader-denorm-flush-to-zero-float64 vk-bool-32)
+  (:shader-rounding-mode-r-t-e-float16 vk-bool-32)
+  (:shader-rounding-mode-r-t-e-float32 vk-bool-32)
+  (:shader-rounding-mode-r-t-e-float64 vk-bool-32)
+  (:shader-rounding-mode-r-t-z-float16 vk-bool-32)
+  (:shader-rounding-mode-r-t-z-float32 vk-bool-32)
+  (:shader-rounding-mode-r-t-z-float64 vk-bool-32))
+
+(defcstruct vk-physical-device-discard-rectangle-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-discard-rectangles :uint32))
+
+(defcstruct vk-physical-device-sample-locations-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:sample-location-sample-counts vk-sample-count-flags)
+  (:max-sample-location-grid-size (:struct vk-extent-2d))
+  (:sample-location-coordinate-range :float :count 2)
+  (:sample-location-sub-pixel-bits :uint32)
+  (:variable-sample-locations vk-bool-32))
+
+(defcstruct vk-physical-device-external-memory-host-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:min-imported-host-pointer-alignment vk-device-size))
+
+(defcstruct vk-physical-device-multiview-per-view-attributes-properties-nvx
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:per-view-position-all-components vk-bool-32))
+
+(defcstruct vk-physical-device-point-clipping-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:point-clipping-behavior VkPointClippingBehavior))
+
+(defcstruct vk-physical-device-subgroup-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:subgroup-size :uint32)
+  (:supported-stages vk-shader-stage-flags)
+  (:supported-operations vk-subgroup-feature-flags)
+  (:quad-operations-in-all-stages vk-bool-32))
+
+(defcstruct vk-physical-device-subgroup-size-control-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:min-subgroup-size :uint32)
+  (:max-subgroup-size :uint32)
+  (:max-compute-workgroup-subgroups :uint32)
+  (:required-subgroup-size-stages vk-shader-stage-flags))
+
+(defcstruct vk-physical-device-blend-operation-advanced-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:advanced-blend-max-color-attachments :uint32)
+  (:advanced-blend-independent-blend vk-bool-32)
+  (:advanced-blend-non-premultiplied-src-color vk-bool-32)
+  (:advanced-blend-non-premultiplied-dst-color vk-bool-32)
+  (:advanced-blend-correlated-overlap vk-bool-32)
+  (:advanced-blend-all-operations vk-bool-32))
+
+(defcstruct vk-physical-device-vertex-attribute-divisor-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-vertex-attrib-divisor :uint32))
+
+(defcstruct vk-physical-device-sampler-filter-minmax-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:filter-minmax-single-component-formats vk-bool-32)
+  (:filter-minmax-image-component-mapping vk-bool-32))
+
+(defcstruct vk-physical-device-protected-memory-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:protected-no-fault vk-bool-32))
+
+(defcstruct vk-physical-device-maintenance3-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-per-set-descriptors :uint32)
+  (:max-memory-allocation-size vk-device-size))
+
+(defcstruct vk-physical-device-mesh-shader-properties-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-draw-mesh-tasks-count :uint32)
+  (:max-task-work-group-invocations :uint32)
+  (:max-task-work-group-size :uint32 :count 3)
+  (:max-task-total-memory-size :uint32)
+  (:max-task-output-count :uint32)
+  (:max-mesh-work-group-invocations :uint32)
+  (:max-mesh-work-group-size :uint32 :count 3)
+  (:max-mesh-total-memory-size :uint32)
+  (:max-mesh-output-vertices :uint32)
+  (:max-mesh-output-primitives :uint32)
+  (:max-mesh-multiview-view-count :uint32)
+  (:mesh-output-per-vertex-granularity :uint32)
+  (:mesh-output-per-primitive-granularity :uint32))
+
+(defcstruct vk-physical-device-descriptor-indexing-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-update-after-bind-descriptors-in-all-pools :uint32)
+  (:shader-uniform-buffer-array-non-uniform-indexing-native vk-bool-32)
+  (:shader-sampled-image-array-non-uniform-indexing-native vk-bool-32)
+  (:shader-storage-buffer-array-non-uniform-indexing-native vk-bool-32)
+  (:shader-storage-image-array-non-uniform-indexing-native vk-bool-32)
+  (:shader-input-attachment-array-non-uniform-indexing-native vk-bool-32)
+  (:robust-buffer-access-update-after-bind vk-bool-32)
+  (:quad-divergent-implicit-lod vk-bool-32)
+  (:max-per-stage-descriptor-update-after-bind-samplers :uint32)
+  (:max-per-stage-descriptor-update-after-bind-uniform-buffers :uint32)
+  (:max-per-stage-descriptor-update-after-bind-storage-buffers :uint32)
+  (:max-per-stage-descriptor-update-after-bind-sampled-images :uint32)
+  (:max-per-stage-descriptor-update-after-bind-storage-images :uint32)
+  (:max-per-stage-descriptor-update-after-bind-input-attachments :uint32)
+  (:max-per-stage-update-after-bind-resources :uint32)
+  (:max-descriptor-set-update-after-bind-samplers :uint32)
+  (:max-descriptor-set-update-after-bind-uniform-buffers :uint32)
+  (:max-descriptor-set-update-after-bind-uniform-buffers-dynamic :uint32)
+  (:max-descriptor-set-update-after-bind-storage-buffers :uint32)
+  (:max-descriptor-set-update-after-bind-storage-buffers-dynamic :uint32)
+  (:max-descriptor-set-update-after-bind-sampled-images :uint32)
+  (:max-descriptor-set-update-after-bind-storage-images :uint32)
+  (:max-descriptor-set-update-after-bind-input-attachments :uint32))
+
+(defcstruct vk-physical-device-inline-uniform-block-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-inline-uniform-block-size :uint32)
+  (:max-per-stage-descriptor-inline-uniform-blocks :uint32)
+  (:max-per-stage-descriptor-update-after-bind-inline-uniform-blocks :uint32)
+  (:max-descriptor-set-inline-uniform-blocks :uint32)
+  (:max-descriptor-set-update-after-bind-inline-uniformq-blocks :uint32))
+
+(defcstruct vk-physical-device-conservative-rasterization-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:primitive-overestimation-size :float)
+  (:max-extra-primitive-overestimation-size :float)
+  (:extra-primitive-overestimation-size-granularity :float)
+  (:primitive-underestimation vk-bool-32)
+  (:conservative-point-and-line-rasterization vk-bool-32)
+  (:degenerate-triangles-rasterized vk-bool-32)
+  (:degenerate-lines-rasterized vk-bool-32)
+  (:fully-covered-fragment-shader-input-variable vk-bool-32)
+  (:conservative-rasterization-post-depth-coverage vk-bool-32))

@@ -159,3 +159,4 @@
 (defctype vk-device-group-present-mode-flags-khr vk-flags)
 (defctype vk-build-acceleration-structure-flags-khr vk-flags)
 (defctype vk-geometry-instance-flags-khr vk-flags)
+(defctype vk-subgroup-feature-flags vk-flags)
