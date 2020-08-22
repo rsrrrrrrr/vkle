@@ -8,11 +8,11 @@
   (:type VkStructureType)
   (:next (:pointer (:struct vk-basic-structure))))
 
-(defcstruct vk-off-set-2d
+(defcstruct vk-offset-2d
   (:x :uint32)
   (:y :uint32))
 
-(defcstruct vk-off-set-3d
+(defcstruct vk-offset-3d
   (:x :uint32)
   (:y :uint32)
   (:z :uint32))
@@ -27,7 +27,7 @@
   (:depth :uint32))
 
 (defcstruct vk-rect-2d
-  (:offset (:struct vk-off-set-2d))
+  (:offset (:struct vk-offset-2d))
   (:extent (:struct vk-extent-2d)))
 
 (defcstruct vk-application-info
@@ -2739,9 +2739,9 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-image-copy
   (:src-subresource (:struct vk-image-subresource-layers))
-  (:src-offset (:struct vk-off-set-3d))
+  (:src-offset (:struct vk-offset-3d))
   (:dst-subresource (:struct vk-image-subresource-layers))
-  (:dst-offset (:struct vk-off-set-3d))
+  (:dst-offset (:struct vk-offset-3d))
   (:extent (:struct vk-extent-3d)))
 
 (defcstruct vk-buffer-image-copy
@@ -2749,20 +2749,20 @@ i don't know how to set up android in lisp
   (:buffer-row-length :uint32)
   (:buffer-image-height :uint32)
   (:image-subresource (:struct vk-image-subresource-layers))
-  (:image-offset (:struct vk-off-set-3d))
+  (:image-offset (:struct vk-offset-3d))
   (:image-extent (:struct vk-extent-3d)))
 
 (defcstruct vk-image-blit
   (:src-subresource (:struct vk-image-subresource-layers))
-  (:src-offsets (:struct vk-off-set-3d) :count 2)
+  (:src-offsets (:struct vk-offset-3d) :count 2)
   (:dst-subresource (:struct vk-image-subresource-layers))
-  (:dst-offsets (:struct vk-off-set-3d) :count 2))
+  (:dst-offsets (:struct vk-offset-3d) :count 2))
 
 (defcstruct vk-image-resloved
   (:src-subresource (:struct vk-image-subresource-layers))
-  (:src-offset (:struct vk-off-set-3d))
+  (:src-offset (:struct vk-offset-3d))
   (:dst-subresource (:struct vk-image-subresource-layers))
-  (:dst-offset (:struct vk-off-set-3d))
+  (:dst-offset (:struct vk-offset-3d))
   (:extent (:struct vk-extent-3d)))
 
 (defcstruct vk-draw-indirect-command
@@ -3090,7 +3090,7 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-sparse-image-memory-bind
   (:subresource (:struct vk-image-subresource))
-  (:offset (:struct vk-off-set-3d))
+  (:offset (:struct vk-offset-3d))
   (:extent (:struct vk-extent-3d))
   (:memory vk-device-memory)
   (:memory-offset vk-device-size)
@@ -3183,12 +3183,12 @@ i don't know how to set up android in lisp
 
 (defcstruct vk-display-plane-capabilities-khr
   (:supported-alpha vk-display-plane-alpha-flags-khr)
-  (:min-src-position (:struct vk-off-set-2d))
-  (:max-src-position (:struct vk-off-set-2d))
+  (:min-src-position (:struct vk-offset-2d))
+  (:max-src-position (:struct vk-offset-2d))
   (:min-src-extent (:struct vk-extent-2d))
   (:max-src-extent (:struct vk-extent-2d))
-  (:min-dst-position (:struct vk-off-set-2d))
-  (:max-dst-position (:struct vk-off-set-2d))
+  (:min-dst-position (:struct vk-offset-2d))
+  (:max-dst-position (:struct vk-offset-2d))
   (:min-dst-extent (:struct vk-extent-2d))
   (:max-dst-extent (:struct vk-extent-2d)))
 
@@ -3361,4 +3361,409 @@ i don't know how to set up android in lisp
   (:fence vk-fence)
   (:device-mask :uint32))
 
+(defcstruct vk-present-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:wait-semaphore-count :uint32)
+  (:wait-semaphore (:pointer vk-semaphore))
+  (:swapchain-count :uint32)
+  (:swapchain (:pointer vk-swapchain-khr))
+  (:image-indices (:pointer :uint32))
+  (:result VkResult))
 
+(defcstruct vk-present-regions-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:swapchain-count :uint32)
+  (:regions (:pointer (:struct vk-present-regions-khr))))
+
+(defcstruct vk-rect-layer-khr
+  (:offset (:struct vk-offset-2d))
+  (:extent (:struct vk-extent-2d))
+  (:layer :uint32))
+
+(defcstruct vk-display-present-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:src-rect (:struct vk-rect-2d))
+  (:dst-rect (:struct vk-rect-2d))
+  (:persistent vk-bool-32))
+
+(defcstruct vk-device-group-present-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:swapchain-count :uint32)
+  (:device-mask (:pointer :uint32))
+  (:mode VkDeviceGroupPresentModeFlagBitsKHR))
+
+(defcstruct vk-present-time-google
+  (:present-id :uint32)
+  (:desired-present-time :uint64))
+
+(defcstruct vk-present-times-info-google
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:swapchain-count :uint32)
+  (:times (:pointer (:struct vk-present-time-google))))
+
+(defcstruct vk-present-frame-token-ggp
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:frame-token :uint32))   ;;maybe ??
+
+(defcstruct vk-xy-color-ext
+  (:x :float)
+  (:y :float))
+
+(defcstruct vk-hdr-metadata-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:display-primary-red (:struct vk-xy-color-ext))
+  (:display-primary-green (:struct vk-xy-color-ext))
+  (:display-primary-blue (:struct vk-xy-color-ext))
+  (:white-point (:struct vk-xy-color-ext))
+  (:max-luminance :float)
+  (:min-luminance :float)
+  (:max-content-light-level :float)
+  (:max-frame-average-light-level :float))
+
+(defcstruct vk-deferred-operation-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:operation-handle vk-deferred-operation-khr))
+
+(defcstruct vk-private-data-slot-create-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-private-data-slot-create-flags-ext))
+
+(defcstruct vk-strided-buffer-region-khr
+  (:buffer vk-buffer)
+  (:offset vk-device-size)
+  (:stride vk-device-size)
+  (:size vk-device-size))
+
+(defcstruct vk-trace-rays-indirect-command-khr
+  (:width :uint32)
+  (:height :uint32)
+  (:depth :uint32))
+
+(defcunion vk-device-or-host-address-const-khr
+  (:device-address vk-device-address)
+  (:host-address (:pointer :void)))
+
+(defcstruct vk-acceleration-structure-geometry-triangles-data-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:vertex-format VkFormat)
+  (:vertex-data (:union vk-device-or-host-address-const-khr))
+  (:vertex-stride vk-device-size)
+  (:index-type VkIndexType)
+  (:index-data (:union vk-device-or-host-address-const-khr))
+  (:transform-data (:union vk-device-or-host-address-const-khr)))
+
+(defcstruct vk-acceleration-structure-geometry-aabbs-data-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:data (:union vk-device-or-host-address-const-khr))
+  (:stride vk-device-size))
+
+(defcstruct vk-acceleration-structure-geometry-instances-data-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:array-of-pointers vk-bool-32)
+  (:data (:union vk-device-or-host-address-const-khr)))
+
+(defcunion vk-acceleration-structure-geometry-data-khr
+  (:triangles (:struct vk-acceleration-structure-geometry-triangles-data-khr))
+  (:aabbs (:struct vk-acceleration-structure-geometry-aabbs-data-khr))
+  (:instances (:struct vk-acceleration-structure-geometry-instances-data-khr)))
+
+(defcstruct vk-acceleration-structure-geometry-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:geometry-type VkGeometryTypeKHR)
+  (:geometry (:union vk-acceleration-structure-geometry-data-khr))
+  (:flags vk-geometry-flags-khr))
+
+(defcunion vk-device-or-host-address-khr
+  (:device-address vk-device-address)
+  (:host-address (:pointer :void)))
+
+(defcstruct vk-acceleration-structure-build-geometry-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:type VkAccelerationStructureTypeKHR)
+  (:flags vk-build-acceleration-structure-flags-khr)
+  (:update vk-bool-32)
+  (:src-acceleration-structure vk-acceleration-structure-khr)
+  (:dst-acceleration-structure vk-acceleration-structure-khr)
+  (:geometry-array-of-pointers vk-bool-32)
+  (:scratch-data (:union vk-device-or-host-address-khr)))
+
+(defcstruct vk-transform-matrix-khr
+  (:matrix :float :count 3 :count 4))
+
+(defcstruct vk-aabb-positions-khr
+  (:minx :float)
+  (:miny :float)
+  (:minz :float)
+  (:maxx :float)
+  (:maxy :float)
+  (:maxz :float))
+
+(defcstruct vk-acceleration-structure-instance-khr
+  (:transform (:struct vk-transform-matrix-khr))
+  (:instance-custom-index :uint32)                        ;;initialize as 24
+  (:mask :uint32)                                         ;;initialize as 8
+  (:instance-shader-binding-table-record-offset :uint32)  ;;initialize as 24
+  (:flags vk-geometry-instance-flags-khr)                 ;;initialize as 8
+  (:acceleration-structure-reference :uint64))
+
+(defcstruct vk-acceleration-structure-build-offset-info-khr
+  (:primitive-count :uint32)
+  (:primitive-offset :uint32)
+  (:first-vertex :uint32)
+  (:transform-offset :uint32))
+
+(defcstruct vk-copy-acceleration-structure-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:src vk-acceleration-structure-khr)
+  (:dst vk-acceleration-structure-khr)
+  (:mode VkCopyAccelerationStructureModeKHR))
+
+(defcstruct vk-copy-acceleration-structure-to-memory-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:src vk-acceleration-structure-khr)
+  (:dst (:union vk-device-or-host-address-khr))
+  (:mode VkCopyAccelerationStructureModeKHR))
+
+(defcstruct vk-copy-memory-to-acceleration-structure-info-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:src (:union vk-device-or-host-address-const-khr))
+  (:dst vk-acceleration-structure-khr)
+  (:mode VkCopyAccelerationStructureModeKHR))
+
+(defcstruct vk-acceleration-structure-version-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:version-data (:pointer :uint8)))
+
+(defcstruct vk-layer-properties
+  (:layer-name :char :count 256)
+  (:spec-version :uint32)
+  (:implementation-version :uint32)
+  (:description :char :count 256))
+
+(defcstruct vk-extension-properties
+  (:extension-name :char :count 256)
+  (:spec-version :uint32))
+
+(defcstruct vk-physical-device-features2
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:feature (:struct vk-physical-device-features)))
+
+(defcstruct vk-physical-device-vulkan11-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:storage-buffer16-bit-access vk-bool-32)
+  (:uniform-and-storage-buffer-16-bit-access vk-bool-32)
+  (:storage-push-constant-16 vk-bool-32)
+  (:storage-input-output-16 vk-bool-32)
+  (:multiview vk-bool-32)
+  (:multiview-geometry-shader vk-bool-32)
+  (:multiview-tessellation-shader vk-bool-32)
+  (:variable-pointers-storage-buffer vk-bool-32)
+  (:variable-pointers vk-bool-32)
+  (:protected-memory vk-bool-32)
+  (:sampler-ycbcr-conversion vk-bool-32)
+  (:shader-draw-parameters vk-bool-32))
+
+(defcstruct vk-physical-device-vulkan12-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:sampler-mirror-clamp-to-edge vk-bool-32)
+  (:draw-indirect-count vk-bool-32)
+  (:storage-buffer8-bit-access vk-bool-32)
+  (:uniform-and-storage-buffer8-bit-access vk-bool-32)
+  (:storage-push-constant8 vk-bool-32)
+  (:shader-buffer-int64-atomics vk-bool-32)
+  (:shader-shared-int64-atomics vk-bool-32)
+  (:shader-float16 vk-bool-32)
+  (:shader-int8 vk-bool-32)
+  (:descriptor-indexing vk-bool-32)
+  (:shader-input-attachment-array-dynamic-indexing vk-bool-32)
+  (:shader-uniform-texel-buffer-array-dynamic-indexing vk-bool-32)
+  (:shader-storage-texel-buffer-array-dynamic-indexing vk-bool-32)
+  (:shader-uniform-buffer-array-non-uniform-indexing vk-bool-32)
+  (:shader-sampled-image-array-non-uniform-indexing vk-bool-32)
+  (:shader-storage-buffer-array-non-uniform-indexing vk-bool-32)
+  (:shader-storage-image-array-non-uniform-indexing vk-bool-32)
+  (:shader-input-attachment-array-non-uniform-indexing vk-bool-32)
+  (:shader-uniform-texel-buffer-array-non-uniform-indexing vk-bool-32)
+  (:shader-storage-texel-buffer-array-non-uniform-indexing vk-bool-32)
+  (:descriptor-binding-uniform-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-sampled-image-update-after-bind vk-bool-32)
+  (:descriptor-binding-storage-image-update-after-bind vk-bool-32)
+  (:descriptor-binding-storage-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-uniform-texel-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-storage-texel-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-update-unused-while-pending vk-bool-32)
+  (:descriptor-binding-partially-bound vk-bool-32)
+  (:descriptor-binding-variable-descriptor-count vk-bool-32)
+  (:runtime-descriptor-array vk-bool-32)
+  (:sampler-filter-minmax vk-bool-32)
+  (:scalar-block-layout vk-bool-32)
+  (:imageless-framebuffer vk-bool-32)
+  (:uniform-buffer-standard-layout vk-bool-32)
+  (:shader-subgroup-extended-types vk-bool-32)
+  (:separate-depth-stencil-layouts vk-bool-32)
+  (:host-query-reset vk-bool-32)
+  (:timeline-semaphore vk-bool-32)
+  (:buffer-device-address vk-bool-32)
+  (:buffer-device-address-capture-replay vk-bool-32)
+  (:buffer-device-address-multi-device vk-bool-32)
+  (:vulkan-memory-model vk-bool-32)
+  (:vulkan-memory-model-device-scope vk-bool-32)
+  (:vulkan-memory-model-availability-visibility-chains vk-bool-32)
+  (:shader-output-viewport-index vk-bool-32)
+  (:shader-output-layer vk-bool-32)
+  (:subgroup-broadcast-dynamic-id vk-bool-32))
+
+(defcstruct vk-physical-device-variable-pointers-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:variable-pointers-storage-buffer vk-bool-32)
+  (:variable-pointers vk-bool-32))
+
+(defcstruct vk-physical-device-multiview-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:multiview vk-bool-32)
+  (:multiview-geometry-shader vk-bool-32)
+  (:multiview-tessellation-shader vk-bool-32))
+
+(defcstruct vk-physical-device-shader-atomic-float-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-buffer-float-32-atomics vk-bool-32)
+  (:shader-buffer-float-32-atomic-add vk-bool-32)
+  (:shader-buffer-float-64-atomics vk-bool-32)
+  (:shader-buffer-float-64-atomic-add vk-bool-32)
+  (:shader-shared-float-32-atomics vk-bool-32)
+  (:shader-shared-float-32-atomic-add vk-bool-32)
+  (:shader-shared-float-64-atomics vk-bool-32)
+  (:shader-shared-float-64-atomic-add vk-bool-32)
+  (:shader-image-float-32-atomics vk-bool-32)
+  (:shader-image-float-32-atomic-add vk-bool-32)
+  (:sparse-image-float-32-atomics vk-bool-32)
+  (:sparse-image-float-32-atomic-add vk-bool-32))
+
+(defcstruct vk-physical-device-shader-atomic-int-64-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-buffer-int-64-atomics vk-bool-32)
+  (:shader-shared-int-64-atomics vk-bool-32))
+
+(defcstruct vk-physical-device-8-bit-storage-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:storage-buffer-8-bit-access vk-bool-32)
+  (:uniform-and-storage-buffer-8-bit-access vk-bool-32)
+  (:storage-push-constant-8 vk-bool-32))
+
+(defcstruct vk-physical-device-16-bit-storage-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:storage-buffer-16-bit-access vk-bool-32)
+  (:uniform-and-storage-buffer-16-bit-access vk-bool-32)
+  (:storage-push-constant-16 vk-bool-32))
+
+(defcstruct vk-physical-device-shader-float-16-int-8-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-float-16 vk-bool-32)
+  (:shader-int8 vk-bool-32))
+
+(defcstruct vk-physical-device-shader-clock-features-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-subgroup-clock vk-bool-32)
+  (:shader-device-clock vk-bool-32))
+
+(defcstruct vk-physical-device-sampler-ycbcr-conversion-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:sampler-ycbcr-conversion vk-bool-32))
+
+(defcstruct vk-physical-device-protected-memory-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:protected-memory vk-bool-32))
+
+(defcstruct vk-physical-device-blend-operation-advanced-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:advanced-blend-coherent-operations vk-bool-32))
+
+(defcstruct vk-physical-device-conditional-rendering-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:conditional-rendering vk-bool-32)
+  (:inherited-conditional-rendering vk-bool-32))
+
+(defcstruct vk-physical-device-shader-draw-parameters-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-draw-parameters vk-bool-32))
+
+(defcstruct vk-physical-device-mesh-shader-features-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:task-shader vk-bool-32)
+  (:mesh-shader vk-bool-32))
+
+(defcstruct vk-physical-device-descriptor-indexing-features
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-input-attachment-array-dynamic-indexing vk-bool-32)
+  (:shader-uniform-texel-buffer-array-dynamic-indexing vk-bool-32)
+  (:shader-storage-texel-buffer-array-dynamic-indexing vk-bool-32)
+  (:shader-uniform-buffer-array-non-uniform-indexing vk-bool-32)
+  (:shader-sampled-image-array-non-uniform-indexing vk-bool-32)
+  (:shader-storage-buffer-array-non-uniform-indexing vk-bool-32)
+  (:shader-storage-image-array-non-uniform-indexing vk-bool-32)
+  (:shader-input-attachment-array-non-uniform-indexing vk-bool-32)
+  (:shader-uniform-texel-buffer-array-non-uniform-indexing vk-bool-32)
+  (:shader-storage-texel-buffer-array-non-uniform-indexing vk-bool-32)
+  (:descriptor-binding-uniform-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-sampled-image-update-after-bind vk-bool-32)
+  (:descriptor-binding-storage-image-update-after-bind vk-bool-32)
+  (:descriptor-binding-storage-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-uniform-texel-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-storage-texel-buffer-update-after-bind vk-bool-32)
+  (:descriptor-binding-update-unused-while-pending vk-bool-32)
+  (:descriptor-binding-partially-bound vk-bool-32)
+  (:descriptor-binding-variable-descriptor-count vk-bool-32)
+  (:runtime-descriptor-array vk-bool-32))
+
+(defcstruct vk-physical-device-vertex-attribute-divisor-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:vertex-attribute-instance-rate-divisor vk-bool-32)
+  (:vertex-attribute-instance-rate-zero-divisor vk-bool-32))
+
+(defcstruct vk-physical-device-a-s-t-c-decode-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:decode-mode-shared-exponent vk-bool-32))
+
+(defcstruct vk-physical-device-transform-feedback-features-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:transform-feedback vk-bool-32)
+  (:geometry-streams vk-bool-32))

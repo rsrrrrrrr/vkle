@@ -102,6 +102,7 @@
 (defctype vk-display-surface-create-flags-khr vk-flags)
 (defctype vk-headless-surface-create-flags-ext vk-flags)
 (defctype vk-swapchain-create-flags vk-flags)
+(defctype vk-private-data-slot-create-flags-ext vk-flags)
 
 (defctype vk-sample-count-flags vk-flags)
 (defctype vk-reslove-mode-flags vk-flags)
@@ -156,3 +157,5 @@
 (defctype vk-composite-alpha-flags-khr vk-flags)
 (defctype vk-surface-counter-flags-ext vk-flags)
 (defctype vk-device-group-present-mode-flags-khr vk-flags)
+(defctype vk-build-acceleration-structure-flags-khr vk-flags)
+(defctype vk-geometry-instance-flags-khr vk-flags)
