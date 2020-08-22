@@ -4215,3 +4215,383 @@ i don't know how to set up android in lisp
   (:degenerate-lines-rasterized vk-bool-32)
   (:fully-covered-fragment-shader-input-variable vk-bool-32)
   (:conservative-rasterization-post-depth-coverage vk-bool-32))
+
+(defcstruct vk-physical-device-fragment-density-map-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:min-fragment-density-texel-size (:struct vk-extent-2d))
+  (:max-fragment-density-texel-size (:struct vk-extent-2d))
+  (:fragment-density-invocations vk-bool-32))
+
+(defcstruct vk-physical-device-fragment-density-map2-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:subsampled-loads vk-bool-32)
+  (:subsampled-coarse-reconstruction-early-access vk-bool-32)
+  (:max-subsampled-array-layers :uint32)
+  (:max-descriptor-set-subsampled-samplers :uint32))
+
+(defcstruct vk-physical-device-shader-core-properties-amd
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-engine-count :uint32)
+  (:shader-arrays-per-engine-count :uint32)
+  (:compute-units-per-shader-array :uint32)
+  (:simd-per-compute-unit :uint32)
+  (:wavefronts-per-simd :uint32)
+  (:wavefront-size :uint32)
+  (:sgprs-per-simd :uint32)
+  (:min-sgpr-allocation :uint32)
+  (:max-sgpr-allocation :uint32)
+  (:sgpr-allocation-granularity :uint32)
+  (:vgprs-per-simd :uint32)
+  (:min-vgpr-allocation :uint32)
+  (:max-vgpr-allocation :uint32)
+  (:vgpr-allocation-granularity :uint32))
+
+(defcstruct vk-physical-device-shader-core-properties2-amd
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-core-features vk-shader-core-properties-flags-amd)
+  (:active-compute-unit-count :uint32))
+
+(defcstruct vk-physical-device-depth-stencil-resolve-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:supported-depth-resolve-modes vk-reslove-mode-flags)
+  (:supported-stencil-resolve-modes vk-reslove-mode-flags)
+  (:independent-resolve-none vk-bool-32)
+  (:independent-resolve vk-bool-32))
+
+(defcstruct vk-physical-device-performance-query-properties-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:allow-command-buffer-query-copies vk-bool-32))
+
+(defcstruct vk-physical-device-shading-rate-image-properties-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shading-rate-texel-size (:struct vk-extent-2d))
+  (:shading-rate-palette-size :uint32)
+  (:shading-rate-max-coarse-samples :uint32))
+
+(defcstruct vk-physical-device-transform-feedback-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-transform-feedback-streams :uint32)
+  (:max-transform-feedback-buffers :uint32)
+  (:max-transform-feedback-buffer-size vk-device-size)
+  (:max-transform-feedback-stream-data-size :uint32)
+  (:max-transform-feedback-buffer-data-size :uint32)
+  (:max-transform-feedback-buffer-data-stride :uint32)
+  (:transform-feedback-queries vk-bool-32)
+  (:transform-feedback-streams-lines-triangles vk-bool-32)
+  (:transform-feedback-rasterization-stream-select vk-bool-32)
+  (:transform-feedback-draw vk-bool-32))
+
+(defcstruct vk-physical-device-ray-tracing-properties-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-group-handle-size :uint32)
+  (:max-recursion-depth :uint32)
+  (:max-shader-group-stride :uint32)
+  (:shader-group-base-alignment :uint32)
+  (:max-geometry-count :uint64)
+  (:max-instance-count :uint64)
+  (:max-triangle-count :uint64)
+  (:max-descriptor-set-acceleration-structures :uint32))
+
+(defcstruct vk-physical-device-ray-tracing-properties-khr
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-group-handle-size :uint32)
+  (:max-recursion-depth :uint32)
+  (:max-shader-group-stride :uint32)
+  (:shader-group-base-alignment :uint32)
+  (:max-geometry-count :uint64)
+  (:max-instance-count :uint64)
+  (:max-primitive-count :uint64)
+  (:max-descriptor-set-acceleration-structures :uint32)
+  (:shader-group-handle-capture-replay-size :uint32))
+
+(defcstruct vk-physical-device-cooperative-matrix-properties-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:cooperative-matrix-supported-stages vk-shader-stage-flags))
+
+(defcstruct vk-physical-device-shader-sm-builtins-properties-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:shader-sm-count :uint32)
+  (:shader-warps-persm :uint32))
+
+(defcstruct vk-physical-device-texel-buffer-alignment-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:storage-texel-buffer-offset-alignment-bytes vk-device-size)
+  (:storage-texel-buffer-offset-single-texel-alignment vk-bool-32)
+  (:uniform-texel-buffer-offset-alignment-bytes vk-device-size)
+  (:uniform-texel-buffer-offset-single-texel-alignment vk-bool-32))
+
+(defcstruct vk-physical-device-timeline-semaphore-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-timeline-semaphore-value-difference :uint64))
+
+(defcstruct vk-physical-device-line-rasterization-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:line-sub-pixel-precision-bits :uint32))
+
+(defcstruct vk-physical-device-robustness2-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:robust-storage-buffer-access-size-alignment vk-device-size)
+  (:robust-uniform-buffer-access-size-alignment vk-device-size))
+
+(defcstruct vk-physical-device-device-generated-commands-properties-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-graphics-shader-group-count :uint32)
+  (:max-indirect-sequence-count :uint32)
+  (:max-indirect-commands-token-count :uint32)
+  (:max-indirect-commands-stream-count :uint32)
+  (:max-indirect-commands-token-offset :uint32)
+  (:max-indirect-commands-stream-stride :uint32)
+  (:min-sequences-count-buffer-offset-alignment :uint32)
+  (:min-sequences-index-buffer-offset-alignment :uint32)
+  (:min-indirect-commands-buffer-offset-alignment :uint32))
+
+(defcstruct vk-multisample-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-sample-location-grid-size (:struct vk-extent-2d)))
+
+(defcstruct vk-physical-device-custom-border-color-properties-ext 
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:max-custom-border-color-samplers :uint32))
+
+(defcstruct vk-format-properties
+  (:linear-tiling-features vk-format-feature-flags)
+  (:optimal-tiling-features vk-format-feature-flags)
+  (:buffer-features vk-format-feature-flags))
+
+(defcstruct vk-format-properties2
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:format-properties (:struct vk-format-properties)))
+
+(defcstruct vk-drm-format-modifier-properties-ext
+  (:drm-format-modifier :uint64)
+  (:drm-format-modifier-plane-count :uint32)
+  (:drm-format-modifier-tiling-features vk-format-feature-flags))
+
+(defcstruct vk-drm-format-modifier-properties-list-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:drm-format-modifier-count :uint32)
+  (:drm-format-modifier-properties (:pointer (:struct vk-drm-format-modifier-properties-ext))))
+
+(defcstruct vk-image-format-properties
+  (:max-extent (:struct vk-extent-3d))
+  (:max-mip-levels :uint32)
+  (:max-array-layers :uint32)
+  (:sample-count vk-sample-count-flags)
+  (:max-resource-size vk-device-size))
+
+(defcstruct vk-external-image-format-properties-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:image-format-properties (:struct vk-image-format-properties))
+  (:external-memory-features vk-external-memory-feature-flags-nv)
+  (:export-from-imported-handle-types vk-external-memory-handle-type-flags)
+  (:compatible-handle-types vk-external-memory-handle-type-flags))
+
+(defcstruct vk-physical-device-image-format-info2 
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:foramt VkFormat)
+  (:type VkImageType)
+  (:tiling VkImageTiling)
+  (:usage vk-image-usage-flags)
+  (:flags vk-image-create-flags))
+
+(defcstruct vk-image-format-properties2
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:image-format-properties (:struct vk-image-format-properties)))
+
+(defcstruct vk-texture-lod-gather-format-properties-amd
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:supports-texture-gather-lod-bias-amd vk-bool-32))
+
+(defcstruct vk-physical-device-external-image-format-info 
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:handle-type VkExternalMemoryHandleTypeFlagBits))
+
+(defcstruct vk-external-memory-properties
+  (:external-memory-features vk-external-memory-feature-flags)
+  (:export-from-imported-handle-types vk-external-memory-handle-type-flags)
+  (:compatible-handle-types vk-external-memory-handle-type-flags))
+
+(defcstruct vk-external-image-format-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:external-memory-properties (:struct vk-external-memory-properties)))
+
+(defcstruct vk-physical-device-image-drm-format-modifier-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:drm-format-modifier :uint64)
+  (:sharing-mode VkSharingMode)
+  (:queue-family-index-count :uint32)
+  (:queue-family-indices (:pointer :uint32)))
+
+(defcstruct vk-sampler-ycbcr-conversion-image-format-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:combined-image-sampler-descriptor-count :uint32))
+
+(defcstruct vk-android-hardware-buffer-usage-android
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:android-hardware-buffer-usage :uint64))
+
+(defcstruct vk-physical-device-image-view-image-format-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:image-view-type VkImageViewType))
+
+(defcstruct vk-filter-cubic-image-view-image-format-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:filter-cubic vk-bool-32)
+  (:filter-cubic-minmax vk-bool-32))
+
+(defcstruct vk-physical-device-external-buffer-info
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-buffer-create-flags)
+  (:usage vk-buffer-usage-flags)
+  (:handle-type VkExternalMemoryHandleTypeFlagBits))
+
+(defcstruct vk-external-buffer-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:external-memory-properties (:struct vk-external-memory-properties)))
+
+(defcstruct vk-physical-device-external-semaphore-info
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:handle-type VkExternalSemaphoreHandleTypeFlagBits))
+
+(defcstruct vk-external-semaphore-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:export-from-imported-handle-types vk-external-semaphore-handle-type-flags)
+  (:compatible-handle-types vk-external-semaphore-handle-type-flags)
+  (:external-semaphore-features vk-external-semaphore-feature-flags))
+
+(defcstruct vk-physical-device-external-fence-info
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:handle-type VkExternalFenceHandleTypeFlagBits))
+
+(defcstruct vk-external-fence-properties
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:export-from-imported-handle-types vk-external-fence-handle-type-flags)
+  (:compatible-handle-types vk-external-fence-handle-type-flags)
+  (:external-fence-features vk-external-fence-feature-flags))
+
+(defcstruct vk-debug-utils-object-name-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:object-type VkObjectType)
+  (:object-handle :uint64)
+  (:object-name (:pointer :char)))
+
+(defcstruct vk-debug-utils-object-tag-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:object-type VkObjectType)
+  (:object-handle :uint64)
+  (:tag-name :uint64)
+  (:tag-size :unsigned-int)
+  (:tag (:pointer :void)))
+
+(defcstruct vk-debug-utils-label-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:label-name :string)
+  (:color :float :count 4))
+
+(defcstruct vk-debug-utils-messenger-create-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-debug-utils-messenger-create-flags-ext)
+  (:message-severity vk-debug-utils-message-severity-flags-ext)
+  (:message-type vk-debug-utils-message-type-flags-ext)
+  (:pfn-user-callback pfn-vk-debug-utils-messenger-callback-ext)
+  (:user-data (:pointer :void)))
+
+(defcstruct vk-debug-utils-messenger-callback-data-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-debug-utils-messenger-callback-data-flags-ext)
+  (:message-id-name :string)
+  (:message-id-number :int32)
+  (:message :string)
+  (:queue-label-count :uint32)
+  (:queue-labels (:pointer (:struct vk-debug-utils-label-ext)))
+  (:cmd-buf-label-count :uint32)
+  (:cmd-buf-labels (:pointer (:struct vk-debug-utils-label-ext)))
+  (:object-count :uint32)
+  (:objects (:pointer (:struct vk-debug-utils-object-name-info-ext))))
+
+(defcstruct vk-debug-marker-object-name-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:object-type VkDebugReportObjectTypeEXT)
+  (:object :uint64)
+  (:object-name :string))
+
+(defcstruct vk-debug-marker-object-tag-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:object-type VkDebugReportObjectTypeEXT)
+  (:object :uint64)
+  (:tag-name :uint64)
+  (:tag-size :unsigned-int)
+  (:tag (:pointer :void)))
+
+(defcstruct vk-debug-marker-marker-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:mark-name :string)
+  (:color :float :count 4))
+
+(defcstruct vk-debug-report-callback-create-info-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:flags vk-debug-report-flags-ext)
+  (:pfn-callback pfn-vk-debug-report-callback-ext)
+  (:user-data (:pointer :void)))
+
+(defcstruct vk-checkpoint-data-nv
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:stage VkPipelineStageFlagBits)
+  (:checkpoint-marker (:pointer :void)))
+
+(defcstruct vk-physical-device-tool-properties-ext
+  (:type VkStructureType)
+  (:next (:pointer :void))
+  (:name :char :count 256)
+  (:version :char :count 256)
+  (:purpose vk-tool-purpose-flags-ext)
+  (:description :char :count 256)
+  (:layers :char :count 256))
