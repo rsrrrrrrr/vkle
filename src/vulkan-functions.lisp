@@ -6,7 +6,14 @@
 	  with-instance
 	  enumerate-physical-devices
 	  get-physical-device-properties
-	  get-physical-device-queue-family-properties))
+	  get-physical-device-queue-family-properties
+	  get-physical-device-memory-properties
+	  get-physical-device-features
+	  get-physical-device-format-properties
+	  get-physical-device-image-format-properties
+	  create-device
+	  destroy-device
+	  with-device))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))
@@ -178,13 +185,14 @@
   (physical-devices (:pointer vk-physical-device)))
 
 (defun enumerate-physical-devices (instance)
-  (with-foreign-objects ((count :uint32)
-			 (physical-devices 'vk-physical-device))
+  (with-foreign-object (count :uint32)
     (check-reslute-type (vkEnumeratephysicaldevices instance count (null-pointer)))
-    (assert (plusp (mem-ref count :uint32)))
-    (check-reslute-type (vkEnumeratephysicaldevices instance count physical-devices))
-    (loop for i from 0 upto (1- (mem-ref count :uint32))
-	  collect (mem-ref physical-devices 'vk-physical-device i))))
+    (let ((ct (mem-ref count :uint32)))
+      (assert (plusp ct))
+      (with-foreign-object (physical-devices 'vk-physical-device ct)
+	(check-reslute-type (vkEnumeratephysicaldevices instance count physical-devices))
+	(loop for i from 0 upto (1- ct)
+	      collect (mem-aref physical-devices 'vk-physical-device i))))))
 
 (defcfun ("vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties) :void
   (physical-device vk-physical-device)
@@ -209,4 +217,147 @@
 	(vkGetPhysicalDeviceQueueFamilyProperties physical-device count queue-families)
 	(loop for i from 0 upto (1- ct)
 	      collect (mem-aref queue-families '(:struct vk-queue-family-properties) i))))))
+
+(defun get-physical-device-memory-properties (physical-device)
+  (with-foreign-object (memory-properties '(:struct vk-physical-device-memory-properties))
+    (foreign-funcall "vkGetPhysicalDeviceMemoryProperties"
+		     vk-physical-device physical-device
+		     (:pointer (:struct vk-physical-device-memory-properties)) memory-properties
+		     :void)
+    (mem-ref memory-properties '(:struct vk-physical-device-memory-properties))))
+
+(defun get-physical-device-features (physical-device)
+  (with-foreign-object (physical-device-features '(:struct vk-physical-device-features))
+    (foreign-funcall "vkGetPhysicalDeviceFeatures"
+		     vk-physical-device physical-device
+		     (:pointer (:struct vk-physical-device-features)) physical-device-features
+		     :void)
+    (mem-ref physical-device-features '(:struct vk-physical-device-features))))
+
+(defcfun ("vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties) :void
+  (physical-device vk-physical-device)
+  (format VkFormat)
+  (format-properties (:pointer (:struct vk-format-properties))))
+
+(defun get-physical-device-format-properties (physical-device format)
+  (with-foreign-object (format-properties '(:struct vk-format-properties))
+    (vkGetPhysicalDeviceFormatProperties physical-device format format-properties)
+    (mem-ref format-properties '(:struct vk-format-properties))))
+
+(defun get-physical-device-image-format-properties (physical-device format type tiling usage flags)
+  (with-foreign-object (image-format-properties '(:struct vk-image-format-properties))
+    (check-reslute-type (foreign-funcall "vkGetPhysicalDeviceImageFormatProperties"
+					 vk-physical-device physical-device
+					 VkFormat format
+					 VkImageType type
+					 VkImageTiling tiling
+					 VkImageUsageFlagBits usage
+					 vk-image-create-flags flags
+					 (:pointer (:struct vk-image-format-properties)) image-format-properties
+					 VkResult))
+    (mem-ref image-format-properties '(:struct vk-image-format-properties))))
+
+(defcfun ("vkCreateDevice" vkCreateDevice) VkResult
+  (physical-device vk-physical-device)
+  (create-info (:pointer (:struct vk-device-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (device (:pointer vk-device)))
+
+(defcfun ("vkDestroyDevice" destroy-device) :void
+  (device vk-device)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defun create-device (physical-device &key
+					(next nil)
+					(flags 0)
+					(queue-create-infos nil)
+					(layers nil)
+					(extensions nil)
+					(enable-features 1.0)
+					(allocator nil))
+  (let ((queue-count (length queue-create-infos)))
+    (with-foreign-objects ((device 'vk-device)
+			   (queues '(:struct vk-device-queue-create-info) queue-count)
+			   (queue-properties :float queue-count)
+			   (device-create-info '(:struct vk-device-create-info))
+			   (device-extensions '(:pointer :string))
+			   (device-layers '(:pointer :string))
+			   (device-features '(:pointer :float)))
+      (if (null queue-create-infos)
+	  (setf queues (null-pointer))
+	  (loop for lqueue in queue-create-infos
+		for i from 0
+		for cqueue = (mem-aref queues '(:struct vk-device-queue-create-info) i)
+		do
+		   (progn
+		     (setf (foreign-slot-value cqueue '(:struct vk-device-queue-create-info) :type)
+			   :structure-type-device-queue-create-info)
+		     (loop for (key val) in lqueue
+			   when (null val)
+			     do
+				(setf val (null-pointer))
+			   when (eql key :queue-properties)
+			     do
+				(setf (mem-aref queue-properties :float i) val
+				      val (mem-aref queue-properties :float i))
+			   do
+			      (setf (foreign-slot-value cqueue '(:struct vk-device-queue-create-info) key) val)))))
+      (when (null next)
+	(setf next (null-pointer)))
+      (when (null layers)
+	(setf device-layers (null-pointer)))
+      (when (null extensions)
+	(setf device-extensions (null-pointer)))
+      (when (null allocator)
+	(setf allocator (null-pointer)))
+      (setf (mem-ref device-features :float) enable-features)
+      (loop for layer in layers
+	    for i from 0
+	    do
+	       (setf (mem-ref device-layers '(:pointer :string) i) layer))
+      (loop for extension in extensions
+	    for i from 0
+	    do
+	       (setf (mem-ref device-extensions '(:pointer :string) i) extension))
+      (setf (foreign-slot-value device-create-info '(:struct vk-device-create-info) :type)
+	    :structure-type-device-create-info
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :next)
+	    next
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :flags)
+	    flags
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :queue-create-info-count)
+	    (length queue-create-infos)
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :queue-create-infos)
+	    queues
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layer-count)
+	    (length layers)
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layers)
+	    device-layers
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extension-count)
+	    (length extensions)
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extensions)
+	    device-extensions
+	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :enable-features)
+	    device-features)
+      (check-reslute-type (vkCreateDevice physical-device device-create-info allocator device))
+      (mem-ref device 'vk-device))))
+
+(defmacro with-device ((device physical-device &key
+						 (next nil)
+						 (flags 0)
+						 (queue-create-infos nil)
+						 (layers nil)
+						 (extensions nil)
+						 (enable-features 1.0)
+						 (allocator nil))
+		       &body body)
+  `(let ((,device (create-device ,physical-device :next ,next
+						  :flags ,flags
+						  :queue-create-infos ,queue-create-infos
+						  :layers ,layers
+						  :extensions ,extensions
+						  :enable-features ,enable-features
+						  :allocator ,allocator)))
+     ,@body
+     (destroy-device ,device (null-pointer))))
 

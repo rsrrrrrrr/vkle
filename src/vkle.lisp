@@ -4,4 +4,5 @@
 
 (defun queue-family-support-mode-p (val &key (mode :queue-graphics-bit))
   "val is a type of uint32, mode is a enumerate type of VkQueueFlagBits"
-  (logand val (foreign-enum-value 'VkQueueFlagBits mode)))
+  (when (/= (logand val (foreign-enum-value 'VkQueueFlagBits mode)) 0)
+    t))

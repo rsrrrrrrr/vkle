@@ -344,7 +344,7 @@
   (:flags vk-device-queue-create-flags)
   (:queue-family-index :uint32)
   (:queue-count :uint32)
-  (:p-queue-properties (:pointer :float)))
+  (:queue-properties (:pointer :float)))
 
 (defcstruct vk-physical-device-features
   (:robust-buffer-access vk-bool-32)
@@ -407,8 +407,8 @@
   (:type VkStructureType)
   (:next (:pointer :void))
   (:flags vk-device-create-flags)
-  (:queue-create-info-counter :uint32)
-  (:p-queue-create-info (:pointer (:struct vk-device-queue-create-info)))
+  (:queue-create-info-count :uint32)
+  (:queue-create-infos (:pointer (:struct vk-device-queue-create-info)))
   (:layer-count :uint32)
   (:layers (:pointer :string))
   (:extension-count :uint32)

@@ -37,23 +37,28 @@
       (let* ((gpu-list (enumerate-physical-devices instance))
 	     (gpu (car gpu-list))
 	     (gpu-properties (get-physical-device-properties gpu))
-	     (queue-family-properties (get-physical-device-queue-family-properties gpu)))
-	(format t "~{~a ~a~%~}~%" gpu-properties)
-	(loop for queue-family in queue-family-properties
-	      for i from 0
-	      for mode = (getf queue-family :queue-flags)
-	      when (queue-family-support-mode-p mode :mode :queue-graphics-bit)
-		collect i into graphics-list
-	      when (queue-family-support-mode-p mode :mode :queue-transfer-bit)
-		collect i into transfer-list
-	      finally
-		 (progn
-		   (format t "graphics list: ~{ ~a ~}~%" graphics-list)
-		   (format t "transfer list: ~{ ~a ~}~%" transfer-list)
-		   (format t "~a" queue-family-properties)
-		   (set-key-callback 'key-callback)
-		   (set-mouse-button-callback 'mouse-callback)
-		   (set-window-size-callback 'window-size-callback)
-		   (loop until (window-should-close-p) do (wait-events))))))))
-
-
+	     (queue-family-properties (get-physical-device-queue-family-properties gpu))
+	     (memory-properties (get-physical-device-memory-properties gpu))
+	     (gpu-features (get-physical-device-features gpu))
+	     (gpu-format-properties (get-physical-device-format-properties gpu :format-undefined)))
+	(with-device (device gpu)
+	  (format t "~{~a ~a~%~}~%" gpu-properties)
+	  (loop for queue-family in queue-family-properties
+		for i from 0
+		for mode = (getf queue-family :queue-flags)
+		when (queue-family-support-mode-p mode :mode :queue-graphics-bit)
+		  collect i into graphics-list
+		when (queue-family-support-mode-p mode :mode :queue-transfer-bit)
+		  collect i into transfer-list
+		finally
+		   (progn
+		     (format t "graphics list: ~{ ~a ~}~%~%" graphics-list)
+		     (format t "transfer list: ~{ ~a ~}~%~%" transfer-list)
+		     (format t "queue-family-properties: ~a~%~%" queue-family-properties)
+		     (format t "gpu-features: ~a~%~%" gpu-features)
+		     (format t "memory-properties: ~a~%~%" memory-properties)		   
+		     (format t "gpu-format-properties: ~a~%~%" gpu-format-properties)
+		     (set-key-callback 'key-callback)
+		     (set-mouse-button-callback 'mouse-callback)
+		     (set-window-size-callback 'window-size-callback)
+		     (loop until (window-should-close-p) do (wait-events)))))))))
