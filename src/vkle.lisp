@@ -1152,53 +1152,5 @@
 	    :supported-composite-alpha supported-composite-alpha
 	    :supported-usage-flags supported-usage-flags))))
 
-(defun create-vulkan-surface-khr (win instance allocate)
-  (let ((surface-type (get-vulkan-dispatch-type)))
-    (with-foreign-object (surface surface-type)
-      (foreign-funcall "glfwCreateWindowSurface"
-		       :pointer instance
-		       :pointer win
-		       :pointer allocate
-		       :pointer surface
-		       :boolean)
-      (mem-ref surface surface-type))))
 
-(defmacro with-surface ((surface win instance) &body body)
-  `(let ((,surface (create-vulkan-surface-khr ,win ,instance (null-pointer))))
-     (progn
-       ,@body
-       (%vk:destroy-surface-khr ,instance ,surface (null-pointer)))))
-
-(defun create-semaphore (logic-device)
-  (let ((semaphore-type (get-vulkan-dispatch-type)))
-    (with-foreign-objects ((create-info '(:struct semaphore-create-info) (semaphore semaphore-type)))
-      (setf (foreign-slot-value create-info '(:struct semaphore-create-info) :struct-info) :semaphore-create-info
-	    (foreign-slot-value create-info '(:struct semaphore-create-info) :next) (null-pointer)
-	    (foreign-slot-value create-info '(:struct semaphore-create-info) :flag) 0)
-      (foreign-funcall "vkCreateSemaphore"
-		       logic-device ))))
-
-(defcfun ("vkCreateSemaphore" create-semaphore) :uint32
-  (device :pointer)
-  (p-create-info (:pointer (:struct semaphore-create-info)))
-  (p-allocator :pointer) 
-  (p-semaphore (:pointer semaphore)))
-
-
-(defun get-instance-extensions ()
-  (with-foreign-object (count :uint32)
-    (let* ((extensions (foreign-funcall "glfwGetRequiredInstanceExtensions"
-					:pointer count
-					:pointer))
-	   (extensions-count (- (mem-ref count :uint32) 1)))
-      (loop for i from 0 upto extensions-count
-	    collect (mem-aref extensions :string i)))))
-
-(defcfun ("glfwVulkanSupported" get-vulkan-support) :boolean
-  "return true if vulkan is available")
-
-(defcfun ("glfwGetPhysicalDevicePresentationSupport" queue-family-index-support-present-p) :uint64
-  (instance vk-handle)
-  (physical-device vk-handle)
-  (index :uint32))
 |#

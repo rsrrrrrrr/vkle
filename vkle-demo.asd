@@ -1,5 +1,5 @@
 (asdf:defsystem :vkle-demo
-  :depends-on (:cl-vulkan :cl-glfw3 :vkle)
+  :depends-on (:cl-glfw3 :vkle)
   :serial t
   :pathname "demo"
   :components ((:file "package")

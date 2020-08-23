@@ -8,7 +8,7 @@
     `(defctype vk-non-dispatch-handle :pointer)
     `(defctype vk-non-dispatch-handle :uint64))
 
-(defctype vk-isntance vk-handle)
+(defctype vk-instance vk-handle)
 (defctype vk-physical-device vk-handle)
 (defctype vk-device vk-handle)
 (defctype vk-queue vk-handle)

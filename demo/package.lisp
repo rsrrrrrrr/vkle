@@ -1,5 +1,5 @@
 (defpackage :vkle-demo
-  (:use :cl :cl-vulkan :cl-glfw3 :vkle)
+  (:use :cl :cl-glfw3 :vkle)
   (:export
    :instance-demo
    :print-physical-devices-info-demo
