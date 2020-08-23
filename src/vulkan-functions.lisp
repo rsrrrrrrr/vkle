@@ -208,5 +208,5 @@
       (with-foreign-object (queue-families '(:struct vk-queue-family-properties) ct)
 	(vkGetPhysicalDeviceQueueFamilyProperties physical-device count queue-families)
 	(loop for i from 0 upto (1- ct)
-	      collect (mem-ref queue-families '(:struct vk-queue-family-properties) i))))))
+	      collect (mem-aref queue-families '(:struct vk-queue-family-properties) i))))))
 
