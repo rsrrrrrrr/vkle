@@ -13,7 +13,12 @@
 	  get-physical-device-image-format-properties
 	  create-device
 	  destroy-device
-	  with-device))
+	  with-device
+	  enumerate-instance-version
+	  enumerate-instance-layer-properties
+	  enumerate-instance-extension-properties
+	  enumerate-device-layer-properties
+	  enumerate-device-extesnion-properties))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))
@@ -98,8 +103,8 @@
   (with-foreign-objects ((app-info '(:struct vk-application-info))
 			 (instance-info '(:struct vk-instance-create-info))
 			 (instance 'vk-instance)
-			 (instance-layers '(:pointer :string))
-			 (instance-extensions '(:pointer :string)))
+			 (instance-layers :string)
+			 (instance-extensions :string))
     (when (null instance-next)
       (setf instance-next (null-pointer)))    
     (when (null application-next)
@@ -122,16 +127,16 @@
 	  (foreign-slot-value app-info '(:struct vk-application-info) :api-version)
 	  api-version)
     (let* ((usable-extensions (get-instance-extensions))
-	   (use-extensions (intersection usable-extensions extensions)))
+	   (use-extensions (intersection usable-extensions extensions :test #'string=)))
       ;;covert lisp string to c string pointer
       (loop for extension in use-extensions
 	    for i from 0 upto (1- (length use-extensions))
 	    do
-	       (setf (mem-ref instance-extensions '(:pointer :string) i) extension))
+	       (setf (mem-ref instance-extensions :string i) extension))
       (loop for layer in layers
 	    for i from 0 upto (1- (length layers))
 	    do
-	       (setf (mem-ref instance-layers '(:pointer :string) i) layer))
+	       (setf (mem-ref instance-layers :string i) layer))
       ;;setf struct VkInstanceCreaetInfo
       (setf (foreign-slot-value instance-info '(:struct vk-instance-create-info) :type)
 	    :structure-type-instance-create-info
@@ -361,3 +366,101 @@
      ,@body
      (destroy-device ,device (null-pointer))))
 
+(defun enumerate-instance-version ()
+  (with-foreign-object (api-version :uint32)
+    (check-reslute-type (foreign-funcall "vkEnumerateInstanceVersion"
+					 :pointer api-version
+					 VkResult))
+    (mem-ref api-version :uint32)))
+
+(defcfun ("vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLayerProperties) VkResult
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-layer-properties))))
+
+(defun enumerate-instance-layer-properties ()
+  (with-foreign-object (count :uint32)
+    (check-reslute-type (vkEnumerateInstanceLayerProperties count (null-pointer)))
+    (let ((ct (mem-ref count :uint32)))
+      (with-foreign-object (properties '(:struct vk-layer-properties) ct)
+	(check-reslute-type (vkEnumerateInstanceLayerProperties count properties))
+	(let ((props (loop for i upto (1- ct)
+			   collect (mem-aref properties '(:struct vk-layer-properties) i))))
+	  (loop for p in props
+		for i upto (1- ct)
+		do
+		   (setf (getf p :description)
+			 (c-array-to-lisp-string (foreign-slot-value (mem-aptr properties '(:struct vk-layer-properties) i) '(:struct vk-layer-properties) :description) 256)
+			 (getf p :layer-name)
+			 (c-array-to-lisp-string (foreign-slot-value (mem-aptr properties '(:struct vk-layer-properties) i) '(:struct vk-layer-properties) :layer-name) 256))
+		finally
+		   (return props)))))))
+
+(defcfun ("vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties) VkResult
+  (layer-name :string)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-extension-properties))))
+
+(defun enumerate-instance-extension-properties (layer-name)
+  (with-foreign-objects ((count :uint32)
+			 (properties '(:struct vk-extension-properties)))
+    (with-foreign-pointer-as-string (name (length layer-name))
+      (lisp-string-to-foreign layer-name name (length layer-name))
+      (check-reslute-type (vkEnumerateInstanceExtensionProperties layer-name count (null-pointer)))
+      (let ((ct (mem-ref count :uint32)))
+	(check-reslute-type (vkEnumerateInstanceExtensionProperties layer-name count properties))
+	(let ((props (loop for i upto (1- ct)
+			   collect (mem-aref properties '(:struct vk-extension-properties) i))))
+	  (loop for p in props
+		for i upto (1- ct)
+		do
+		   (setf (getf p :extension-name)
+			 (c-array-to-lisp-string (foreign-slot-value (mem-aptr properties '(:struct vk-extension-properties) i) '(:struct vk-extension-properties) :extension-name) 256))
+		finally
+		   (return props)))))))
+
+(defcfun ("vkEnumerateDeviceLayerProperties" vkEnumerateDeviceLayerProperties) VkResult
+  (physical-device vk-physical-device)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-layer-properties))))
+
+(defun enumerate-device-layer-properties (physical-device)
+  (with-foreign-objects ((count :uint32)
+			 (properties '(:struct vk-layer-properties)))
+    (check-reslute-type (vkEnumerateDeviceLayerProperties physical-device count (null-pointer)))
+    (let ((ct (mem-aref count :uint32)))
+      (check-reslute-type (vkEnumerateDeviceLayerProperties physical-device count properties))
+      (let ((props (loop for i upto (1- ct)
+			 collect (mem-aref properties '(:struct vk-layer-properties) i))))
+	(loop for p in props
+	      for i upto (1- ct)
+	      do
+		 (setf (getf p :description)
+		       (c-array-to-lisp-string (foreign-slot-value (mem-aptr properties '(:struct vk-layer-properties) i) '(:struct vk-layer-properties) :description) 256)
+		       (getf p :layer-name)
+		       (c-array-to-lisp-string (foreign-slot-value (mem-aptr properties '(:struct vk-layer-properties) i) '(:struct vk-layer-properties) :layer-name) 256))
+	      finally
+		 (return props))))))
+  
+(defcfun ("vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties) VkResult
+  (physical-device vk-physical-device)
+  (layer-name :string)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-extension-properties))))
+
+(defun enumerate-device-extesnion-properties (physical-device layer-name)
+  (with-foreign-objects ((count :uint32)
+			 (properties '(:struct vk-extension-properties)))
+    (with-foreign-pointer-as-string (name (length layer-name))
+      (lisp-string-to-foreign layer-name name (length layer-name))
+      (check-reslute-type (vkEnumerateDeviceExtensionProperties physical-device name count (null-pointer)))
+      (let ((ct (mem-ref count :uint32)))
+	(check-reslute-type (vkEnumerateDeviceExtensionProperties physical-device name count properties))
+	(let ((props (loop for i upto (1- ct)
+			   collect (mem-aref properties '(:struct vk-extension-properties) i))))
+	  (loop for p in props
+		for i upto (1- ct)
+		do
+		   (setf (getf p :extension-name)
+			 (c-array-to-lisp-string (foreign-slot-value (mem-aptr properties '(:struct vk-extension-properties) i) '(:struct vk-extension-properties) :extension-name) 255))
+		finally
+		   (return props)))))))

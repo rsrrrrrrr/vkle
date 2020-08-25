@@ -33,7 +33,9 @@
 
 (defun demo ()
   (init-basic-glfw ()
-    (with-instance (instance)
+    (with-instance (instance
+		    :extensions '("VK_KHR_surface")
+		    :layers '("VK_LAYER_LUNARG_standard_validation"))
       (let* ((gpu-list (enumerate-physical-devices instance))
 	     (gpu (car gpu-list))
 	     (gpu-properties (get-physical-device-properties gpu))
@@ -58,6 +60,10 @@
 		     (format t "gpu-features: ~a~%~%" gpu-features)
 		     (format t "memory-properties: ~a~%~%" memory-properties)		   
 		     (format t "gpu-format-properties: ~a~%~%" gpu-format-properties)
+		     (format t "instance api version: ~a ~%~%" (enumerate-instance-version))
+		     (format t "instance layers: ~a~%~%~%" (enumerate-instance-layer-properties))
+		     (format t "instance extesnions: ~a ~%~%~%" (enumerate-instance-extension-properties "VK_LAYER_MESA_overlay"))
+		     (format t "device layers: ~a ~%~%~%" (enumerate-device-layer-properties gpu))
 		     (set-key-callback 'key-callback)
 		     (set-mouse-button-callback 'mouse-callback)
 		     (set-window-size-callback 'window-size-callback)
