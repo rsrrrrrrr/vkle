@@ -132,11 +132,11 @@
       (loop for extension in use-extensions
 	    for i from 0 upto (1- (length use-extensions))
 	    do
-	       (setf (mem-ref instance-extensions :string i) extension))
+	       (setf (mem-aref instance-extensions :string i) extension))
       (loop for layer in layers
 	    for i from 0 upto (1- (length layers))
 	    do
-	       (setf (mem-ref instance-layers :string i) layer))
+	       (setf (mem-aref instance-layers :string i) layer))
       ;;setf struct VkInstanceCreaetInfo
       (setf (foreign-slot-value instance-info '(:struct vk-instance-create-info) :type)
 	    :structure-type-instance-create-info
@@ -285,9 +285,9 @@
 			   (queues '(:struct vk-device-queue-create-info) queue-count)
 			   (queue-properties :float queue-count)
 			   (device-create-info '(:struct vk-device-create-info))
-			   (device-extensions '(:pointer :string))
-			   (device-layers '(:pointer :string))
-			   (device-features '(:pointer :float)))
+			   (device-extensions :string)
+			   (device-layers :string)
+			   (device-features :float))
       (if (null queue-create-infos)
 	  (setf queues (null-pointer))
 	  (loop for lqueue in queue-create-infos
@@ -307,45 +307,48 @@
 				      val (mem-aref queue-properties :float i))
 			   do
 			      (setf (foreign-slot-value cqueue '(:struct vk-device-queue-create-info) key) val)))))
-      (when (null next)
-	(setf next (null-pointer)))
-      (when (null layers)
-	(setf device-layers (null-pointer)))
-      (when (null extensions)
-	(setf device-extensions (null-pointer)))
-      (when (null allocator)
-	(setf allocator (null-pointer)))
-      (setf (mem-ref device-features :float) enable-features)
-      (loop for layer in layers
-	    for i from 0
-	    do
-	       (setf (mem-ref device-layers '(:pointer :string) i) layer))
-      (loop for extension in extensions
-	    for i from 0
-	    do
-	       (setf (mem-ref device-extensions '(:pointer :string) i) extension))
-      (setf (foreign-slot-value device-create-info '(:struct vk-device-create-info) :type)
-	    :structure-type-device-create-info
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :next)
-	    next
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :flags)
-	    flags
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :queue-create-info-count)
-	    (length queue-create-infos)
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :queue-create-infos)
-	    queues
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layer-count)
-	    (length layers)
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layers)
-	    device-layers
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extension-count)
-	    (length extensions)
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extensions)
-	    device-extensions
-	    (foreign-slot-value device-create-info '(:struct vk-device-create-info) :enable-features)
-	    device-features)
-      (check-reslute-type (vkCreateDevice physical-device device-create-info allocator device))
-      (mem-ref device 'vk-device))))
+      (let* ((usable-layers (get-support-layers layers (enumerate-device-layer-properties physical-device)))
+	     (usable-extensions (loop for l in usable-layers
+				      collect (get-support-extensions extensions (enumerate-device-extesnion-properties physical-device l)))))
+	(loop for layer in usable-layers
+	      for i from 0
+	      do
+		 (setf (mem-aref device-layers :string i) layer))
+	(loop for extension in (remove-duplicates (apply #'append usable-extensions) :test #'string=)
+	      for i from 0
+	      do
+		 (setf (mem-aref device-extensions :string i) extension))
+	(when (null next)
+	  (setf next (null-pointer)))
+	(when (null usable-layers)
+	  (setf device-layers (null-pointer)))
+	(when (null usable-extensions)
+	  (setf device-extensions (null-pointer)))
+	(when (null allocator)
+	  (setf allocator (null-pointer)))
+	(setf (mem-ref device-features :float) enable-features)
+	(setf (foreign-slot-value device-create-info '(:struct vk-device-create-info) :type)
+	      :structure-type-device-create-info
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :next)
+	      next
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :flags)
+	      flags
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :queue-create-info-count)
+	      (length queue-create-infos)
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :queue-create-infos)
+	      queues
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layer-count)
+	      (length layers)
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layers)
+	      device-layers
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extension-count)
+	      (length extensions)
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extensions)
+	      device-extensions
+	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :enable-features)
+	      device-features)
+	(check-reslute-type (vkCreateDevice physical-device device-create-info allocator device))
+	(mem-ref device 'vk-device)))))
 
 (defmacro with-device ((device physical-device &key
 						 (next nil)
@@ -428,6 +431,8 @@
 			 (properties '(:struct vk-layer-properties)))
     (check-reslute-type (vkEnumerateDeviceLayerProperties physical-device count (null-pointer)))
     (let ((ct (mem-aref count :uint32)))
+      (when (zerop ct)
+	(return-from enumerate-device-layer-properties nil)) 
       (check-reslute-type (vkEnumerateDeviceLayerProperties physical-device count properties))
       (let ((props (loop for i upto (1- ct)
 			 collect (mem-aref properties '(:struct vk-layer-properties) i))))
@@ -454,6 +459,8 @@
       (lisp-string-to-foreign layer-name name (length layer-name))
       (check-reslute-type (vkEnumerateDeviceExtensionProperties physical-device name count (null-pointer)))
       (let ((ct (mem-ref count :uint32)))
+	(when (zerop ct)
+	  (return-from enumerate-device-extesnion-properties nil))
 	(check-reslute-type (vkEnumerateDeviceExtensionProperties physical-device name count properties))
 	(let ((props (loop for i upto (1- ct)
 			   collect (mem-aref properties '(:struct vk-extension-properties) i))))

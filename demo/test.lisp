@@ -43,7 +43,8 @@
 	     (memory-properties (get-physical-device-memory-properties gpu))
 	     (gpu-features (get-physical-device-features gpu))
 	     (gpu-format-properties (get-physical-device-format-properties gpu :format-undefined)))
-	(with-device (device gpu)
+	(with-device (device gpu
+		      :layers '("VK_LAYER_LUNARG_standard_validation"))
 	  (format t "~{~a ~a~%~}~%" gpu-properties)
 	  (loop for queue-family in queue-family-properties
 		for i from 0
@@ -64,6 +65,7 @@
 		     (format t "instance layers: ~a~%~%~%" (enumerate-instance-layer-properties))
 		     (format t "instance extesnions: ~a ~%~%~%" (enumerate-instance-extension-properties "VK_LAYER_MESA_overlay"))
 		     (format t "device layers: ~a ~%~%~%" (enumerate-device-layer-properties gpu))
+		     (format t "device instances: ~a ~%~%~%" (enumerate-device-extesnion-properties gpu "VK_LAYER_LUNARG_standard_validation"))
 		     (set-key-callback 'key-callback)
 		     (set-mouse-button-callback 'mouse-callback)
 		     (set-window-size-callback 'window-size-callback)
