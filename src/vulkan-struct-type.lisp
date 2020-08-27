@@ -492,12 +492,12 @@
   (:type VkStructureType)
   (:next (:pointer :void))
   (:wait-semaphore-count :uint32)
-  (:wait-semaphore (:pointer vk-semaphore))
-  (:wait-dst-stage-mask (:pointer vk-pipeline-stage-flags))
+  (:wait-semaphores (:pointer vk-semaphore))
+  (:wait-dst-stage-masks (:pointer vk-pipeline-stage-flags))
   (:command-buffer-count :uint32)
-  (:command-buffer (:pointer vk-command-buffer))
+  (:command-buffers (:pointer vk-command-buffer))
   (:signal-semaphore-count :uint32)
-  (:signal-semaphore (:pointer vk-semaphore)))
+  (:signal-semaphores (:pointer vk-semaphore)))
 
 (defcstruct vk-timeline-semaphore-submit-info
   (:type VkStructureType)

@@ -44,7 +44,8 @@
 	     (gpu-features (get-physical-device-features gpu))
 	     (gpu-format-properties (get-physical-device-format-properties gpu :format-undefined)))
 	(with-device (device gpu
-		      :layers '("VK_LAYER_LUNARG_standard_validation"))
+		      :layers '("VK_LAYER_LUNARG_standard_validation")
+		      :extensions '("VK_LAYER_LUNARG_standard_validation"))
 	  (format t "~{~a ~a~%~}~%" gpu-properties)
 	  (loop for queue-family in queue-family-properties
 		for i from 0

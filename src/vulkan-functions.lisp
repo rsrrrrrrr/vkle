@@ -18,7 +18,13 @@
 	  enumerate-instance-layer-properties
 	  enumerate-instance-extension-properties
 	  enumerate-device-layer-properties
-	  enumerate-device-extesnion-properties))
+	  enumerate-device-extesnion-properties
+	  get-device-queue
+	  queue-submit
+	  queue-wait-idle
+	  device-wait-idle
+	  allocate-memory
+	  free-memory))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))
@@ -231,13 +237,15 @@
 		     :void)
     (mem-ref memory-properties '(:struct vk-physical-device-memory-properties))))
 
-(defun get-physical-device-features (physical-device)
+(defun get-physical-device-features (physical-device &optional (get-pointer nil))
   (with-foreign-object (physical-device-features '(:struct vk-physical-device-features))
     (foreign-funcall "vkGetPhysicalDeviceFeatures"
 		     vk-physical-device physical-device
 		     (:pointer (:struct vk-physical-device-features)) physical-device-features
 		     :void)
-    (mem-ref physical-device-features '(:struct vk-physical-device-features))))
+    (if get-pointer
+	physical-device-features
+	(mem-ref physical-device-features '(:struct vk-physical-device-features)))))
 
 (defcfun ("vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties) :void
   (physical-device vk-physical-device)
@@ -278,7 +286,6 @@
 					(queue-create-infos nil)
 					(layers nil)
 					(extensions nil)
-					(enable-features 1.0)
 					(allocator nil))
   (let ((queue-count (length queue-create-infos)))
     (with-foreign-objects ((device 'vk-device)
@@ -286,8 +293,7 @@
 			   (queue-properties :float queue-count)
 			   (device-create-info '(:struct vk-device-create-info))
 			   (device-extensions :string)
-			   (device-layers :string)
-			   (device-features :float))
+			   (device-layers :string))
       (if (null queue-create-infos)
 	  (setf queues (null-pointer))
 	  (loop for lqueue in queue-create-infos
@@ -308,25 +314,28 @@
 			   do
 			      (setf (foreign-slot-value cqueue '(:struct vk-device-queue-create-info) key) val)))))
       (let* ((usable-layers (get-support-layers layers (enumerate-device-layer-properties physical-device)))
-	     (usable-extensions (loop for l in usable-layers
-				      collect (get-support-extensions extensions (enumerate-device-extesnion-properties physical-device l)))))
-	(loop for layer in usable-layers
-	      for i from 0
-	      do
-		 (setf (mem-aref device-layers :string i) layer))
-	(loop for extension in (remove-duplicates (apply #'append usable-extensions) :test #'string=)
-	      for i from 0
-	      do
-		 (setf (mem-aref device-extensions :string i) extension))
+	     (usable-extensions-t (loop for l in usable-layers
+					collect (get-support-extensions extensions (enumerate-device-extesnion-properties physical-device l))))
+	     (usable-extensions (apply #'append usable-extensions-t))
+	     (enable-features (get-physical-device-features physical-device t))
+	     (enable-layer-count (length usable-layers))
+	     (enable-extension-count (length usable-extensions)))
 	(when (null next)
 	  (setf next (null-pointer)))
-	(when (null usable-layers)
-	  (setf device-layers (null-pointer)))
-	(when (null usable-extensions)
-	  (setf device-extensions (null-pointer)))
+	(if (null usable-layers)
+	    (setf device-layers (null-pointer))
+	    (loop for layer in usable-layers
+		  for i from 0
+		  do
+		     (setf (mem-aref device-layers :string i) layer)))
+	(if (null usable-extensions)
+	    (setf device-extensions (null-pointer))
+	    (loop for extension in (remove-duplicates usable-extensions :test #'string=)
+		  for i from 0
+		  do
+		     (setf (mem-aref device-extensions :string i) extension)))
 	(when (null allocator)
 	  (setf allocator (null-pointer)))
-	(setf (mem-ref device-features :float) enable-features)
 	(setf (foreign-slot-value device-create-info '(:struct vk-device-create-info) :type)
 	      :structure-type-device-create-info
 	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :next)
@@ -338,15 +347,15 @@
 	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :queue-create-infos)
 	      queues
 	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layer-count)
-	      (length layers)
+	      enable-layer-count
 	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :layers)
 	      device-layers
 	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extension-count)
-	      (length extensions)
+	      enable-extension-count
 	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :extensions)
 	      device-extensions
 	      (foreign-slot-value device-create-info '(:struct vk-device-create-info) :enable-features)
-	      device-features)
+	      enable-features)
 	(check-reslute-type (vkCreateDevice physical-device device-create-info allocator device))
 	(mem-ref device 'vk-device)))))
 
@@ -356,7 +365,6 @@
 						 (queue-create-infos nil)
 						 (layers nil)
 						 (extensions nil)
-						 (enable-features 1.0)
 						 (allocator nil))
 		       &body body)
   `(let ((,device (create-device ,physical-device :next ,next
@@ -364,7 +372,6 @@
 						  :queue-create-infos ,queue-create-infos
 						  :layers ,layers
 						  :extensions ,extensions
-						  :enable-features ,enable-features
 						  :allocator ,allocator)))
      ,@body
      (destroy-device ,device (null-pointer))))
@@ -471,3 +478,104 @@
 			 (c-array-to-lisp-string (foreign-slot-value (mem-aptr properties '(:struct vk-extension-properties) i) '(:struct vk-extension-properties) :extension-name) 255))
 		finally
 		   (return props)))))))
+
+(defun get-device-queue (device queue-family-index queue-index)
+  (with-foreign-object (queue 'vk-queue)
+    (foreign-funcall "vkGetDeviceQueue"
+		     vk-device device
+		     :uint32 queue-family-index
+		     :uint32 queue-index
+		     (:pointer vk-queue) queue
+		     :void)
+    (mem-ref queue 'vk-queue)))
+
+(defun queue-submit (&key queue
+		       submit-count
+		       fence
+		       (next nil)
+		       (p-wait-semaphores nil)
+		       (p-wait-dst-stage-masks nil)
+		       (command-buffer-count 0)
+		       (p-command-buffers nil)
+		       (signal-semaphore-count 0)
+		       (p-signal-semaphores nil))
+  "submit-info is a list"
+  (with-foreign-object (info '(:struct vk-submit-info))
+    (when (null p-wait-semaphores)
+      (setf p-wait-semaphores (null-pointer)))
+    (when (null p-wait-dst-stage-masks)
+      (setf p-wait-dst-stage-masks (null-pointer)))
+    (when (null p-command-buffers)
+      (setf p-command-buffers (null-pointer)))
+    (when (null p-signal-semaphores)
+      (setf p-signal-semaphores (null-pointer)))
+    (when (null next)
+      (setf next (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-submit-info) :type)
+	  :structure-type-submit-info
+	  (foreign-slot-value info '(:struct vk-submit-info) :next)
+	  next
+	  (foreign-slot-value info '(:struct vk-submit-info) :wait-semaphores)
+	  p-wait-semaphores
+	  (foreign-slot-value info '(:struct vk-submit-info) :wait-dst-stage-masks)
+	  p-wait-dst-stage-masks
+	  (foreign-slot-value info '(:struct vk-submit-info) :command-buffer-count)
+	  command-buffer-count
+	  (foreign-slot-value info '(:struct vk-submit-info) :command-buffers)
+	  p-command-buffers
+	  (foreign-slot-value info '(:struct vk-submit-info) :signal-semaphore-count)
+	  signal-semaphore-count
+	  (foreign-slot-value info '(:struct vk-submit-info) :signal-semaphores)
+	  p-signal-semaphores)
+    (check-reslute-type (foreign-funcall "vkQueueSubmit"
+					 vk-queue queue
+					 :uint32 submit-count
+					 (:pointer (:struct vk-submit-info)) info
+					 vk-fence fence
+					 VkResult))))
+
+(defun queue-wait-idle (queue)
+  (check-reslute-type (foreign-funcall "vkQueueWaitIdle"
+				       vk-queue queue
+				       VkResult)))
+
+(defun device-wait-idle (device)
+  (check-reslute-type (foreign-funcall "vkDeviceWaitIdle"
+				       vk-device device
+				       VkResult)))
+
+(defun allocate-memory (device &key
+				 (next nil)
+				 (allocation-size 0)
+				 (memory-type-index 0)
+				 (allocator nil))
+  (when (null next)
+    (setf next (null-pointer)))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (with-foreign-objects ((info '(:struct vk-memory-allocate-info))
+			 (memory 'vk-device-memory))
+    (setf (foreign-slot-value info '(:struct vk-memory-allocate-info) :type)
+	  :structure-type-memory-allocate-info
+	  (foreign-slot-value info '(:struct vk-memory-allocate-info) :next)
+	  next
+	  (foreign-slot-value info '(:struct vk-memory-allocate-info) :allocation-size)
+	  allocation-size
+	  (foreign-slot-value info '(:struct vk-memory-allocate-info) :memory-type-index)
+	  memory-type-index)
+    (check-reslute-type (foreign-funcall "vkAllocateMemory"
+					 vk-device device
+					 (:pointer (:struct vk-memory-allocate-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-device-memory) memory
+					 VkResult))
+    (mem-ref memory 'vk-device-memory)))
+
+(defun free-memory (device memory &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkFreeMemory"
+		   vk-device device
+		   vk-device-memory memory
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
