@@ -5,6 +5,7 @@
 	  destroy-instance
 	  with-instance
 	  enumerate-physical-devices
+	  get-instance-extensions
 	  get-physical-device-properties
 	  get-physical-device-queue-family-properties
 	  get-physical-device-memory-properties
@@ -24,7 +25,10 @@
 	  queue-wait-idle
 	  device-wait-idle
 	  allocate-memory
-	  free-memory))
+	  free-memory
+	  create-surface-khr
+	  destroy-surface-khr
+	  with-surface))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))
@@ -34,24 +38,8 @@
   (logior (ash major 22)
 	  (ash minor 12)
 	  patch))
+
 #|
-(defun create-vulkan-surface-khr (win instance allocate)
-  (let ((surface-type (get-vulkan-dispatch-type)))
-    (with-foreign-object (surface surface-type)
-      (foreign-funcall "glfwCreateWindowSurface"
-		       :pointer instance
-		       :pointer win
-		       :pointer allocate
-		       :pointer surface
-		       :boolean)
-      (mem-ref surface surface-type))))
-
-(defmacro with-surface ((surface win instance) &body body)
-  `(let ((,surface (create-vulkan-surface-khr ,win ,instance (null-pointer))))
-     (progn
-       ,@body
-       (%vk:destroy-surface-khr ,instance ,surface (null-pointer)))))
-
 (defun create-semaphore (logic-device)
   (let ((semaphore-type (get-vulkan-dispatch-type)))
     (with-foreign-objects ((create-info '(:struct semaphore-create-info) (semaphore semaphore-type)))
@@ -71,7 +59,7 @@
 (defcfun ("glfwVulkanSupported" get-vulkan-support) :boolean
   "return true if vulkan is available")
 
-(defcfun ("glfwGetPhysicalDevicePresentationSupport" queue-family-index-support-present-p) :uint64
+(defcfun ("glfwGetPhysicalDevicePresentationSupport" queue-family-index-support-present-p) :int
   (instance vk-handle)
   (physical-device vk-handle)
   (index :uint32))
@@ -103,7 +91,7 @@
 			  (engine-name "Vkle test")
 			  (engine-version (make-vulkan-version 0 0 0))
 			  (api-version (make-vulkan-version))
-			  (extensions (get-instance-extensions))   ;;as default use glfw get the extension
+			  (extensions nil)   ;;as default use glfw get the extension
 			  (layers nil)
 			  (allocator nil))
   (with-foreign-objects ((app-info '(:struct vk-application-info))
@@ -133,14 +121,17 @@
 	  (foreign-slot-value app-info '(:struct vk-application-info) :api-version)
 	  api-version)
     (let* ((usable-extensions (get-instance-extensions))
-	   (use-extensions (intersection usable-extensions extensions :test #'string=)))
+	   (use-extensions (intersection usable-extensions extensions :test #'string=))
+	   (extension-count (length use-extensions))
+	   (use-layers (get-support-layers layers (enumerate-instance-layer-properties)))
+	   (layer-count (length use-layers)))
       ;;covert lisp string to c string pointer
       (loop for extension in use-extensions
-	    for i from 0 upto (1- (length use-extensions))
+	    for i from 0 
 	    do
 	       (setf (mem-aref instance-extensions :string i) extension))
-      (loop for layer in layers
-	    for i from 0 upto (1- (length layers))
+      (loop for layer in use-layers
+	    for i from 0 
 	    do
 	       (setf (mem-aref instance-layers :string i) layer))
       ;;setf struct VkInstanceCreaetInfo
@@ -153,11 +144,11 @@
 	    (foreign-slot-value instance-info '(:struct vk-instance-create-info) :info)
 	    app-info
 	    (foreign-slot-value instance-info '(:struct vk-instance-create-info) :layer-count)
-	    (length layers)
+	    layer-count
 	    (foreign-slot-value instance-info '(:struct vk-instance-create-info) :layers)
 	    instance-layers
 	    (foreign-slot-value instance-info '(:struct vk-instance-create-info) :extension-count)
-	    (length extensions)
+	    extension-count
 	    (foreign-slot-value instance-info '(:struct vk-instance-create-info) :extensions)
 	    instance-extensions)
       (check-reslute-type (VkCreateInstance instance-info allocator instance))
@@ -298,21 +289,9 @@
 	  (setf queues (null-pointer))
 	  (loop for lqueue in queue-create-infos
 		for i from 0
-		for cqueue = (mem-aref queues '(:struct vk-device-queue-create-info) i)
+		for cqueue = (mem-aptr queues '(:struct vk-device-queue-create-info) i)
 		do
-		   (progn
-		     (setf (foreign-slot-value cqueue '(:struct vk-device-queue-create-info) :type)
-			   :structure-type-device-queue-create-info)
-		     (loop for (key val) in lqueue
-			   when (null val)
-			     do
-				(setf val (null-pointer))
-			   when (eql key :queue-properties)
-			     do
-				(setf (mem-aref queue-properties :float i) val
-				      val (mem-aref queue-properties :float i))
-			   do
-			      (setf (foreign-slot-value cqueue '(:struct vk-device-queue-create-info) key) val)))))
+		   (create-device-queue lqueue cqueue)))
       (let* ((usable-layers (get-support-layers layers (enumerate-device-layer-properties physical-device)))
 	     (usable-extensions-t (loop for l in usable-layers
 					collect (get-support-extensions extensions (enumerate-device-extesnion-properties physical-device l))))
@@ -579,3 +558,26 @@
 		   vk-device-memory memory
 		   (:pointer (:struct vk-allocation-callback)) allocator
 		   :void))
+
+(defun create-surface-khr (win instance allocate)
+  (with-foreign-object (surface 'vk-surface-khr)
+    (check-reslute-type (foreign-funcall "glfwCreateWindowSurface"
+					 vk-instance instance
+					 :pointer win
+					 (:pointer (:struct vk-allocation-callback)) allocate
+					 (:pointer vk-surface-khr) surface
+					 VkResult))
+    (mem-ref surface 'vk-surface-khr)))
+
+(defun destroy-surface-khr (instance surface allocator)
+  (foreign-funcall "vkDestroySurfaceKHR"
+		   vk-instance instance
+		   vk-surface-khr surface
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defmacro with-surface ((surface win instance) &body body)
+  `(let ((,surface (create-surface-khr ,win ,instance (null-pointer))))
+     (progn
+       ,@body
+       (destroy-surface-khr ,instance ,surface (null-pointer)))))
