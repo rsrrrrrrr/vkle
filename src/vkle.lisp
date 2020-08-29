@@ -50,8 +50,6 @@
   (with-foreign-object (pro :float)
     (setf (foreign-slot-value queue '(:struct vk-device-queue-create-info) :type)
 	  :structure-type-device-queue-create-info
-	  (foreign-slot-value queue '(:struct vk-device-queue-create-info) :flags)
-	  1
 	  (foreign-slot-value queue '(:struct vk-device-queue-create-info) :next)
 	  (null-pointer))
     (labels ((create (info)
