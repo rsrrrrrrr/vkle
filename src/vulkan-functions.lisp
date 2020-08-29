@@ -28,7 +28,39 @@
 	  free-memory
 	  create-surface-khr
 	  destroy-surface-khr
-	  with-surface))
+	  with-surface
+	  map-memory
+	  unmap-memory
+	  flush-mapped-memory-ranges
+	  invalidate-mapped-memory-rannges
+	  get-device-memory-commitment
+	  get-buffer-memory-requirements
+	  bind-buffer-memory
+	  get-image-memory-requirememt
+	  bind-image-memory
+	  get-image-sparse-memory-requirements
+	  get-physical-device-sparse-image-format-properties
+	  queue-bind-sparse
+	  create-fence
+	  destroy-fence
+	  reset-fence
+	  get-fence-status
+	  wait-for-fence
+	  create-semaphore
+	  destroy-semaphore
+	  create-event
+	  destory-evnet
+	  get-event-status
+	  set-event
+	  reset-event
+	  create-query-pool
+	  destroy-query-pool
+	  get-query-pool-results
+	  reset-query-pool
+	  with-query-pool
+	  create-buffer
+	  destroy-buffer
+	  create-buffer-view))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))
