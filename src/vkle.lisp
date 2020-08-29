@@ -12,6 +12,9 @@
 	finally
 	(return  (concatenate 'string lstr))))
 
+(defun pointer->val (pointer type)
+  (mem-ref pointer type))
+
 (defun queue-family-support-mode-p (val &optional (mode :queue-graphics-bit))
   "val is a type of uint32, mode is a enumerate type of VkQueueFlagBits"
   (when (/= (logand val (foreign-enum-value 'VkQueueFlagBits mode)) 0)
@@ -46,6 +49,16 @@
 	unless (zerop (queue-family-index-support-present-p instance physical-device i))
 	  collect i))
 
+(defun create-vk-object (obj type lst)
+  (if (null lst)
+      nil
+      (progn
+	(set-vk-object obj type (car lst) (cadr lst))
+	(create-vk-object obj type (cddr lst)))))
+
+(defun set-vk-object (obj type key val)
+  (setf (foreign-slot-value obj type key) val))
+
 (defun create-device-queue (infos queue)
   (with-foreign-object (pro :float)
     (setf (foreign-slot-value queue '(:struct vk-device-queue-create-info) :type)
@@ -71,3 +84,77 @@
 				(cadr info))
 			  (create (cddr info)))))))
       (create infos))))
+
+(defun create-bind-sparse-info (&key
+				  (next nil)
+				  (wait-semaphores-lst nil)
+				  (buffer-binds-lst nil)
+				  (image-opaque-binds-lst nil)
+				  (image-binds-lst nil)
+				  (signal-semaphores-lst nil))
+  (with-foreign-objects ((bind-info '(:struct vk-bind-sparse-info))
+			 (wait-semaphores 'vk-semaphore (length wait-semaphores-lst))
+			 (signal-semaphores 'vk-semaphore (length signal-semaphores-lst))			 
+			 (buffer-binds '(:struct vk-sparse-buffer-memory-bind-info) (length buffer-binds-lst))
+			 (image-opaque-binds '(:struct vk-sparse-image-opaque-memory-bind-info) (length image-opaque-binds-lst))
+			 (image-binds '(:struct vk-sparse-image-memory-bind-info) (length image-binds-lst)))
+    (when (null next)
+      (setf next (null-pointer)))
+    (when (null wait-semaphores-lst)
+      (setf wait-semaphores (null-pointer)))
+    (when (null signal-semaphores-lst)
+      (setf signal-semaphores (null-pointer)))
+    (when (null buffer-binds-lst)
+      (setf buffer-binds (null-pointer)))
+    (when (null image-opaque-binds-lst)
+      (setf image-opaque-binds (null-pointer)))
+    (when (null image-binds-lst)
+      (setf image-binds (null-pointer)))
+    (loop for semaphore in wait-semaphores-lst
+	  for i from 0
+	  do
+	     (setf (mem-aref wait-semaphores 'vk-semaphore i) semaphore))
+    (loop for semaphore in signal-semaphores-lst
+	  for i from 0
+	  do
+	     (setf (mem-aref signal-semaphores 'vk-semaphore i) semaphore))
+    (loop for info in buffer-binds-lst
+	  for i from 0
+	  for cinfo = (mem-aptr buffer-binds '(:struct vk-sparse-buffer-memory-bind-info) i)
+	  do
+	     (create-vk-object cinfo '(:struct vk-sparse-buffer-memory-bind-info) info))
+    (loop for info in image-opaque-binds-lst
+	  for i from 0
+	  for cinfo = (mem-aptr buffer-binds '(:struct vk-sparse-image-opaque-memory-bind-info) i)
+	  do
+	     (create-vk-object cinfo '(:struct vk-sparse-image-opaque-memory-bind-info) info))
+    (loop for info in image-binds-lst
+	  for i from 0
+	  for cinfo = (mem-aptr buffer-binds '(:struct vk-sparse-image-memory-bind-info) i)
+	  do
+	     (create-vk-object cinfo '(:struct vk-sparse-image-memory-bind-info) info))
+    (setf (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :type)
+	  :structure-type-bind-sparse-info
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :next)
+	  next
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :wait-semaphore-count)
+	  (length wait-semaphores-lst)
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :wait-semaphores)
+	  wait-semaphores
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :buffer-bind-count)
+	  (length buffer-binds-lst)
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :buffer-binds)
+	  buffer-binds
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :image-opaque-bind-count)
+	  (length image-opaque-binds-lst)
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :image-opaque-binds)
+	  image-opaque-binds
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :image-bind-count)
+	  (length image-binds-lst)
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :image-binds)
+	  image-binds
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :signal-semaphore-count)
+	  (length signal-semaphores-lst)
+	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :signal-semaphores)
+	  signal-semaphores)
+    bind-info))

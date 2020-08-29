@@ -177,3 +177,5 @@
 (defctype vk-debug-utils-messenger-callback-data-flags-ext vk-flags)
 (defctype vk-debug-report-flags-ext vk-flags)
 (defctype vk-tool-purpose-flags-ext vk-flags)
+(defctype vk-memory-map-flags vk-flags)
+(defctype vk-query-result-flags vk-flags)

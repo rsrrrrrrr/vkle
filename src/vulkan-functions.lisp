@@ -69,9 +69,11 @@
   (allocator (:pointer (:struct vk-allocation-callback)))
   (instance (:pointer vk-instance)))
 
-(defcfun ("vkDestroyInstance" destroy-instance) :void
-  (instance vk-instance)
-  (allocator (:pointer (:struct vk-allocation-callback))))
+(defun destory-instance (instance &optional (allocator nil))
+  (foreign-funcall "vkDestroyInstance"
+		   vk-instance instance
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
 
 (defun get-instance-extensions ()
   (with-foreign-object (count :uint32)
@@ -179,7 +181,7 @@
 				     :layers ,layers
 				     :allocator ,allocator)))
        ,@body
-       (destroy-instance ,instance (null-pointer))))
+       (destroy-instance ,instance)))
 
 (defcfun ("vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices) VkResult
   (instance vk-instance)
@@ -267,9 +269,11 @@
   (allocator (:pointer (:struct vk-allocation-callback)))
   (device (:pointer vk-device)))
 
-(defcfun ("vkDestroyDevice" destroy-device) :void
-  (device vk-device)
-  (allocator (:pointer (:struct vk-allocation-callback))))
+(defun destroy-device (device &optional (allocatior nil))
+  (foreign-funcall "vkDestroyDevice"
+		   vk-device device
+		   (:pointer (:struct vk-allocation-callback)) allocatior
+		   :void))
 
 (defun create-device (physical-device &key
 					(next nil)
@@ -353,7 +357,7 @@
 						  :extensions ,extensions
 						  :allocator ,allocator)))
      ,@body
-     (destroy-device ,device (null-pointer))))
+     (destroy-device ,device)))
 
 (defun enumerate-instance-version ()
   (with-foreign-object (api-version :uint32)
@@ -558,6 +562,466 @@
 		   vk-device-memory memory
 		   (:pointer (:struct vk-allocation-callback)) allocator
 		   :void))
+
+(defun map-memory (device memory offset size flags)
+  (with-foreign-object (data '(:pointer :void))
+    (check-reslute-type (foreign-funcall "vkMapMemory"
+					 vk-device device
+					 vk-device-memory memory
+					 vk-device-size offset
+					 vk-device-size size
+					 vk-memory-map-flags flags
+					 (:pointer (:pointer :void)) data
+					 VkResult))))
+
+(defun unmap-memory (device memory)
+  (foreign-funcall "vkUnmapMemory"
+		   vk-device device
+		   vk-device-memory memory
+		   :void))
+
+(defun flush-mapped-memory-ranges (device memory-range-count memory offset size &key (next nil))
+  (with-foreign-object (memory-ranges '(:struct vk-mapped-memory-range))
+    (when (null next)
+      (setf next (null-pointer)))
+    (setf (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :type)
+	  :structure-type-mapped-memory-range
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :next)
+	  next
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :memory)
+	  memory
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :offset)
+	  offset
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :size)
+	  size)
+    (check-reslute-type (foreign-funcall "vkFlushMappedMemoryRanges"
+					 vk-device device
+					 :uint32 memory-range-count
+					 (:pointer (:struct vk-mapped-memory-range)) memory-ranges
+					 VkResult))))
+
+(defun invalidate-mapped-memory-rannges (device memory-range-count memory offset size &key (next nil))
+  (with-foreign-object (memory-ranges '(:struct vk-mapped-memory-range))
+    (when (null next)
+      (setf next (null-pointer)))
+    (setf (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :type)
+	  :structure-type-mapped-memory-range
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :next)
+	  next
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :memory)
+	  memory
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :offset)
+	  offset
+	  (foreign-slot-value memory-ranges '(:struct vk-mapped-memory-range) :size)
+	  size)
+    (check-reslute-type (foreign-funcall "vkInvalidateMappedMemoryRanges"
+					 vk-device device
+					 :uint32 memory-range-count
+					 (:pointer (:struct vk-mapped-memory-range)) memory-ranges
+					 VkResult))))
+
+(defun get-device-memory-commitment (device memory)
+  (with-foreign-object (committed-memory-in-bytes 'vk-device-size)
+    (foreign-funcall "vkGetDeviceMemoryCommitment"
+		     vk-device device
+		     vk-device-memory memory
+		     (:pointer vk-device-size) committed-memory-in-bytes)
+    (mem-ref committed-memory-in-bytes 'vk-device-size)))
+
+(defun get-buffer-memory-requirements (device buffer)
+  (with-foreign-object (memory-requirements '(:struct vk-memory-requirements))
+    (foreign-funcall "vkGetBufferMemoryRequirements"
+		     vk-device device
+		     vk-buffer buffer
+		     (:pointer (:struct vk-memory-requirements)) memory-requirements)
+    (mem-ref memory-requirements '(:struct vk-memory-requirements))))
+
+(defun bind-buffer-memory (device buffer memory memory-offset)
+  (check-reslute-type (foreign-funcall "vkBindBufferMemory"
+				       vk-device device
+				       vk-buffer buffer
+				       vk-device-memory memory
+				       vk-device-size memory-offset)))
+
+(defun get-image-memory-requirememt (device image)
+  (with-foreign-object (image-requirement '(:struct vk-memory-requirements))
+    (foreign-funcall "vkGetImageMemoryRequirements"
+		     vk-device device
+		     vk-image image
+		     (:pointer (:struct vk-memory-requirements)) image-requirement
+		     :void)
+    (mem-ref image-requirement '(:struct vk-memory-requirements))))
+
+(defun bind-image-memory (device image memory memory-offset)
+  (check-reslute-type (foreign-funcall "vkBindImageMemory"
+				       vk-device device
+				       vk-image image
+				       vk-device-memory memory
+				       vk-device-size memory-offset
+				       VkResult)))
+
+(defcfun ("vkGetImageSparseMemoryRequirements" vkGetImageSparseMemoryRequirements) :void
+  (device vk-device)
+  (image vk-image)
+  (count (:pointer :uint32))
+  (sparse-memory-requirements (:pointer (:struct vk-sparse-image-memory-requirements))))
+
+(defun get-image-sparse-memory-requirements (device image)
+  (with-foreign-object (count :uint32)
+    (vkGetImageSparseMemoryRequirements device image count (null-pointer))
+    (let ((ct (mem-ref count :uint32)))
+      (with-foreign-object (sparse-memory-requirements '(:struct vk-sparse-image-memory-requirements) ct)
+	(vkGetImageSparseMemoryRequirements device image count sparse-memory-requirements)
+	(loop for i from 0 upto (1- ct)
+	      collect (mem-aref sparse-memory-requirements '(:struct vk-sparse-image-memory-requirements) i))))))
+
+(defcfun ("vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysicalDeviceSparseImageFormatProperties) :void
+  (physical-device vk-physical-device)
+  (format VkFormat)
+  (type VkImageType)
+  (samples VkSampleCountFlagBits)
+  (usage vk-image-usage-flags)
+  (tiling VkImageTiling)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-sparse-image-format-properties))))
+
+(defun get-physical-device-sparse-image-format-properties (physical-device format type samples usage tiling)
+  (with-foreign-object (count :uint32)
+    (vkGetPhysicalDeviceSparseImageFormatProperties physical-device format type samples usage tiling count (null-pointer))
+    (let ((ct (mem-ref count :uint32)))
+      (with-foreign-object (properties '(:struct vk-sparse-image-format-properties))
+	(vkGetPhysicalDeviceSparseImageFormatProperties physical-device format type samples usage tiling count properties)
+	(loop for i from 0 upto (1- ct)
+	      collect (mem-aref properties i))))))
+
+(defun queue-bind-sparse (queue count fence &key
+					      (next nil)
+					      (wait-semaphores-lst nil)
+					      (buffer-binds-lst nil)
+					      (image-opaque-binds-lst nil)
+					      (image-binds-lst nil)
+					      (signal-semaphores-lst nil))
+  (let ((bind-info (create-bind-sparse-info :next next
+					    :wait-semaphores-lst wait-semaphores-lst
+					    :buffer-binds-lst buffer-binds-lst
+					    :image-opaque-binds-lst image-opaque-binds-lst
+					    :image-binds-lst image-binds-lst
+					    :signal-semaphores-lst signal-semaphores-lst)))
+    (check-reslute-type (foreign-funcall "vkQueueBindSparse"
+					 vk-queue queue
+					 :uint32 count
+					 (:pointer (:struct vk-bind-sparse-info)) bind-info
+					 vk-fence fence
+					 VkResult))))
+
+(defcfun ("vkCreateFence" vkCreateFence) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-fence-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (fence (:pointer vk-fence)))
+
+(defun create-fence (device &key
+			      (info-next nil)
+			      (info-flags 0)
+			      (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-fence-create-info))
+			 (fence 'vk-fence))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-fence-create-info) :type)
+	  :structure-type-fence-create-info
+	  (foreign-slot-value info '(:struct vk-fence-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-fence-create-info) :flags)
+	  info-flags)
+    (check-reslute-type (vkCreateFence device info allocator fence))
+    (mem-ref fence 'vk-fence)))
+
+(defun destroy-fence (device fence &optional (allocator nil))
+  (foreign-funcall "vkDestroyFence"
+		   vk-device device
+		   vk-fence fence
+		   (:pointer (:struct vk-allocation-callback)) allocator))
+
+(defun reset-fence (device fence-list)
+  (with-foreign-object (fences 'vk-fence (length fence-list))
+    (loop for fence in fence-list
+	  for i from 0
+	  do
+	     (setf (mem-ref fences 'vk-fence i) fence))
+    (check-reslute-type (foreign-funcall "vkResetFences"
+					 vk-device device
+					 :uint32 (length fence-list)
+					 (:pointer vk-fence) fences
+					 VkResult))))
+
+(defun get-fence-status (device fence)
+  (check-reslute-type (foreign-funcall "vkGetFenceStatus"
+				       vk-device device
+				       vk-fence fence
+				       VkResult)))
+
+(defun wait-for-fence (device fence-list &key
+					   (wait-all 0)
+					   (timeout 1000))
+  (with-foreign-object (fences 'vk-fence (length fence-list))
+    (loop for fence in fence-list
+	  for i from 0
+	  do
+	     (setf (mem-ref fences 'vk-fence i) fence))
+    (check-reslute-type (foreign-funcall "vkWaitForFences"
+					 vk-device device
+					 :uint (length fence-list)
+					 (:pointer vk-fence) fences
+					 vk-bool-32 wait-all
+					 :uint64 timeout
+					 VkResult))))
+
+(defun create-semaphore (device &key
+				  (info-next nil)
+				  (info-flags 0)
+				  (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-semaphore-create-info))
+			 (semaphore 'vk-semaphore))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))   
+    (setf (foreign-slot-value info '(:struct vk-semaphore-create-info) :type)
+	  :structure-type-semaphore-create-info
+	  (foreign-slot-value info '(:struct vk-semaphore-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-semaphore-create-info) :flags)
+	  info-flags)
+    (check-reslute-type (foreign-funcall "vkCreateSemaphore"
+					 vk-device device
+					 (:pointer (:struct vk-semaphore-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-semaphore) semaphore
+					 VkResult))
+    (mem-ref semaphore 'vk-semaphore)))
+
+(defun destroy-semaphore (device semaphore &optional (allocator nil))
+  (foreign-funcall "vkDestroySemaphore"
+		   vk-device device
+		   vk-semaphore semaphore
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-event (device &key
+			      (info-next nil)
+			      (info-flags 0)
+			      (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-event-create-info))
+			 (event 'vk-event))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))   
+    (setf (foreign-slot-value info '(:struct vk-event-create-info) :type)
+	  :structure-type-event-create-info
+	  (foreign-slot-value info '(:struct vk-event-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-event-create-info) :flags)
+	  info-flags)
+    (check-reslute-type (foreign-funcall "vkCreateEvent"
+					 vk-device device
+					 (:pointer (:struct vk-event-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-event) event
+					 VkResult))
+    (mem-ref event 'vk-event)))
+
+(defun destory-evnet (device event &optional (allocator nil))
+  (foreign-funcall "vkDestroyEvent"
+		   vk-device device
+		   vk-event event
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun get-event-status (device event)
+  (check-reslute-type (foreign-funcall "vkGetEventStatus"
+				       vk-device device
+				       vk-event event
+				       VkResult)))
+
+(defun set-event (device event)
+  (check-reslute-type (foreign-funcall "vkSetEvent"
+				       vk-device device
+				       vk-event event
+				       VkResult)))
+
+(defun reset-event (device event)
+  (check-reslute-type (foreign-funcall "vkResetEvent"
+				       vk-device device
+				       vk-event event
+				       VkResult)))
+
+(defcfun ("vkCreateQueryPool" vkCreateQueryPool) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-query-pool-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pool (:pointer vk-query-pool)))
+
+(defun create-query-pool (device &key
+				   (info-next nil)
+				   (info-flags 0)
+				   (info-type 0)
+				   (info-count 0)
+				   (info-pipeline-statistics 0)
+				   (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-query-pool-create-info))
+			 (pool 'vk-query-pool))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-query-pool-create-info) :type)
+	  :structure-type-query-pool-create-info
+	  (foreign-slot-value info '(:struct vk-query-pool-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-query-pool-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-query-pool-create-info) :query-type)
+	  info-type
+	  (foreign-slot-value info '(:struct vk-query-pool-create-info) :query-count)
+	  info-count
+	  (foreign-slot-value info '(:struct vk-query-pool-create-info) :pipeline-statistics)
+	  info-pipeline-statistics)
+    (check-reslute-type (vkCreateQueryPool device info allocator pool))
+    (mem-ref pool 'vk-query-pool)))
+
+(defun destroy-query-pool (device pool &optional (allocator nil))
+  (foreign-funcall "vkDestroyQueryPool"
+		   vk-device device
+		   vk-query-pool pool
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun get-query-pool-results (device pool first-query query-count data-size stride flags)
+  (with-foreign-object (data '(:pointer :void))
+    (check-reslute-type (foreign-funcall "vkGetQueryPoolResults"
+					 vk-device device
+					 vk-query-pool pool
+					 :uint32 first-query
+					 :uint32 query-count
+					 :uint data-size
+					 (:pointer :void) data
+					 vk-device-size stride
+					 vk-query-result-flags flags
+					 VkResult))
+    (mem-ref data '(:pointer :void))))
+
+(defun reset-query-pool (device pool first-query query-count)
+  (foreign-funcall "vkResetQueryPool"
+		   vk-device device
+		   vk-query-pool pool
+		   :uint32 first-query
+		   :uint32 query-count
+		   :void))
+
+(defmacro with-query-pool ((pool device &key
+					 (info-next nil)
+					 (info-flags 0)
+					 (info-type 0)
+					 (info-count 0)
+					 (info-pipeline-statistics 0)
+					  (allocator nil))
+			   &body body)
+  `(let ((,pool (create-query-pool ,device
+				   :info-next ,info-next
+				   :info-flags ,info-flags
+				   :info-type ,info-type
+				   :info-count ,info-count
+				   :info-pipeline-statistics ,info-pipeline-statistics
+				   :allocator ,allocator)))
+     ,@body
+     (destroy-query-pool ,device ,pool)))
+
+(defun create-buffer (device &key
+			       (info-next nil)
+			       (info-flags 0)
+			       (info-size 0)
+			       (info-usage 0)
+			       (info-sharing-mode 0)
+			       (info-queue-family-index 0)
+			       (info-queue-family-indices 0)
+			       (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-buffer-create-info))
+			 (buffer 'vk-buffer)
+			 (info-indices :uint32))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (mem-ref info-indices :uint32) info-queue-family-indices)
+    (setf (foreign-slot-value info '(:struct vk-buffer-create-info) :type)
+	  :structure-type-buffer-create-info
+	  (foreign-slot-value info '(:struct vk-buffer-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-buffer-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-buffer-create-info) :size)
+	  info-size
+	  (foreign-slot-value info '(:struct vk-buffer-create-info) :usage)
+	  info-usage
+	  (foreign-slot-value info '(:struct vk-buffer-create-info) :sharing-mode)
+	  info-sharing-mode
+	  (foreign-slot-value info '(:struct vk-buffer-create-info) :queue-family-count)
+	  info-queue-family-index
+	  (foreign-slot-value info '(:struct vk-buffer-create-info) :queue-family-indices)
+	  info-indices)
+    (check-reslute-type (foreign-funcall "vkCreateBuffer"
+					 vk-device device
+					 (:pointer (:struct vk-buffer-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-buffer) buffer
+					 VkResult))
+    (mem-ref buffer 'vk-buffer)))
+
+(defun destroy-buffer (device buffer &optional (allocator nil))
+  (foreign-funcall "vkDestroyBuffer"
+		   vk-device device
+		   vk-buffer buffer
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-buffer-view (device info-buffer &key
+						(info-next nil)
+						(info-flags 0)
+						(info-format 0)
+						(info-offset 0)
+						(info-range 0)
+						(allocator nil))
+  (with-foreign-objects ((info '(:struct vk-buffer-view-create-info))
+			 (buffer-view 'vk-buffer-view))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-buffer-view-create-info) :type)
+	  :structure-type-buffer-view-create-info
+	  (foreign-slot-value info '(:struct vk-buffer-view-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-buffer-view-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-buffer-view-create-info) :buffer)
+	  info-buffer
+	  (foreign-slot-value info '(:struct vk-buffer-view-create-info) :format)
+	  info-format
+	  (foreign-slot-value info '(:struct vk-buffer-view-create-info) :offset)
+	  info-offset
+	  (foreign-slot-value info '(:struct vk-buffer-view-create-info) :range)
+	  info-range)
+    (check-reslute-type (foreign-funcall "vkCreateBufferView"
+					 vk-device device
+					 (:pointer (:struct vk-buffer-view-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-buffer-view) buffer-view
+					 VkResult))
+    (mem-ref buffer-view 'vk-buffer-view)))
 
 (defun create-surface-khr (win instance allocate)
   (with-foreign-object (surface 'vk-surface-khr)
