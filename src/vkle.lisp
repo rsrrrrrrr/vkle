@@ -49,15 +49,28 @@
 	unless (zerop (queue-family-index-support-present-p instance physical-device i))
 	  collect i))
 
+(defun create-sub-vk-object (type lst)
+  (with-foreign-object (obj type)
+    (create-vk-object obj type lst)
+    obj))
+
 (defun create-vk-object (obj type lst)
-  (if (null lst)
-      nil
-      (progn
-	(set-vk-object obj type (car lst) (cadr lst))
-	(create-vk-object obj type (cddr lst)))))
+  (cond ((null lst) nil)
+	((listp (cadr lst))
+	 (progn
+	   (let ((sub-type (car (cadr lst)))
+		 (sub-list (cadr (cadr lst))))
+	     (set-vk-object obj type (car lst) (create-sub-vk-object sub-type sub-list))
+	     (create-vk-object obj type (cddr lst)))))
+	(t
+	 (progn
+	   (set-vk-object obj type (car lst) (cadr lst))
+	   (create-vk-object obj type (cddr lst))))))
 
 (defun set-vk-object (obj type key val)
-  (setf (foreign-slot-value obj type key) val))
+  (if (null val)
+      (setf (foreign-slot-value obj type key) (null-pointer))
+      (setf (foreign-slot-value obj type key) val)))
 
 (defun create-device-queue (infos queue)
   (with-foreign-object (pro :float)
@@ -158,3 +171,9 @@
 	  (foreign-slot-value bind-info '(:struct vk-bind-sparse-info) :signal-semaphores)
 	  signal-semaphores)
     bind-info))
+
+(defun create-3d-extent (obj lst)
+  (if (null lst)
+      (null-pointer)
+      (create-vk-object obj '(:struct vk-extent-3d) lst)))
+

@@ -49,7 +49,7 @@
 	  create-semaphore
 	  destroy-semaphore
 	  create-event
-	  destory-evnet
+	  destroy-evnet
 	  get-event-status
 	  set-event
 	  reset-event
@@ -101,7 +101,9 @@
   (allocator (:pointer (:struct vk-allocation-callback)))
   (instance (:pointer vk-instance)))
 
-(defun destory-instance (instance &optional (allocator nil))
+(defun destroy-instance (instance &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
   (foreign-funcall "vkDestroyInstance"
 		   vk-instance instance
 		   (:pointer (:struct vk-allocation-callback)) allocator
@@ -301,10 +303,12 @@
   (allocator (:pointer (:struct vk-allocation-callback)))
   (device (:pointer vk-device)))
 
-(defun destroy-device (device &optional (allocatior nil))
+(defun destroy-device (device &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))  
   (foreign-funcall "vkDestroyDevice"
 		   vk-device device
-		   (:pointer (:struct vk-allocation-callback)) allocatior
+		   (:pointer (:struct vk-allocation-callback)) allocator
 		   :void))
 
 (defun create-device (physical-device &key
@@ -772,6 +776,8 @@
     (mem-ref fence 'vk-fence)))
 
 (defun destroy-fence (device fence &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
   (foreign-funcall "vkDestroyFence"
 		   vk-device device
 		   vk-fence fence
@@ -805,7 +811,7 @@
 	     (setf (mem-ref fences 'vk-fence i) fence))
     (check-reslute-type (foreign-funcall "vkWaitForFences"
 					 vk-device device
-					 :uint (length fence-list)
+					 :unsigned-int (length fence-list)
 					 (:pointer vk-fence) fences
 					 vk-bool-32 wait-all
 					 :uint64 timeout
@@ -836,6 +842,8 @@
     (mem-ref semaphore 'vk-semaphore)))
 
 (defun destroy-semaphore (device semaphore &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
   (foreign-funcall "vkDestroySemaphore"
 		   vk-device device
 		   vk-semaphore semaphore
@@ -866,7 +874,9 @@
 					 VkResult))
     (mem-ref event 'vk-event)))
 
-(defun destory-evnet (device event &optional (allocator nil))
+(defun destroy-evnet (device event &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
   (foreign-funcall "vkDestroyEvent"
 		   vk-device device
 		   vk-event event
@@ -926,6 +936,8 @@
     (mem-ref pool 'vk-query-pool)))
 
 (defun destroy-query-pool (device pool &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
   (foreign-funcall "vkDestroyQueryPool"
 		   vk-device device
 		   vk-query-pool pool
@@ -939,7 +951,7 @@
 					 vk-query-pool pool
 					 :uint32 first-query
 					 :uint32 query-count
-					 :uint data-size
+					 :unsigned-int data-size
 					 (:pointer :void) data
 					 vk-device-size stride
 					 vk-query-result-flags flags
@@ -1014,6 +1026,8 @@
     (mem-ref buffer 'vk-buffer)))
 
 (defun destroy-buffer (device buffer &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
   (foreign-funcall "vkDestroyBuffer"
 		   vk-device device
 		   vk-buffer buffer
@@ -1054,6 +1068,423 @@
 					 (:pointer vk-buffer-view) buffer-view
 					 VkResult))
     (mem-ref buffer-view 'vk-buffer-view)))
+
+(defun destroy-buffer-view (device buffer-view &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyBufferView"
+		   vk-device device
+		   vk-buffer-view buffer-view
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-image (device &key
+			      (info-next nil)
+			      (info-flags 0)
+			      (info-image-type :image-type-2d)
+			      (info-format 0)
+			      (info-extent nil)
+			      (info-mip-levels 0)
+			      (info-array-layers 0)
+			      (info-samples 0)
+			      (info-tiling 0)
+			      (info-usage 0)
+			      (info-sharing-mode 0)
+			      (info-queue-family-index-count 0)
+			      (info-queue-family-indices 0)
+			      (info-layout :image-layout-general)
+			      (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-image-create-info))
+			 (extent '(:struct vk-extent-3d))
+			 (indices :uint32)
+			 (image 'vk-image))
+    (create-3d-extent extent info-extent)
+    (setf (mem-ref indices :uint32) info-queue-family-indices)
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-image-create-info) :type)
+	  :structure-type-image-create-info
+	  (foreign-slot-value info '(:struct vk-image-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-image-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-image-create-info) :image-type)
+	  info-image-type
+	  (foreign-slot-value info '(:struct vk-image-create-info) :format)
+	  info-format
+	  (foreign-slot-value info '(:struct vk-image-create-info) :extent)
+	  (mem-ref extent '(:struct vk-extent-3d))
+	  (foreign-slot-value info '(:struct vk-image-create-info) :mip-levels)
+	  info-mip-levels
+	  (foreign-slot-value info '(:struct vk-image-create-info) :array-layers)
+	  info-array-layers
+	  (foreign-slot-value info '(:struct vk-image-create-info) :samples)
+	  info-samples
+	  (foreign-slot-value info '(:struct vk-image-create-info) :tiling)
+	  info-tiling
+	  (foreign-slot-value info '(:struct vk-image-create-info) :usage)
+	  info-usage
+	  (foreign-slot-value info '(:struct vk-image-create-info) :sharing-mode)
+	  info-sharing-mode
+	  (foreign-slot-value info '(:struct vk-image-create-info) :queue-family-index-count)
+	  info-queue-family-index-count
+	  (foreign-slot-value info '(:struct vk-image-create-info) :queue-family-indices)
+	  indices
+	  (foreign-slot-value info '(:struct vk-image-create-info) :initial-layout)
+	  info-layout)
+    (check-reslute-type (foreign-funcall "vkCreateImage"
+					 vk-device device
+					 (:pointer (:struct vk-image-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-image) image
+					 VkResult))
+    (mem-ref image 'vk-image)))
+
+(defun destroy-image (device image &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyImage"
+		   vk-device device
+		   vk-image image
+		   (:pointer (:struct vk-allocation-callback)) allocator))
+
+(defun get-image-subresource-layout (device image aspect-mask mip-level array-layer)
+  (with-foreign-objects ((subresource '(:struct vk-image-subresource))
+			 (layout '(:struct vk-subresource-layout)))
+    (setf (foreign-slot-value subresource '(:struct vk-image-subresource) :aspect-mask)
+	  aspect-mask
+	  (foreign-slot-value subresource '(:struct vk-image-subresource) :mip-level)
+	  mip-level
+	  (foreign-slot-value subresource '(:struct vk-image-subresource) :array-layer)
+	  array-layer)
+    (foreign-funcall "vkGetImageSubresourceLayout"
+		     vk-device device
+		     vk-image image
+		     (:pointer (:struct vk-image-subresource)) subresource
+		     (:pointer (:struct vk-subresource-layout)) layout
+		     :void)
+    (mem-ref layout '(:struct vk-subresource-layout))))
+
+(defun create-image-view (device info-image &key
+					      (info-next nil)
+					      (info-flags 0)
+					      (info-view-type 0)
+					      (info-format 0)
+					      (info-components nil)
+					      (info-image-subresource-range nil)
+					      (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-image-view-create-info))
+			 (components '(:struct vk-component-mapping))
+			 (subresource-range '(:struct vk-image-subresource-range))
+			 (image-view 'vk-image-view))
+    (create-vk-object components '(:struct vk-component-mapping) info-components)
+    (create-vk-object subresource-range '(:struct vk-image-subresource-range) info-image-subresource-range)
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-image-view-create-info) :type)
+	  :structure-type-image-view-create-info
+	  (foreign-slot-value info '(:struct vk-image-view-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-image-view-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-image-view-create-info) :image)
+	  info-image
+	  (foreign-slot-value info '(:struct vk-image-view-create-info) :view-type)
+	  info-view-type
+	  (foreign-slot-value info '(:struct vk-image-view-create-info) :format)
+	  info-format
+	  (foreign-slot-value info '(:struct vk-image-view-create-info) :components)
+	  (mem-ref components '(:struct vk-component-mapping))
+	  (foreign-slot-value info '(:struct vk-image-view-create-info) :subresource-range)
+	  (mem-ref subresource-range '(:struct vk-image-subresource-range)))
+    (check-reslute-type (foreign-funcall "vkCreateImageView"
+					 vk-device device
+					 (:pointer (:struct vk-image-view-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-image-view) image-view
+					 VkResult))
+    (mem-ref image-view 'vk-image-view)))
+
+(defun destroy-image-view (device image-view &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyImageView"
+		   vk-device device
+		   vk-image-view image-view
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-sharder-module (device &key
+				       (info-next nil)
+				       (info-flags 0)
+				       (info-code-size 0)
+				       (info-code 0)
+				       (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-shader-module-create-info))
+			 (code :uint32)
+			 (module 'vk-shader-module))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (mem-ref code :uint32) info-code)
+    (setf (foreign-slot-value info '(:struct vk-shader-module-create-info) :type)
+	  :structure-type-shader-module-create-info
+	  (foreign-slot-value info '(:struct vk-shader-module-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-shader-module-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-shader-module-create-info) :code-size)
+	  info-code-size
+	  (foreign-slot-value info '(:struct vk-shader-module-create-info) :code)
+	  code)
+    (check-reslute-type (foreign-funcall "vkCreateShaderModule"
+					 vk-device device
+					 (:pointer (:struct vk-shader-module-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-shader-module) module
+					 VkResult))
+    (mem-ref module 'vk-shader-module)))
+
+(defun destroy-shader-module (device shader-module &optional (allocator nil))
+  (foreign-funcall "vkDestroyShaderModule"
+		   vk-device device
+		   vk-shader-module shader-module
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-pipeline-cache (device &key
+				       (info-next nil)
+				       (info-flags 0)
+				       (info-initialize-data-size 0)
+				       (info-initialize-data nil)
+				       (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-pipeline-cache-create-info))
+			 (pipeline-cache 'vk-pipeline-cache))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null info-initialize-data)
+      (setf info-initialize-data (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-pipeline-cache-create-info) :type)
+	  :structure-type-pipeline-cache-create-info
+	  (foreign-slot-value info '(:struct vk-pipeline-cache-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-pipeline-cache-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-pipeline-cache-create-info) :initial-date-size)
+	  info-initialize-data-size
+	  (foreign-slot-value info '(:struct vk-pipeline-cache-create-info) :init-data)
+	  info-initialize-data)
+    (check-reslute-type (foreign-funcall "vkCreatePipelineCache"
+					 vk-device device
+					 (:pointer (:struct vk-pipeline-cache-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-pipeline-cache) pipeline-cache))
+    (mem-ref pipeline-cache 'vk-pipeline-cache)))
+
+(defun destroy-pipeline-cache (device pipeline-cache &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyPipelineCache"
+		   vk-device device
+		   vk-pipeline-cache pipeline-cache
+		   (:pointer (:struct vk-allocation-callback)) allocator))
+
+(defcfun ("vkGetPipelineCacheData" vkGetPipelineCacheData) VkResult
+  (device vk-device)
+  (pipeline-cache vk-pipeline-cache)
+  (data-size (:pointer :unsigned-int))
+  (data (:pointer :void)))
+
+(defun get-pipeline-cache-data (device pipeline-cache)
+  (with-foreign-objects ((data-size :unsigned-int)
+			 (data '(:pointer :void)))
+    (check-reslute-type (vkGetPipelineCacheData device pipeline-cache data-size (null-pointer)))
+    (check-reslute-type (vkGetPipelineCacheData device pipeline-cache data-size data-size))
+    (mem-ref data '(:pointer :void))))
+
+(defun merge-pipeline-caches (device dst-cache cache-list)
+  (with-foreign-object (src-cache 'vk-pipeline-cache (length cache-list))
+    (loop for cache in cache-list
+	  for i from 0
+	  do
+	     (setf (mem-aref src-cache 'vk-pipeline-cache i) cache))
+    (check-reslute-type (foreign-funcall "vkMergePipelineCaches"
+					 vk-device device
+					 vk-pipeline-cache dst-cache
+					 :uint32 (length cache-list)
+					 (:pointer vk-pipeline-cache) src-cache
+					 VkResult))))
+
+(defun create-graphics-pipelines (device
+				  pipeline-cache
+				  count
+				  info-layout
+				  info-render-pass
+				  info-sub-pass
+				  info-base-pipeline-handle
+				  info-base-pipeline-index
+				  &key
+				    (info-next nil)
+				    (info-flags 0)
+				    (info-stage-count 0)
+				    (info-stages nil)
+				    (info-vertex-input-states nil)
+				    (info-input-assembly-states nil)
+				    (info-tessellation-states nil)
+				    (info-view-port-states nil)
+				    (info-rasterization-states nil)
+				    (info-multisample-states nil)
+				    (info-depth-stencil-states nil)
+				    (info-color-blend-states nil)
+				    (info-dynamic-states nil)
+				    (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-graphics-pipeline-create-info))
+			 (stages '(:struct vk-pipeline-shader-stage-create-info) info-stage-count)
+			 (vertexs '(:struct vk-pipeline-vertex-input-state-create-info) info-stage-count)
+			 (input-assemblies '(:struct vk-pipeline-input-assembly-state-create-info) info-stage-count)
+			 (tessellations '(:struct vk-pipeline-tessellation-state-create-info) info-stage-count)
+			 (view-ports '(:struct vk-pipeline-viewport-state-create-info) info-stage-count)
+			 (rasterizations '(:struct vk-pipeline-rasterization-state-create-info) info-stage-count)
+			 (multiple-samples '(:struct vk-pipeline-multisample-state-create-info) info-stage-count)
+			 (depth-stencils '(:struct vk-pipeline-depth-stencil-state-create-info) info-stage-count)
+			 (color-blends '(:struct vk-pipeline-color-blend-state-create-info) info-stage-count)
+			 (dynamics '(:struct vk-pipeline-dynamic-state-create-info) info-stage-count)
+			 (pipeline 'vk-pipeline))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (loop for stage in info-stages
+	  for i from 0
+	  for cstage = (mem-aptr stages '(:struct vk-pipeline-shader-stage-create-info) i)
+	  do
+	     (create-vk-object cstage '(:struct vk-pipeline-shader-stage-create-info) stage))
+    (loop for states in info-vertex-input-states
+	  for i from 0
+	  for cstates = (mem-aptr vertexs '(:struct vk-pipeline-vertex-input-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-vertex-input-state-create-info) states))
+    (loop for states in info-input-assembly-states
+	  for i from 0
+	  for cstates = (mem-aptr input-assemblies '(:struct vk-pipeline-input-assembly-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-input-assembly-state-create-info) states))    
+    (loop for states in info-tessellation-states
+	  for i from 0
+	  for cstates = (mem-aptr tessellations '(:struct vk-pipeline-tessellation-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-tessellation-state-create-info) states))
+    (loop for states in info-view-port-states
+	  for i from 0
+	  for cstates = (mem-aptr view-ports '(:struct vk-pipeline-viewport-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-viewport-state-create-info) states))
+    (loop for states in info-rasterization-states
+	  for i from 0
+	  for cstates = (mem-aptr rasterizations '(:struct vk-pipeline-rasterization-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-rasterization-state-create-info) states))
+    (loop for states in info-multisample-states
+	  for i from 0
+	  for cstates = (mem-aptr multiple-samples '(:struct vk-pipeline-multisample-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-multisample-state-create-info) states))
+
+    (loop for states in info-depth-stencil-states
+	  for i from 0
+	  for cstates = (mem-aptr depth-stencils '(:struct vk-pipeline-depth-stencil-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-depth-stencil-state-create-info) states))
+    (loop for states in info-color-blend-states
+	  for i from 0
+	  for cstates = (mem-aptr color-blends '(:struct vk-pipeline-color-blend-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-color-blend-state-create-info) states))
+    (loop for states in info-dynamic-states
+	  for i from 0
+	  for cstates = (mem-aptr dynamics '(:struct vk-pipeline-dynamic-state-create-info) i)
+	  do
+	     (create-vk-object cstates '(:struct vk-pipeline-dynamic-state-create-info) states))
+    (setf (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :type)
+	  :structure-type-graphics-pipeline-create-info
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :stage-count)
+	  info-stage-count
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :layout)
+	  info-layout
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :render-pass)
+	  info-render-pass
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :subpass)
+	  info-sub-pass
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :base-pipeline-handle)
+	  info-base-pipeline-handle
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :base-pipeline-index)
+	  info-base-pipeline-index
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :stages)
+	  stages
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :vertex-input-state)
+	  vertexs
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :input-assembly-state)
+	  input-assemblies
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :tessellation-state)
+	  tessellations
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :viewport-state)
+	  view-ports
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :rasterization-state)
+	  rasterizations
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :multisample-state)
+	  multiple-samples
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :depth-stencil-state)
+	  depth-stencils
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :color-blend-state)
+	  color-blends
+	  (foreign-slot-value info '(:struct vk-graphics-pipeline-create-info) :dynamic-state)
+	  dynamics)
+    (check-reslute-type (foreign-funcall "vkCreateGraphicsPipelines"
+					 vk-device device
+					 vk-pipeline-cache pipeline-cache
+					 :uint32 count
+					 (:pointer (:struct vk-graphics-pipeline-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-pipeline) pipeline
+					 VkResult))
+    (mem-ref pipeline 'vk-pipeline)))
+
+(defun create-compute-pipelines (device pipeline-cache count &key
+							       (create-infos nil)
+							       (allocator nil))
+  (with-foreign-objects ((infos '(:struct vk-compute-pipeline-create-info))
+			 (pipeline 'vk-pipeline))
+    (create-vk-object infos '(:struct vk-compute-pipeline-create-info) create-infos)
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (check-reslute-type (foreign-funcall "vkCreateComputePipelines"
+					 vk-device device
+					 vk-pipeline-cache pipeline-cache
+					 :uint32 count
+					 (:pointer (:struct vk-compute-pipeline-create-info)) infos
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-pipeline) pipeline
+					 VkResult))
+    (mem-ref pipeline 'vk-pipeline)))
+
+(defun destroy-pipeline (device pipeline &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyPipeline"
+		   vk-device device
+		   vk-pipeline pipeline
+		   (:pointer (:struct vk-allocation-callback)) allocator))
 
 (defun create-surface-khr (win instance allocate)
   (with-foreign-object (surface 'vk-surface-khr)
