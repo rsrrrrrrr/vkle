@@ -1501,6 +1501,287 @@
 		   vk-pipeline pipeline
 		   (:pointer (:struct vk-allocation-callback)) allocator))
 
+(defun create-pipeline-layout (device &key
+				       (info-next nil)
+				       (info-flags 0)
+				       (info-layouts nil)
+				       (info-push-constant-range nil)
+				       (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-pipeline-layout-create-info))
+			 (layouts 'vk-descriptor-set-layout (length info-layouts))
+			 (push-constant-rang '(:struct vk-push-constant-range) (length info-push-constant-range))
+			 (layout 'vk-pipeline-layout))
+    (loop for layout in info-layouts
+	  for i from 0
+	  do
+	     (setf (mem-aref layouts 'vk-descriptor-set-layout i) layout))
+    (loop for range in info-push-constant-range
+	  for i from 0
+	  for crange = (mem-aptr push-constant-rang '(:struct vk-push-constant-range) i)
+	  do
+	     (create-vk-object crange '(:struct vk-push-constant-range) range))
+    (when (null info-layouts)
+      (setf layouts (null-pointer)))
+    (when (null info-push-constant-range)
+      (setf push-constant-rang (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-pipeline-layout-create-info) :type)
+	  :structure-type-pipeline-layout-create-info
+	  (foreign-slot-value info '(:struct vk-pipeline-layout-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-pipeline-layout-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-pipeline-layout-create-info) :set-layout-count)
+	  (length info-layouts)
+	  (foreign-slot-value info '(:struct vk-pipeline-layout-create-info) :set-layouts)
+	  layouts
+	  (foreign-slot-value info '(:struct vk-pipeline-layout-create-info) :push-constant-range-count)
+	  (length info-push-constant-range)
+	  (foreign-slot-value info '(:struct vk-pipeline-layout-create-info) :push-constant-ranges)
+	  push-constant-rang)
+    (check-reslute-type (foreign-funcall "vkCreatePipelineLayout"
+					 vk-device device
+					 (:pointer (:struct vk-pipeline-layout-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-pipeline-layout) layout
+					 VkResult))
+    (mem-ref layout 'vk-pipeline-layout)))
+
+(defun destroy-pipeline-layout (device pipeline-layout &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyPipelineLayout"
+		   vk-device device
+		   vk-pipeline-layout pipeline-layout
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-sampler (device &key
+				(info-next nil)
+				(info-flags 0)
+				(info-mag-filter :filter-nearest)
+				(info-min-filter :filter-nearest)
+				(info-mipmap-mode :sampler-mipmap-mode-nearest)
+				(info-address-mode-u :sampler-mipmap-mode-nearest)
+				(info-address-mode-v :sampler-mipmap-mode-nearest)
+				(info-address-mode-w :sampler-mipmap-mode-nearest)
+				(info-mip-lod-bias 0.0)
+				(info-anisotropy-enable 0)
+				(info-max-anisotropy 0.0)
+				(info-compare-enable 0)
+				(info-compare-op :compare-op-never)
+				(info-min-lod 0.0)
+				(info-max-lod 0.0)
+				(info-border-color :border-color-float-transparent-black)
+				(info-unnormalized-coordinates 0)
+				(allocator nil))
+  (with-foreign-objects ((info '(:struct vk-sampler-create-info))
+			 (sampler 'vk-sampler))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-sampler-create-info) :type)
+	  :structure-type-sampler-create-info
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :mag-filter)
+	  info-mag-filter
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :min-filter)
+	  info-min-filter
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :mipmap-mode)
+	  info-mipmap-mode
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :address-mode-u)
+	  info-address-mode-u
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :address-mode-v)
+	  info-address-mode-v
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :address-mode-w)
+	  info-address-mode-w
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :mip-lod-bias)
+	  info-mip-lod-bias
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :anisotropy-enable)
+	  info-anisotropy-enable
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :max-anisotropy)
+	  info-max-anisotropy
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :compare-enable)
+	  info-compare-enable
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :compare-op)
+	  info-compare-op
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :min-lod)
+	  info-min-lod
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :max-lod)
+	  info-max-lod
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :border-color)
+	  info-border-color
+	  (foreign-slot-value info '(:struct vk-sampler-create-info) :unnormalized-coordinates)
+	  info-unnormalized-coordinates)
+    (check-reslute-type (foreign-funcall "vkCreateSampler"
+					 vk-device device
+					 (:pointer (:struct vk-sampler-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-sampler) sampler
+					 VkResult))
+    (mem-ref sampler 'vk-sampler)))
+
+(defun destroy-sampler (device sampler &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroySampler"
+		   vk-device device
+		   vk-sampler sampler
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-descriptor-set-layout (device &key
+					      (info-next nil)
+					      (info-flags 0)
+					      (info-bindings nil)
+					      (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-descriptor-set-layout-create-info))
+			 (bindings '(:struct vk-descriptor-set-layout-binding) (length info-bindings))
+			 (set-layout 'vk-descriptor-set-layout))
+    (loop for bind in info-bindings
+	  for i from 0
+	  for cbind = (mem-aptr '(:struct vk-descriptor-set-layout-binding) i)
+	  do
+	     (create-vk-object cbind '(:struct vk-descriptor-set-layout-binding) bind))
+    (when (null info-bindings)
+      (setf bindings (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-descriptor-set-layout-create-info) :type)
+	  :structure-type-descriptor-set-layout-create-info
+	  (foreign-slot-value info '(:struct vk-descriptor-set-layout-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-descriptor-set-layout-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-descriptor-set-layout-create-info) :binding-count)
+	  (length info-bindings)
+	  (foreign-slot-value info '(:struct vk-descriptor-set-layout-create-info) :bindings)
+	  bindings)
+    (check-reslute-type (foreign-funcall "vkCreateDescriptorSetLayout"
+					 vk-device device
+					 (:pointer (:struct vk-descriptor-set-layout-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-descriptor-set-layout) set-layout
+					 VkResult))
+    (mem-ref set-layout 'vk-descriptor-set-layout)))
+
+(defun destroy-descriptor-set-layout (device set-layout &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator nil))
+  (foreign-funcall "vkDestroyDescriptorSetLayout"
+		   vk-device device
+		   vk-descriptor-set-layout set-layout
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun create-descriptor-pool (device &key
+					(info-next nil)
+					(info-flags 0)
+					(info-max-sets 0)
+					(info-pool-sizes nil)
+					(allocator nil))
+  (with-foreign-objects ((info '(:struct vk-descriptor-pool-create-info))
+			 (pool-sizes '(:struct vk-descriptor-pool-size) (length info-pool-sizes))
+			 (pool 'vk-descriptor-pool))
+    (loop for pool-size in info-pool-sizes
+	  for i from 0
+	  for cpool-size = (mem-aptr pool-sizes '(:struct vk-descriptor-pool-size))
+	  do
+	     (create-vk-object cpool-size '(:struct vk-descriptor-pool-size) pool-sizes))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null info-pool-sizes)
+      (setf pool-sizes (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-descriptor-pool-create-info) :type)
+	  :structure-type-descriptor-pool-create-info
+	  (foreign-slot-value info '(:struct vk-descriptor-pool-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-descriptor-pool-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-descriptor-pool-create-info) :max-sets)
+	  info-max-sets
+	  (foreign-slot-value info '(:struct vk-descriptor-pool-create-info) :pool-size-count)
+	  (length info-pool-sizes)
+	  (foreign-slot-value info '(:struct vk-descriptor-pool-create-info) :pool-sizes)
+	  pool-sizes)
+    (check-reslute-type (foreign-funcall "vkCreateDescriptorPool"
+					 vk-device device
+					 (:pointer (:struct vk-descriptor-pool-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-descriptor-pool) pool
+					 VkResult))
+    (mem-ref pool 'vk-descriptor-pool)))
+
+(defun destroy-descriptor-pool (device pool &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyDescriptorPool"
+		   vk-device device
+		   vk-descriptor-pool pool
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun reset-descriptor-pool (device pool flags)
+  (check-reslute-type (foreign-funcall "vkResetDescriptorPool"
+				       vk-device device
+				       vk-descriptor-pool pool
+				       vk-descriptor-pool-reset-flags flags
+				       VkResult)))
+
+(defun allocate-descriptor-sets (device &optional allocator)
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (with-foreign-object (descriptor-set 'vk-descriptor-set)
+    (check-reslute-type (foreign-funcall "vkAllocateDescriptorSets"
+					 vk-device device
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-descriptor-set) descriptor-set
+					 VkResult))
+    (mem-ref descriptor-set 'vk-descriptor-set)))
+
+(defun free-descriptor-sets (device pool descriptor-sets)
+  (with-foreign-object (sets 'vk-descriptor-set (length descriptor-sets))
+    (loop for set in descriptor-sets
+	  for i from 0
+	  do
+	     (setf (mem-ref sets 'vk-descriptor-set i) set))
+    (check-reslute-type (foreign-funcall "vkFreeDescriptorSets"
+					 vk-device device
+					 vk-descriptor-pool pool
+					 :uint32 (length descriptor-sets)
+					 (:pointer vk-descriptor-set) sets
+					 VkResult))))
+
+(defun update-descriptor-sets (device &key
+					(descriptor-writes nil)
+					(descriptor-copies nil))
+  (with-foreign-objects ((writes '(:struct vk-write-descriptor-set) (length descriptor-writes))
+			 (copies '(:struct vk-copy-descriptor-set) (length descriptor-copies)))
+    (loop for write in descriptor-writes
+	  for i from 0
+	  for cwrite = (mem-aptr writes '(:struct vk-write-descriptor-set) i)
+	  do
+	     (create-vk-object cwrite '(:struct vk-write-descriptor-set) write))
+    (loop for copy in descriptor-copies
+	  for i from 0
+	  for ccopy = (mem-aptr copies '(:struct vk-copy-descriptor-set) i)
+	  do
+	     (create-vk-object ccopy '(:struct vk-copy-descriptor-set) copy))
+    (check-reslute-type (foreign-funcall "vkUpdateDescriptorSets"
+					 vk-device device
+					 :uint32 (length descriptor-writes)
+					 (:pointer (:struct vk-write-descriptor-set)) writes
+					 :uint32 (length descriptor-copies)
+					 (:pointer (:struct vk-copy-descriptor-set)) copies
+					 VkResult))))
+
 (defun create-surface-khr (win instance allocate)
   (with-foreign-object (surface 'vk-surface-khr)
     (check-reslute-type (foreign-funcall "glfwCreateWindowSurface"

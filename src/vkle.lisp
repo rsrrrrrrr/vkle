@@ -360,3 +360,42 @@
 	:dynamic-state-count (length states)
 	:dynamic-states states))
 
+(defun make-write-descriptor-set (dst-set &key
+					    (next nil)
+					    (dst-binding 0)
+					    (dst-array-element 0)
+					    (descriptor-count 0)
+					    (descriptor-type :descriptor-type-sampler)
+					    (image-info nil)
+					    (buffer-info nil)
+					    (texel-buffer-view nil))
+  (list :type :structure-type-write-descriptor-set
+	:next next
+	:dst-set dst-set
+	:dst-binding dst-binding
+	:dst-array-element dst-array-element
+	:descriptor-count descriptor-count
+	:descriptor-type descriptor-type
+	:image-info (list '(:struct vk-descriptor-image-info)
+			  image-info)
+	:buffer-info (list '(:struct vk-descriptor-buffer-info)
+			   buffer-info)
+	:texel-buffer-view (list 'vk-buffer-view
+				 texel-buffer-view)))
+
+(defun make-copy-descriptor-set (src-set dst-set &key
+						   (next nil)
+						   (src-binding 0)
+						   (src-array-element 0)
+						   (dst-binding 0)
+						   (dst-array-element 0)
+						   (descriptor-count 0))
+  (list :type :structure-type-copy-descriptor-set
+	:next next
+	:src-set src-set
+	:src-binding src-binding
+	:src-array-element src-array-element
+	:dst-set dst-set
+	:dst-binding dst-binding
+	:dst-array-element dst-array-element
+	:descriptor-count descriptor-count))

@@ -179,3 +179,4 @@
 (defctype vk-tool-purpose-flags-ext vk-flags)
 (defctype vk-memory-map-flags vk-flags)
 (defctype vk-query-result-flags vk-flags)
+(defctype vk-descriptor-pool-reset-flags vk-flags)
