@@ -60,7 +60,22 @@
 	  with-query-pool
 	  create-buffer
 	  destroy-buffer
-	  create-buffer-view))
+	  create-buffer-view
+	  destroy-buffer-view
+	  create-image
+	  destroy-image
+	  get-image-subresource-layout
+	  create-image-view
+	  destroy-image-view
+	  create-sharder-module
+	  destroy-shader-module
+	  create-pipeline-cache
+	  destroy-pipeline-cache
+	  get-pipeline-cache-data
+	  merge-pipeline-caches
+	  create-graphics-pipelines
+	  create-compute-pipelines
+	  destroy-pipeline))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))
@@ -1098,7 +1113,7 @@
 			 (extent '(:struct vk-extent-3d))
 			 (indices :uint32)
 			 (image 'vk-image))
-    (create-3d-extent extent info-extent)
+    (make-3d-extent extent info-extent)
     (setf (mem-ref indices :uint32) info-queue-family-indices)
     (when (null info-next)
       (setf info-next (null-pointer)))

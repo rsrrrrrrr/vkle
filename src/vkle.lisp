@@ -2,7 +2,17 @@
 
 (export '(queue-family-support-mode-p
 	  get-propertiy-queue-list
-	  get-present-queue-list))
+	  get-present-queue-list
+	  make-pipeline-shader-stage-info
+	  make-pipeline-dynamic-state-info
+	  make-pipeline-rasterization-info
+	  make-pipeline-viewport-stage-info
+	  make-pipeline-color-blend-state-info
+	  make-pipeline-multisample-state-info
+	  make-pipeline-vertex-input-state-info
+	  make-pipeline-tessellation-state-info
+	  make-pipeline-depth-stencil-state-info
+	  make-pipeline-input-assembly-state-info))
 
 (defun c-array-to-lisp-string (array size)
   (loop for i upto (1- size)
@@ -50,9 +60,15 @@
 	  collect i))
 
 (defun create-sub-vk-object (type lst)
-  (with-foreign-object (obj type)
-    (create-vk-object obj type lst)
-    obj))
+  (if (null lst)
+      (null-pointer)
+      (with-foreign-object (obj type (length lst))
+	(loop for sub-lst in lst
+	      for i from 0
+	      for sub-obj = (mem-aptr obj type i)
+	      do
+		 (create-vk-object sub-obj type sub-lst))
+	obj)))
 
 (defun create-vk-object (obj type lst)
   (cond ((null lst) nil)
@@ -172,8 +188,175 @@
 	  signal-semaphores)
     bind-info))
 
-(defun create-3d-extent (obj lst)
+(defun make-3d-extent (obj lst)
   (if (null lst)
       (null-pointer)
       (create-vk-object obj '(:struct vk-extent-3d) lst)))
+
+(defun make-pipeline-shader-stage-info (module &key
+						 (next nil)
+						 (flags 0)
+						 (stage 0)
+						 (name "test")
+						 (specialization-info nil))
+  (list :type :structure-type-pipeline-shader-stage-create-info
+	:next next
+	:flags flags
+	:stage stage
+	:module module
+	:name name
+	:specialization-info (list '(:struct vk-specialization-info)
+				   specialization-info)))
+
+(defun make-pipeline-vertex-input-state-info (&key
+						(next nil)
+						(flags 0)
+						(bindings nil)
+						(attributes nil))
+  (list :type :structure-type-pipeline-vertex-input-state-create-info
+	:next next
+	:flags flags
+	:vertex-binding-description-count (length bindings)
+	:vertex-binding-description (list '(:struct vk-vertex-input-binding-description)
+					  bindings)
+	:vertex-attribute-description-count (length attributes)
+	:vertex-attribute-description (list '(:struct vk-vertex-input-attribute-description)
+					    attributes)))
+
+(defun make-pipeline-input-assembly-state-info (&key
+						  (next nil)
+						  (flags 0)
+						  (topology 0)
+						  (primitive-restart-enable 0))
+  (list :type :structure-type-pipeline-input-assembly-state-create-info
+	:next next
+	:flags flags
+	:topology topology
+	:primitive-restart-enable primitive-restart-enable))
+
+(defun make-pipeline-tessellation-state-info (&key
+						(next nil)
+						(flags 0)
+						(patch-control-points 0))
+  (list :type :structure-type-pipeline-tessellation-state-create-info
+	:next next
+	:flags flags
+	:patch-control-points patch-control-points))
+
+(defun make-pipeline-viewport-stage-info (&key
+					    (next nil)
+					    (flags 0)
+					    (viewports nil)
+					    (scissor nil))
+  (list :type :structure-type-pipeline-viewport-state-create-info
+	:next next
+	:flags flags
+	:viewport-count (length viewports)
+	:viewports (list '(:struct vk-viewport)
+			 viewports)
+	:scissor-count (length scissor)
+	:scissprs (list '(:struct vk-rect-2d)
+			scissor)))
+
+(defun make-pipeline-rasterization-info (&key
+					   (next nil)
+					   (flags 0)
+					   (depth-clamp-enable 0)
+					   (rasterizer-discard-enable 0)
+					   (polygon-mode 0)
+					   (cull-mode 0)
+					   (front-face 0)
+					   (depth-bias-enable 0)
+					   (depth-bias-constant-factor 0.0)
+					   (depth-bias-clamp 0.0)
+					   (depth-bias-slope-factor 0.0)
+					   (line-width 0.0))
+  (list :type :structure-type-pipeline-rasterization-state-create-info
+	:next next
+	:flags flags
+	:depth-clamp-enable depth-clamp-enable
+	:rasterizer-discard-enable rasterizer-discard-enable
+	:polygon-mode polygon-mode
+	:cull-mode cull-mode
+	:front-face front-face
+	:depth-bias-enable depth-bias-enable
+	:depth-bias-constant-factor depth-bias-constant-factor
+	:depth-bias-clamp depth-bias-clamp
+	:depth-bias-slope-factor depth-bias-slope-factor
+	:line-width line-width))
+
+(defun make-pipeline-multisample-state-info (&key
+					       (next nil)
+					       (flags 0)
+					       (rasterization-samples 0)
+					       (sample-shading-enable 0)
+					       (min-sample-shading 0)
+					       (sample-mask nil)
+					       (alpha-to-coverage-enable 0)
+					       (alpha-to-one-enable 0))
+  (list :type :structure-type-pipeline-multisample-state-create-info
+	:next next
+	:flags flags
+	:rasterization-sample rasterization-samples
+	:sample-shading-enable sample-shading-enable
+	:min-sample-shading min-sample-shading
+	:sample-mask (list 'vk-sample-mask
+			   sample-mask)
+	:alpha-to-coverage-enable alpha-to-coverage-enable
+	:alpha-to-one-enable alpha-to-one-enable))
+
+(defun make-pipeline-depth-stencil-state-info (&key
+						 (next nil)
+						 (flags 0)
+						 (depth-test-enable 0)
+						 (depth-write-enable 0)
+						 (depth-compare-op :compare-op-never)
+						 (depth-bounds-test-enable 0)
+						 (stencil-test-enable 0)
+						 (front nil)
+						 (back nil)
+						 (min-depth-bounds 0.0)
+						 (max-depth-bounds 0.0))
+  (list :type :structure-type-pipeline-depth-stencil-state-create-info
+	:next next
+	:flags flags
+	:depth-test-enable depth-test-enable
+	:depth-write-enable depth-write-enable
+	:depth-compare-op depth-compare-op
+	:depth-bounds-test-enable depth-bounds-test-enable
+	:stencil-test-enable stencil-test-enable
+	:front (list '(:struct vk-stencil-op-state)
+		     front)
+	:back (list '(:struct vk-stencil-op-state)
+		    back)
+	:min-depth-bounds min-depth-bounds
+	:max-depth-bounds max-depth-bounds))
+
+(defun make-pipeline-color-blend-state-info (&key
+					       (next nil)
+					       (flags 0)
+					       (logic-op-enable 0)
+					       (logic-op :logic-op-clear)
+					       (attachmemts nil)
+					       (blend-constants nil))
+  (list :type :structure-type-pipeline-color-blend-state-create-info
+	:next next
+	:flags flags
+	:logic-op-enable logic-op-enable
+	:logic-op logic-op
+	:attachment-count (length attachmemts)
+	:attachments (list '(:struct vk-pipeline-color-blend-attachment-state)
+			   attachmemts)
+	:blend-constants (list :float
+			       blend-constants)))
+
+(defun make-pipeline-dynamic-state-info (&key
+					   (next nil)
+					   (flags 0)
+					   (states nil))
+  (list :type :structure-type-pipeline-dynamic-state-create-info
+	:next next
+	:flags flags
+	:dynamic-state-count (length states)
+	:dynamic-states states))
 
