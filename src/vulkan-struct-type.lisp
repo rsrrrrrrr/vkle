@@ -2540,7 +2540,7 @@ i don't know how to set up android in lisp
   (:next (:pointer :void))
   (:flags vk-pipeline-layout-create-flags)
   (:set-layout-count :uint32)
-  (:set-layout (:pointer vk-descriptor-set-layout))
+  (:set-layouts (:pointer vk-descriptor-set-layout))
   (:push-constant-range-count :uint32)
   (:push-constant-ranges (:pointer (:struct vk-push-constant-range))))
 

@@ -75,7 +75,19 @@
 	  merge-pipeline-caches
 	  create-graphics-pipelines
 	  create-compute-pipelines
-	  destroy-pipeline))
+	  destroy-pipeline
+	  create-pipeline-layout
+	  destroy-pipeline-layout
+	  create-sampler
+	  destroy-sampler
+	  create-descriptor-set-layout
+	  destroy-descriptor-set-layout
+	  create-descriptor-pool
+	  destroy-descriptor-pool
+	  reset-descriptor-pool
+	  allocate-descriptor-sets
+	  free-descriptor-sets
+	  update-descriptor-sets))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))

@@ -12,7 +12,9 @@
 	  make-pipeline-vertex-input-state-info
 	  make-pipeline-tessellation-state-info
 	  make-pipeline-depth-stencil-state-info
-	  make-pipeline-input-assembly-state-info))
+	  make-pipeline-input-assembly-state-info
+	  make-write-descriptor-set
+	  make-copy-descriptor-set))
 
 (defun c-array-to-lisp-string (array size)
   (loop for i upto (1- size)
