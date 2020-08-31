@@ -401,3 +401,66 @@
 	:dst-binding dst-binding
 	:dst-array-element dst-array-element
 	:descriptor-count descriptor-count))
+
+(defun attachment-description (&key
+				 (flags 0)
+				 (format :format-undefined)
+				 (samples :sample-count-1-bit)
+				 (load-op :attachment-load-op-load)
+				 (store-op :attachment-store-op-store)
+				 (stencil-load-op :attachment-load-op-load)
+				 (stencil-store-op :attachment-store-op-store)
+				 (initial-layout :image-layout-undefined)
+				 (final-layout :image-layout-undefined))
+  (list :flags flags
+	:format format
+	:samples samples
+	:load-op load-op
+	:store-op store-op
+	:stencil-load-op stencil-load-op
+	:stencil-store-op stencil-store-op
+	:initial-layout initial-layout
+	:final-layout final-layout))
+
+(defun make-subpass-description (&key
+				   (flags 0)
+				   (pipeline-bind-point :pipeline-bind-point-graphics)
+				   (input-attachments nil)
+				   (color-attachments nil)
+				   (reslove-attachments nil)
+				   (depth-stencil-attachments nil)
+				   (preserve-attachments nil))
+  (list :flags  flags
+	:pipeline-bind-point pipeline-bind-point
+	:input-attachment-cout (length input-attachments)
+	:input-attachments (list '(:struct vk-attachment-reference)
+				input-attachments)
+	:color-attachment-count (length color-attachments)
+	:color-attachments (list '(:struct vk-attachment-reference)
+				 color-attachments)
+	:reslove-attachments (list '(:struct vk-attachment-reference)
+				   reslove-attachments)
+	:depth-stencil-attachments (list '(:struct vk-attachment-reference)
+					 depth-stencil-attachments)
+	:reserve-attachment-count (length preserve-attachments)
+	:preserve-attachments (list :uint32
+				    preserve-attachments)))
+
+(defun make-subpass-dependency (&key
+				  (src-subpass 0)
+				  (dst-subpass 0)
+				  (src-stage-mask 0)
+				  (dst-stage-mask 0)
+				  (src-access-mask 0)
+				  (dst-access-mask 0)
+				  (dependency-flags 0))
+  (list :src-subpass src-subpass
+	:dst-subpass dst-subpass
+	:src-stage-mask src-stage-mask
+	:dst-stage-mask dst-stage-mask
+	:src-access-mask src-access-mask
+	:dst-access-mask dst-access-mask
+	:dependency0flags dependency-flags))
+
+
+

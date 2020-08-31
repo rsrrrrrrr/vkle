@@ -1794,6 +1794,120 @@
 					 (:pointer (:struct vk-copy-descriptor-set)) copies
 					 VkResult))))
 
+(defun create-framebuffer (device info-render-pass &key
+						     (info-next nil)
+						     (info-flags 0)
+						     (info-attachments nil)
+						     (info-width 0)
+						     (info-height 0)
+						     (info-layers 0)
+						     (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-framebuffer-create-info))
+			 (image-views 'vk-image-view (length info-attachments))
+			 (framebuffer 'vk-framebuffer))
+    (loop for attachment in info-attachments
+	  for i from 0
+	  do
+	     (setf (mem-aref image-views 'vk-image-view i) attachment))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null info-attachments)
+      (setf image-views (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-framebuffer-create-info) :type)
+	  :structure-type-framebuffer-create-info
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :render-pass)
+	  info-render-pass
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :attachment-count)
+	  (length info-attachments)
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :attachments)
+	  image-views
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :width)
+	  info-width
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :height)
+	  info-height
+	  (foreign-slot-value info '(:struct vk-framebuffer-create-info) :layers)
+	  info-layers)
+    (check-reslute-type (foreign-funcall "vkCreateFramebuffer"
+					 vk-device device
+					 (:pointer (:struct vk-framebuffer-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 vk-framebuffer framebuffer))
+    (mem-ref framebuffer 'vk-framebuffer)))
+
+(defun destroy-framebuffer (device framebuffer &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyFramebuffer"
+		   vk-device device
+		   vk-framebuffer framebuffer
+		   (:pointer (:struct vk-allocation-callback)) allocator))
+
+(defun create-render-pass (device &key
+				    (info-next nil)
+				    (info-flags 0)
+				    (info-attachments-list nil)
+				    (info-subpasses-list nil)
+				    (info-dependencies-list nil)
+				    (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-render-pass-create-info))
+			 (attachments '(:struct vk-attachment-description) (length info-attachments-list))
+			 (subpasses '(:struct vk-subpass-description) (length info-subpasses-list))
+			 (dependencies '(:struct vk-subpass-dependency) (length info-dependencies-list))
+			 (render-pass 'vk-render-pass))
+    (loop for attachment in info-attachments-list
+	  for i from 0
+	  for cattachment = (mem-aptr attachments '(:struct vk-attachment-description) i)
+	  do
+	     (create-vk-object cattachment '(:struct vk-attachment-description) attachment))
+    (loop for subpasses in info-subpasses-list
+	  for i from 0
+	  for csubpasses = (mem-aptr subpasses '(:struct vk-subpass-description) i)
+	  do
+	     (create-vk-object csubpasses '(:struct vk-subpass-description) subpasses))
+    (loop for dependency in info-dependencies-list
+	  for i from 0
+	  for cattachment = (mem-aptr dependencies '(:struct vk-subpass-dependency) i)
+	  do
+	  (create-vk-object cattachment '(:struct vk-subpass-description) dependency))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null info-attachments-list)
+      (setf attachments (null-pointer)))
+    (when (null info-subpasses-list)
+      (setf subpasses (null-pointer)))
+    (when (null info-dependencies-list)
+      (setf dependencies (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-render-pass-create-info) :type)
+	  :structure-type-render-pass-create-info
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :attachment-count)
+	  (length info-attachments-list)
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :attachments)
+	  attachments
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :subpass-count)
+	  (length info-subpasses-list)
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :subpasses)
+	  subpasses
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :dependency-count)
+	  (length info-dependencies-list)
+	  (foreign-slot-value info '(:struct vk-render-pass-create-info) :dependencies)
+	  dependencies)
+    (check-reslute-type (foreign-funcall "vkCreateRenderPass"
+					 vk-device device
+					 (:pointer (:struct vk-render-pass-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-render-pass) render-pass))
+    (mem-ref render-pass 'vk-render-pass)))
+
 (defun create-surface-khr (win instance allocate)
   (with-foreign-object (surface 'vk-surface-khr)
     (check-reslute-type (foreign-funcall "glfwCreateWindowSurface"

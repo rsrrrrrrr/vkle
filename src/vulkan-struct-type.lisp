@@ -756,7 +756,7 @@
   (:flags vk-subpass-description-flags)
   (:pipeline-bind-point VkPipelineBindpoint)
   (:input-attachment-cout :uint32)
-  (:input-attachment (:pointer (:struct vk-attachment-reference)))
+  (:input-attachments (:pointer (:struct vk-attachment-reference)))
   (:color-attachment-count :uint32)
   (:color-attachments (:pointer (:struct vk-attachment-reference)))
   (:reslove-attachments (:pointer (:struct vk-attachment-reference)))
@@ -778,11 +778,11 @@
   (:next (:pointer :void))
   (:flags vk-render-pass-create-flags)
   (:attachment-count :uint32)
-  (:attachment (:pointer (:struct vk-attachment-description)))
+  (:attachments (:pointer (:struct vk-attachment-description)))
   (:subpass-count :uint32)
   (:subpasses (:pointer (:struct vk-subpass-description)))
   (:dependency-count :uint32)
-  (:dependenies (:pointer (:struct vk-subpass-dependency))))
+  (:dependencies (:pointer (:struct vk-subpass-dependency))))
 
 (defcstruct vk-render-pass-multiview-create-info
   (:type VkStructureType)
