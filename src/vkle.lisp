@@ -14,7 +14,10 @@
 	  make-pipeline-depth-stencil-state-info
 	  make-pipeline-input-assembly-state-info
 	  make-write-descriptor-set
-	  make-copy-descriptor-set))
+	  make-copy-descriptor-set
+	  make-attachment-description
+	  make-subpass-description
+	  make-subpass-dependency))
 
 (defun c-array-to-lisp-string (array size)
   (loop for i upto (1- size)
@@ -402,16 +405,16 @@
 	:dst-array-element dst-array-element
 	:descriptor-count descriptor-count))
 
-(defun attachment-description (&key
-				 (flags 0)
-				 (format :format-undefined)
-				 (samples :sample-count-1-bit)
-				 (load-op :attachment-load-op-load)
-				 (store-op :attachment-store-op-store)
-				 (stencil-load-op :attachment-load-op-load)
-				 (stencil-store-op :attachment-store-op-store)
-				 (initial-layout :image-layout-undefined)
-				 (final-layout :image-layout-undefined))
+(defun make-attachment-description (&key
+				      (flags 0)
+				      (format :format-undefined)
+				      (samples :sample-count-1-bit)
+				      (load-op :attachment-load-op-load)
+				      (store-op :attachment-store-op-store)
+				      (stencil-load-op :attachment-load-op-load)
+				      (stencil-store-op :attachment-store-op-store)
+				      (initial-layout :image-layout-undefined)
+				      (final-layout :image-layout-undefined))
   (list :flags flags
 	:format format
 	:samples samples

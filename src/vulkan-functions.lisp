@@ -87,7 +87,10 @@
 	  reset-descriptor-pool
 	  allocate-descriptor-sets
 	  free-descriptor-sets
-	  update-descriptor-sets))
+	  update-descriptor-sets
+	  create-framebuffer
+	  destroy-framebuffer
+	  create-render-pass))
 
 (defun check-reslute-type (ret-val)
   (when (not (eql ret-val :success))
