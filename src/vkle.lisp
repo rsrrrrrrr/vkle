@@ -93,6 +93,15 @@
       (setf (foreign-slot-value obj type key) (null-pointer))
       (setf (foreign-slot-value obj type key) val)))
 
+(defcallback vk-debug-callback vk-bool-32  ((message-serverity VkDebugUtilsMessageSeverityFlagBitsEXT)
+					    (message-type vk-debug-utils-message-type-flags-ext)
+					    (callback-data (:pointer (:struct vk-debug-utils-messenger-callback-data-ext)))
+					    (data (:pointer :void)))
+  (declare (ignore message-serverity message-type data))
+  (format t "vulkan debug info -> ~a ~%" (foreign-slot-value callback-data
+							     '(:struct vk-debug-utils-messenger-callback-data-ext)
+							     :message)))
+
 (defun create-device-queue (infos queue)
   (with-foreign-object (pro :float)
     (setf (foreign-slot-value queue '(:struct vk-device-queue-create-info) :type)
@@ -103,7 +112,6 @@
 	       (cond ((null info) nil)
 		     ((eql (car info) :queue-properties)
 		      (progn
-			(format t "~a ~%" (car info))
 			(setf (mem-ref pro :float) (cadr info)
 			      (foreign-slot-value queue
 						  '(:struct vk-device-queue-create-info)

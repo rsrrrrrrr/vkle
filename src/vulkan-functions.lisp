@@ -219,7 +219,35 @@
 	    instance-extensions)
       (check-reslute-type (VkCreateInstance instance-info allocator instance))
       (mem-ref instance 'vk-instance))))
-
+#|
+(defun create-debug (instance &key
+				(allocator nil))
+  (with-foreign-objects ((info '(:struct vk-debug-utils-messenger-create-info-ext))
+			 (messenger 'vk-debug-utils-messenger-ext))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-debug-utils-messenger-create-info-ext) :type)
+	  :structure-type-debug-utils-messenger-create-info-ext
+	  (foreign-slot-value info '(:struct vk-debug-utils-messenger-create-info-ext) :message-severity)
+	  (logior :debug-utils-message-severity-error-bit-ext
+		  :debug-utils-message-severity-warning-bit-ext
+		  :debug-utils-message-severity-verbose-bit-ext)
+	  (foreign-slot-value info '(:struct vk-debug-utils-messenger-create-info-ext) :message-type)
+	  (logior :debug-utils-message-type-general-bit-ext
+		  :debug-utils-message-type-validation-bit-ext
+		  :debug-utils-message-type-performance-bit-ext)
+	  (foreign-slot-value info '(:struct vk-debug-utils-messenger-create-info-ext) :pfn-user-callback)
+	  'vk-debug-callback
+	  (foreign-slot-value info '(:struct vk-debug-utils-messenger-create-info-ext) :user-data)
+	  (null-pointer))
+    (let ((func (foreign-funcall "vkGetInstanceProcAddr"
+				 vk-instance instance
+				 :string "vkCreateDebugUtilsMessengerEXT"
+				 (:pointer :void))))
+      (when (null-pointer-p func)
+	(error "create callback func failed"))
+      func)))
+|#
 (defmacro with-instance ((instance &key
 				     (instance-next nil)
 				     (instance-flags 0)
@@ -1910,6 +1938,99 @@
 					 (:pointer (:struct vk-allocation-callback)) allocator
 					 (:pointer vk-render-pass) render-pass))
     (mem-ref render-pass 'vk-render-pass)))
+
+(defun destroy-render-pass (device render-pass &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyRenderPass"
+		   vk-device device
+		   vk-render-pass render-pass
+		   (:pointer (:struct vk-allocation-callback)) allocator
+		   :void))
+
+(defun get-render-area-granularity (device render-pass)
+  (with-foreign-object (granularity '(:struct vk-extent-2d))
+    (foreign-funcall "vkGetRenderAreaGranularity"
+		     vk-device device
+		     vk-render-pass render-pass
+		     (:pointer (:struct vk-extent-2d)) granularity
+		     :void)
+    (mem-ref granularity '(:struct vk-extent-2d))))
+
+(defun create-command-pool (device &key
+				     (info-next nil)
+				     (info-flags 0)
+				     (info-queue-family-index 0)
+				     (allocator nil))
+  (with-foreign-objects ((info '(:struct vk-command-pool-create-info))
+			 (pool 'vk-command-pool))
+    (when (null info-next)
+      (setf info-next (null-pointer)))
+    (when (null allocator)
+      (setf allocator (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-command-pool-create-info) :type)
+	  :structure-type-command-pool-create-info
+	  (foreign-slot-value info '(:struct vk-command-pool-create-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-command-pool-create-info) :flags)
+	  info-flags
+	  (foreign-slot-value info '(:struct vk-command-pool-create-info) :queue-family-index)
+	  info-queue-family-index)
+    (check-reslute-type (foreign-funcall "vkCreateCommandPool"
+					 vk-device device
+					 (:pointer (:struct vk-command-pool-create-info)) info
+					 (:pointer (:struct vk-allocation-callback)) allocator
+					 (:pointer vk-command-pool) pool
+					 VkResult))
+    (mem-ref pool 'vk-command-pool)))
+
+(defun destroy-command-pool (device pool &optional (allocator nil))
+  (when (null allocator)
+    (setf allocator (null-pointer)))
+  (foreign-funcall "vkDestroyCommandPool"
+		   vk-device device
+		   vk-command-pool pool
+		   (:pointer (:struct vk-allocation-callback)) allocator))
+
+(defun reset-command-pool (device pool flags)
+  (check-reslute-type (foreign-funcall "vkResetCommandPool"
+				       vk-device device
+				       vk-command-pool pool
+				       vk-command-pool-reset-flags flags)))
+
+(defun allocate-command-buffers (device info-command-pool &key
+							    (command-buffer-list nil)
+							    (info-next nil)
+							    (info-level 0)
+							    (info-command-buffer-count 0))
+  (with-foreign-objects ((info '(:struct vk-command-buffer-allocate-info))
+			 (command-buffers 'vk-command-buffer info-command-buffer-count))
+    (when (null command-buffer-list)
+      (setf command-buffers (null-pointer)))
+    (setf (foreign-slot-value info '(:struct vk-command-buffer-allocate-info) :type)
+	  :structure-type-command-buffer-allocate-info
+	  (foreign-slot-value info '(:struct vk-command-buffer-allocate-info) :next)
+	  info-next
+	  (foreign-slot-value info '(:struct vk-command-buffer-allocate-info) :command-pool)
+	  info-command-pool
+	  (foreign-slot-value info '(:struct vk-command-buffer-allocate-info) :level)
+	  info-level
+	  (foreign-slot-value info '(:struct vk-command-buffer-allocate-info) :command-buffer-count)
+	  info-command-buffer-count)
+    (check-reslute-type (foreign-funcall "vkAllocateCommandBuffers"
+					 vk-device device
+					 (:pointer (:struct vk-command-buffer-allocate-info)) info
+					 (:pointer vk-command-buffer) command-buffers
+					 VkResult))
+    (mem-ref command-buffers 'vk-command-buffer)))
+
+(defun free-command-buffers (device pool free-count command-buffers)
+  (foreign-funcall "vkFreeCommandBuffers"
+		   vk-device device
+		   vk-command-pool pool
+		   :uint32 free-count
+		   (:pointer vk-command-buffer) (mem-aptr command-buffers 'vk-command-buffer)
+		   :void))
 
 (defun create-surface-khr (win instance allocate)
   (with-foreign-object (surface 'vk-surface-khr)

@@ -454,7 +454,7 @@
   (:flags vk-command-pool-create-flags)
   (:queue-family-index :uint32))
 
-(defcstruct vk-command-buffer-allocate-infp
+(defcstruct vk-command-buffer-allocate-info
   (:type VkStructureType)
   (:next (:pointer :void))
   (:command-pool vk-command-pool)

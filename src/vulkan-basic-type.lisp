@@ -180,3 +180,4 @@
 (defctype vk-memory-map-flags vk-flags)
 (defctype vk-query-result-flags vk-flags)
 (defctype vk-descriptor-pool-reset-flags vk-flags)
+(defctype vk-command-pool-reset-flags vk-flags)
