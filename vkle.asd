@@ -6,5 +6,6 @@
 	       (:file "vulkan-enum-type")
 	       (:file "vulkan-basic-type")
 	       (:file "vulkan-struct-type")
+	       (:file "vkle-ext")
 	       (:file "vulkan-functions")
 	       (:file "vkle")))
