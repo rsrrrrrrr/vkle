@@ -720,7 +720,7 @@
   (:base-array-layer :uint32)
   (:layer-count :uint32))
 
-(defcstruct vk-buffer-memory-barrier
+(defcstruct vk-image-memory-barrier
   (:type VkStructureType)
   (:next (:pointer :void))
   (:src-access-mask vk-access-flags)

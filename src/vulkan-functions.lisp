@@ -14,7 +14,7 @@
 	  bind-image-memor
 	  get-fence-status
 	  destroy-semaphore
-	  get-event-status
+n	  get-event-status
 	  set-event
 	  reset-event
 	  reset-query-pool
@@ -47,7 +47,23 @@
 	  cmd-draw-indexed-indirect
 	  cmd-dispatch
 	  cmd-dispatch-indirect
-	  cmd-fill-buffer))
+	  cmd-fill-buffer
+	  cmd-set-evnet
+	  cmd-reset-event
+	  cmd-begin-query
+	  cmd-end-query
+	  cmd-end-conditional-rendering-ext
+	  cmd-reset-query-pool
+	  cmd-write-timestamp
+	  cmd-copy-query-pool-results
+	  cmd-next-subpass
+	  cmd-end-render-pass
+	  destroy-surface-khr
+	  destroy-swapchain-khr
+	  destroy-degbu-report-callback-ext
+	  debug-report-message-ext
+	  cmd-debug-marker-end-ext
+	  cmd-bind-pipeline-shader-group-nv))
 
 (defcfun ("glfwVulkanSupported" get-vulkan-support) :boolean
   "return true if vulkan is available")
@@ -286,6 +302,53 @@
   (device vk-device)
   (pool vk-command-pool)
   (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateDisplayModeKHR" vkCreateDisplayModeKHR) VkResult
+  (physical-device vk-physical-device)
+  (display vk-display-khr)
+  (info (:pointer (:struct vk-display-mode-create-info-khr)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (mode (:pointer vk-display-mode-khr)))
+
+(defcfun ("vkCreateDisplayPlaneSurfaceKHR" vkCreateDisplayPlaneSurfaceKHR) VkResult
+  (instance vk-instance)
+  (info (:pointer (:struct vk-display-surface-create-info-khr)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (surface (:pointer vk-surface-khr)))
+
+(defcfun ("vkDestroySurfaceKHR" destroy-surface-khr) :void
+  (instace vk-instance)
+  (surface vk-surface-khr)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR) VKResult
+  (device vk-device)
+  (swapchain-count :uint32)
+  (infos (:pointer (:struct vk-swapchain-create-info-khr)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (swapchain (:pointer vk-swapchain-khr)))
+
+(defcfun ("vkCreateSwapchainKHR" vkCreateSwapchainKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-swapchain-create-info-khr)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (swapchain (:pointer vk-swapchain-khr)))
+
+(defcfun ("vkDestroySwapchainKHR" destroy-swapchain-khr) :void
+  (device vk-device)
+  (swapchain vk-swapchain-khr)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbackEXT) VkResult
+  (instance vk-instance)
+  (info (:pointer (:struct vk-debug-report-callback-create-info-ext)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (callback (:pointer vk-debug-report-callback-ext)))
+
+(defcfun ("vkDestroyDebugReportCallbackEXT" destroy-degbu-report-callback-ext) :void
+  (instance vk-instance)
+  (callback vk-debug-report-callback-ext)
+  (allocator (:pointer (:struct vk-allocation-callback))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;get function area;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -413,6 +476,87 @@
   (device vk-device)
   (render-pass vk-render-pass)
   (granularity (:pointer (:struct vk-extent-2d))))
+
+(defcfun ("vkGetPhysicalDeviceDisplayPropertiesKHR" vkGetPhysicalDeviceDisplayPropertiesKHR) VkResult
+  (physical-device vk-physical-device)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-display-properties-khr))))
+
+(defcfun ("vkGetPhysicalDeviceDisplayPlanePropertiesKHR" vkGetPhysicalDeviceDisplayPlanePropertiesKHR) VkResult
+  (physical-device vk-physical-device)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-display-plane-properties-khr))))
+
+(defcfun ("vkGetDisplayPlaneSupportedDisplaysKHR" vkGetDisplayPlaneSupportedDisplaysKHR) VkResult
+  (physical-device vk-physical-device)
+  (index :uint32)
+  (count (:pointer :uint32))
+  (dsiplay-khr (:pointer vk-display-khr)))
+
+(defcfun ("vkGetDisplayModePropertiesKHR" vkGetDisplayModePropertiesKHR) VkResult
+  (physical-device vk-physical-device)
+  (display vk-display-khr)
+  (count :uint32)
+  (properties (:pointer (:struct vk-display-mode-properties-khr))))
+
+(defcfun ("vkGetDisplayPlaneCapabilitiesKHR" vkGetDisplayPlaneCapabilitiesKHR) VKResult
+  (physical-device vk-physical-device)
+  (mode vk-display-mode-khr)
+  (index :uint32)
+  (capabilities (:pointer (:struct vk-display-plane-capabilities-khr))))
+
+(defcfun ("vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR) VkResult
+  (physical-device vk-physical-device)
+  (queue-family-index :uint32)
+  (surface vk-surface-khr)
+  (support-p (:pointer vk-bool-32)))
+
+(defcfun ("vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR) VkResult
+  (physical-device vk-physical-device)
+  (surface vk-surface-khr)
+  (capabilities (:pointer (:struct vk-surface-capabilities-khr))))
+
+(defcfun ("vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR) VkResult
+  (physical-device vk-physical-device)
+  (surface vk-surface-khr)
+  (count (:pointer :uint32))
+  (format (:pointer (:struct vk-surface-format-khr))))
+
+(defcfun ("vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDeviceSurfacePresentModesKHR) VkResult
+  (physical-device vk-physical-device)
+  (surface vk-surface-khr)
+  (count (:pointer :uint32))
+  (present-mode (:pointer VkPresentModeKHR)))
+
+(defcfun ("vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR) VkResult
+  (device vk-device)
+  (swapchain vk-swapchain-khr)
+  (count (:pointer :uint32))
+  (swapchain-images (:pointer vk-image)))
+
+(defcfun ("vkAcquireNextImageKHR" vkAcquireNextImageKHR) VkResult
+  (device vk-device)
+  (swapchain vk-swapchain-khr)
+  (timeout :uint64)
+  (semaphore vk-semaphore)
+  (fence vk-fence)
+  (image-index (:pointer :uint32)))
+
+(defcfun ("vkGetPhysicalDeviceExternalImageFormatPropertiesNV" vkGetPhysicalDeviceExternalImageFormatPropertiesNV) VKResult
+  (physical-device vk-physical-device)
+  (format VkFormat)
+  (type VkImageType)
+  (tiling VkImageTiling)
+  (usage vk-image-usage-flags)
+  (flags vk-image-create-flags)
+  (external-handle-type vk-external-memory-handle-type-flags-nv)
+  (external-image-format-properties (:pointer (:struct vk-external-image-format-properties-nv))))
+
+(defcfun ("vkGetMemoryWin32HandleNV" vkGetMemoryWin32HandleNV) VkResult
+  (device vk-device)
+  (memory vk-device-memory)
+  (handler-type vk-external-memory-handle-type-flags-nv)
+  (handle (:pointer (:pointer :uint16))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;queue operation function area;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -433,6 +577,10 @@
   (count :uint32)
   (bind-info (:pointer (:struct vk-bind-sparse-info)))
   (fence vk-fence))
+
+(defcfun ("vkQueuePresentKHR" vkQueuePresentKHR) VkResult
+  (queue vk-queue)
+  (info (:pointer (:struct vk-present-info-khr))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;memory function area;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -777,6 +925,130 @@
   (attachments (:pointer (:struct vk-clear-attachment)))
   (rect-count :uint32)
   (rects (:pointer (:struct vk-clear-rect))))
+
+(defcfun ("vkCmdResolveImage" vkCmdResolveImage) :void
+  (command-buffer vk-command-buffer)
+  (src-image vk-image)
+  (src-image-layout VkImageLayout)
+  (dst-image vk-image)
+  (dst-image-layout VkImageLayout)
+  (count :uint32)
+  (regions (:pointer (:struct vk-image-resloved))))
+
+(defcfun ("vkCmdSetEvent" cmd-set-evnet) :void
+  (command-buffers vk-command-buffer)
+  (event vk-event)
+  (mask vk-pipeline-stage-flags))
+
+(defcfun ("vkCmdResetEvent" cmd-reset-event) :void
+  (command-buffer vk-command-buffer)
+  (event vk-event)
+  (mask vk-pipeline-stage-flags))
+
+(defcfun ("vkCmdWaitEvents" vkCmdWaitEvents) :void
+  (command-buffer vk-command-buffer)
+  (event-count :uint32)
+  (events (:pointer vk-event))
+  (src-stage-mask vk-pipeline-stage-flags)
+  (dst-stage-mask vk-pipeline-stage-flags)
+  (memory-barrier-count :uint32)
+  (memory-barriers (:pointer (:struct vk-memory-barrier)))
+  (buffer-memory-barrier-count :uint32)
+  (buffer-memory-barriers (:pointer (:struct vk-buffer-memory-barrier)))
+  (image-memory-barrier-count :uint32)
+  (image-memory-barriers (:pointer (:struct vk-image-memory-barrier))))
+
+(defcfun ("vkCmdPipelineBarrier" vkCmdPipelineBarrier) :void
+  (command-buffer vk-command-buffer)
+  (src-stage-mask vk-pipeline-stage-flags)
+  (dst-stage-mask vk-pipeline-stage-flags)
+  (dependency-flags vk-dependency-flags)
+  (memory-barrier-count :uint32)
+  (memory-barriers (:pointer (:struct vk-memory-barrier)))
+  (buffer-memory-barrier-count :uint32)
+  (buffer-memory-barriers (:pointer (:struct vk-buffer-memory-barrier)))
+  (image-memory-barrier-count :uint32)
+  (image-memory-barriers (:pointer (:struct vk-image-memory-barrier))))
+
+(defcfun ("vkCmdBeginQuery" cmd-begin-query) :void
+  (command-buffer vk-command-buffer)
+  (pool vk-query-pool)
+  (query :uint32)
+  (flags vk-query-control-flags))
+
+(defcfun ("vkCmdEndQuery" cmd-end-query) :void
+  (command-buffer vk-command-buffer)
+  (query-pool vk-query-pool)
+  (query :uint32))
+
+(defcfun ("vkCmdBeginConditionalRenderingEXT" vkCmdBeginConditionalRenderingEXT) :void
+  (command-buffer vk-buffer)
+  (conditional-rendering-begin (:pointer (:struct vk-conditional-rendering-begin-info-ext))))
+
+(defcfun ("vkCmdEndConditionalRenderingEXT" cmd-end-conditional-rendering-ext) :void
+  (command-buffer vk-command-buffer))
+
+(defcfun ("vkCmdResetQueryPool" cmd-reset-query-pool) :void
+  (command-buffer vk-command-buffer)
+  (query-pool vk-query-pool)
+  (first-query :uint32)
+  (query-count :uint32))
+
+(defcfun ("vkCmdWriteTimestamp" cmd-write-timestamp) :void
+  (command-buffer vk-command-buffer)
+  (pipeline-stage VkPipelineStageFlagBits)
+  (quert-pool vk-query-pool)
+  (query :uint32))
+
+(defcfun ("vkCmdCopyQueryPoolResults" cmd-copy-query-pool-results) :void
+  (command-buffer vk-command-buffer)
+  (query-pool vk-query-pool)
+  (first-query :uint32)
+  (query-count :uint32)
+  (dst-buffer vk-buffer)
+  (dst-offset vk-device-size)
+  (stride vk-device-size)
+  (flags vk-query-result-flags))
+
+(defcfun ("vkCmdPushConstants" vkCmdPushConstants) :void
+  (command-buffer vk-command-buffer)
+  (layout vk-pipeline-layout)
+  (stage-flags vk-shader-stage-flags)
+  (offset :uint32)
+  (size :uint32)
+  (values (:pointer :void)))
+
+(defcfun ("vkCmdBeginRenderPass" vkCmdBeginRenderPass) :void
+  (command-buffer vk-command-buffer)
+  (begin-info (:pointer (:struct vk-render-pass-begin-info)))
+  (constents VkSubpassContents))
+
+(defcfun ("vkCmdNextSubpass" cmd-next-subpass) :void
+  (command-buffer vk-command-buffer)
+  (constents VkSubpassContents))
+
+(defcfun ("vkCmdEndRenderPass" cmd-end-render-pass) :void
+  (command-buffer vk-command-buffer))
+
+(defcfun ("vkCmdExecuteCommands" vkCmdExecuteCommands) :void
+  (command-buffer vk-command-buffer)
+  (count :uint32)
+  (command-buffers (:pointer vk-command-buffer)))
+
+(defcfun ("vkCmdExecuteGeneratedCommandsNV" vkCmdExecuteGeneratedCommandsNV) :void
+  (command-buffer vk-command-buffer)
+  (perprocessed vk-bool-32)
+  (info (:pointer (:struct vk-generated-commands-info-nv))))
+
+(defcfun ("vkCmdPreprocessGeneratedCommandsNV" vkCmdPreprocessGeneratedCommandsNV) :void
+  (command-buffer vk-command-buffer)
+  (info (:pointer (:struct vk-generated-commands-info-nv))))
+
+(defcfun ("vkCmdBindPipelineShaderGroupNV" cmd-bind-pipeline-shader-group-nv) :void
+  (commabd-buffer vk-command-buffer)
+  (pipeline-bind-point VkPipelineBindPoint)
+  (pipeline vk-pipeline)
+  (index :uint32))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;normal function area;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -785,3 +1057,32 @@
 
 (defcfun ("vkDeviceWaitIdle" device-wait-idle) VkResult
   (device vk-device))
+
+(defcfun ("vkDebugReportMessageEXT" debug-report-message-ext) :void
+  (instance vk-instance)
+  (flags vk-debug-report-flags-ext)
+  (object-type VkDebugReportObjectTypeEXT)
+  (object :uint64)
+  (location :unsigned-int)
+  (message-code :int32)
+  (layer-prefix :string)
+  (message :string))
+
+(defcfun ("vkDebugMarkerSetObjectNameEXT" vkDebugMarkerSetObjectNameEXT) VKResult
+  (device vk-device)
+  (info (:pointer (:struct vk-debug-marker-object-name-info-ext))))
+
+(defcfun ("vkDebugMarkerSetObjectTagEXT" vkDebugMarkerSetObjectTagEXT) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-debug-marker-object-tag-info-ext))))
+
+(defcfun ("vkCmdDebugMarkerBeginEXT" vkCmdDebugMarkerBeginEXT) :void
+  (command-buffers vk-command-buffer)
+  (info (:pointer (:struct vk-debug-marker-marker-info-ext))))
+
+(defcfun ("vkCmdDebugMarkerEndEXT" cmd-debug-marker-end-ext) :void
+  (command-buffer vk-command-buffer))
+
+(defcfun ("vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT) :void
+  (command-buffer vk-command-buffer)
+  (info (:pointer (:struct vk-debug-marker-marker-info-ext))))
