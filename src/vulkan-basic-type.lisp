@@ -183,3 +183,5 @@
 (defctype vk-command-pool-reset-flags vk-flags)
 (defctype vk-command-buffer-reset-flags vk-flags)
 (defctype vk-stencil-face-flags vk-flags)
+(defctype vk-command-pool-trim-flags vk-flags)
+(defctype vk-peer-memory-feature-flags vk-flags)

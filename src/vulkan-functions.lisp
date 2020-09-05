@@ -14,7 +14,7 @@
 	  bind-image-memor
 	  get-fence-status
 	  destroy-semaphore
-n	  get-event-status
+	  get-event-status
 	  set-event
 	  reset-event
 	  reset-query-pool
@@ -63,7 +63,13 @@ n	  get-event-status
 	  destroy-degbu-report-callback-ext
 	  debug-report-message-ext
 	  cmd-debug-marker-end-ext
-	  cmd-bind-pipeline-shader-group-nv))
+	  cmd-bind-pipeline-shader-group-nv
+	  destroy-indirect-commands-layout-nv
+	  release-display-ext
+	  cmd-set-device-mask
+	  cmd-dispatch-base
+	  destroy-descriptor-update-template
+	  get-swapchain-status-khr))
 
 (defcfun ("glfwVulkanSupported" get-vulkan-support) :boolean
   "return true if vulkan is available")
@@ -349,6 +355,63 @@ n	  get-event-status
   (instance vk-instance)
   (callback vk-debug-report-callback-ext)
   (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateIndirectCommandsLayoutNV" vkCreateIndirectCommandsLayoutNV) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-indirect-commands-layout-create-info-nv)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (layout (:pointer vk-indirect-commands-layout-nv)))
+
+(defcfun ("vkDestroyIndirectCommandsLayoutNV" destroy-indirect-commands-layout-nv) :void
+  (device vk-device)
+  (layout vk-indirect-commands-layout-nv)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkRegisterDeviceEventEXT" vkRegisterDeviceEventEXT) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-device-event-info-ext)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (fence (:pointer vk-fence)))
+
+(defcfun ("vkRegisterDisplayEventEXT" vkRegisterDisplayEventEXT) VkResult
+  (device vk-device)
+  (display vk-display-khr)
+  (info (:pointer (:struct vk-display-event-info-ext)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (fence (:pointer vk-fence)))
+
+(defcfun ("vkCreateDescriptorUpdateTemplate" vkCreateDescriptorUpdateTemplate) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-descriptor-update-template-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (template (:pointer vk-descriptor-update-template)))
+
+(defcfun ("vkDestroyDescriptorUpdateTemplate" destroy-descriptor-update-template) :void
+  (device vk-device)
+  (template vk-descriptor-update-template)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateSamplerYcbcrConversion" vkCreateSamplerYcbcrConversion) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-sampler-ycbcr-conversion-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (ycbcr-coversion (:pointer vk-sampler-ycbcr-conversion)))
+
+(defcfun ("vkDestroySamplerYcbcrConversion" destroy-sampler-ycbcr-conversion) :void
+  (device vk-device)
+  (ycbcr-coversion vk-sampler-ycbcr-conversion)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateValidationCacheEXT" vkCreateValidationCacheEXT) :void
+  (device vk-device)
+  (info (:pointer (:struct vk-validation-cache-create-info-ext)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (validation-cache (:pointer vk-validation-cache-ext)))
+
+(defcfun ("vkDestroyValidationCacheEXT" destroy-validation-cache-ext) :void
+  (device vk-device)
+  (validation-cache vk-validation-cache-ext)
+  (allocator (:pointer (:struct vk-allocation-callback))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;get function area;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -534,14 +597,6 @@ n	  get-event-status
   (count (:pointer :uint32))
   (swapchain-images (:pointer vk-image)))
 
-(defcfun ("vkAcquireNextImageKHR" vkAcquireNextImageKHR) VkResult
-  (device vk-device)
-  (swapchain vk-swapchain-khr)
-  (timeout :uint64)
-  (semaphore vk-semaphore)
-  (fence vk-fence)
-  (image-index (:pointer :uint32)))
-
 (defcfun ("vkGetPhysicalDeviceExternalImageFormatPropertiesNV" vkGetPhysicalDeviceExternalImageFormatPropertiesNV) VKResult
   (physical-device vk-physical-device)
   (format VkFormat)
@@ -556,16 +611,232 @@ n	  get-event-status
   (device vk-device)
   (memory vk-device-memory)
   (handler-type vk-external-memory-handle-type-flags-nv)
-  (handle (:pointer (:pointer :uint16))))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;queue operation function area;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (handle (:pointer (:pointer :void))))
+
+(defcfun ("vkGetGeneratedCommandsMemoryRequirementsNV" vkGetGeneratedCommandsMemoryRequirementsNV) :void
+  (device vk-device)
+  (info (:pointer (:struct vk-generated-commands-memory-requirements-info-nv)))
+  (memory-requirements (:pointer (:struct vk-memory-requirements2))))
+
+(defcfun ("vkGetPhysicalDeviceFeatures2" vkGetPhysicalDeviceFeatures2) :void
+  (physical-device vk-physical-device)
+  (features (:pointer (:struct vk-physical-device-features2))))
+
+(defcfun ("vkGetPhysicalDeviceProperties2" vkGetPhysicalDeviceProperties2) :void
+  (physical-device vk-physical-device)
+  (properties (:pointer (:struct vk-physical-device-properties2))))
+
+(defcfun ("vkGetPhysicalDeviceFormatProperties2" vkGetPhysicalDeviceFormatProperties2) :void
+  (physical-device vk-physical-device)
+  (format VkFormat)
+  (properties (:pointer (:struct vk-format-properties2))))
+
+(defcfun ("vkGetPhysicalDeviceImageFormatProperties2" vkGetPhysicalDeviceImageFormatProperties2) VKResult
+  (physical-device vk-physical-device)
+  (info (:pointer (:struct vk-physical-device-image-format-info2)))
+  (properties (:pointer (:struct vk-image-format-properties2))))
+
+(defcfun ("vkGetPhysicalDeviceQueueFamilyProperties2" vkGetPhysicalDeviceQueueFamilyProperties2) :void
+  (physical-device vk-physical-device)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-queue-family-properties2))))
+
+(defcfun ("vkGetPhysicalDeviceMemoryProperties2" vkGetPhysicalDeviceMemoryProperties2) :void
+  (physical-device vk-physical-device)
+  (properties (:pointer (:struct vk-physical-device-memory-properties2))))
+
+(defcfun ("vkGetPhysicalDeviceSparseImageFormatProperties2" vkGetPhysicalDeviceSparseImageFormatProperties2) :void
+  (physical-device vk-physical-device)
+  (info (:pointer (:struct vk-physical-device-sparse-image-format-info2)))
+  (count :uint32)
+  (properties (:pointer (:struct vk-sparse-image-format-properties2))))
+
+(defcfun ("vkGetPhysicalDeviceExternalBufferProperties" vkGetPhysicalDeviceExternalBufferProperties) :void
+  (physical-device vk-physical-device)
+  (info (:pointer (:struct vk-physical-device-external-buffer-info)))
+  (properties (:pointer (:struct vk-external-buffer-properties))))
+
+(defcfun ("vkGetMemoryWin32HandleKHR" vkGetMemoryWin32HandleKHR) VkResult
+  (device vk-device)
+  (handle-info (:pointer (:struct vk-memory-get-win32-handle-info-khr)))
+  (handle (:pointer (:pointer :void))))
+
+(defcfun ("vkGetMemoryWin32HandlePropertiesKHR" vkGetMemoryWin32HandlePropertiesKHR) VkResult
+  (device vk-device)
+  (handle-type VkExternalMemoryHandleTypeFlagBits)
+  (handle (:pointer :void))
+  (properties (:pointer (:struct vk-memory-win32-handle-properties-khr))))
+
+(defcfun ("vkGetMemoryFdKHR" vkGetMemoryFdKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-memory-get-fd-info-khr)))
+  (fd (:pointer :int)))
+
+(defcfun ("vkGetMemoryFdPropertiesKHR" vkGetMemoryFdPropertiesKHR) VkResult
+  (device vk-device)
+  (handle-type VkExternalMemoryHandleTypeFlagBits)
+  (fd :int)
+  (properties (:pointer (:struct vk-memory-fd-properties-khr))))
+
+(defcfun ("vkGetPhysicalDeviceExternalSemaphoreProperties" vkGetPhysicalDeviceExternalSemaphoreProperties) :void
+  (physical-device vk-physical-device)
+  (info (:pointer (:struct vk-physical-device-external-semaphore-info)))
+  (properties (:pointer (:struct vk-external-semaphore-properties))))
+
+(defcfun ("vkGetSemaphoreWin32HandleKHR" vkGetSemaphoreWin32HandleKHR) VkResult
+  (device vk-device)
+  (handle-info (:pointer (:struct vk-semaphore-get-win32-handle-info-khr)))
+  (handle (:pointer (:pointer :void))))
+
+(defcfun ("vkImportSemaphoreWin32HandleKHR" vkImportSemaphoreWin32HandleKHR) VkResult
+  (device vk-device)
+  (handle-info (:pointer (:struct vk-import-semaphore-win32-handle-info-khr))))
+
+(defcfun ("vkGetSemaphoreFdKHR" vkGetSemaphoreFdKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-semaphore-get-fd-info-khr)))
+  (fd (:pointer :int)))
+
+(defcfun ("vkGetPhysicalDeviceExternalFenceProperties" vkGetPhysicalDeviceExternalFenceProperties) :void
+  (physical-device vk-physical-device)
+  (info (:pointer (:struct vk-physical-device-external-fence-info)))
+  (properties (:pointer (:struct vk-external-fence-properties))))
+
+(defcfun ("vkGetFenceWin32HandleKHR" vkGetFenceWin32HandleKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-fence-get-win32-handle-info-khr)))
+  (handle (:pointer (:pointer :void))))
+
+(defcfun ("vkGetFenceFdKHR" vkGetFenceFdKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-fence-get-info-khr)))
+  (fd (:pointer :int)))
+#|
+(defcfun ("vkGetRandROutputDisplayEXT" vkGetRandROutputDisplayEXT) VkResult
+  (physical-device vk-physical-device)
+  (dpy (:pointer display))
+  (rroutput rroutput)
+  (display vk-display-khr))
+|#
+(defcfun ("vkGetSwapchainCounterEXT" vkGetSwapchainCounterEXT) VkResult
+  (device vk-device)
+  (swapchain vk-swapchain-khr)
+  (countr VkSurfaceCounterFlagBitsEXT)
+  (counter-value (:pointer :uint64)))
+
+(defcfun ("vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalDeviceSurfaceCapabilities2EXT) VkResult
+  (physical-device vk-physical-device)
+  (surface vk-surface-khr)
+  (capabilities (:pointer (:struct vk-surface-capabilities2-ext))))
+
+(defcfun ("vkEnumeratePhysicalDeviceGroups" vkEnumeratePhysicalDeviceGroups) VkResult
+  (instance vk-instance)
+  (count :uint32)
+  (properties (:pointer (:struct vk-physical-device-group-properties))))
+
+(defcfun ("vkGetDeviceGroupPeerMemoryFeatures" vkGetDeviceGroupPeerMemoryFeatures) :void
+  (device vk-device)
+  (heap-index :uint32)
+  (local-device-index :uint32)
+  (remote-device-index :uint32)
+  (features (:pointer vk-peer-memory-feature-flags)))
+
+(defcfun ("vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPresentCapabilitiesKHR) VkResult
+  (device vk-device)
+  (capabilities (:pointer (:struct vk-device-group-present-capabilities-khr))))
+
+(defcfun ("vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSurfacePresentModesKHR) VkResult
+  (device vk-device)
+  (surface vk-surface-khr)
+  (modes (:pointer vk-device-group-present-mode-flags-khr)))
+
+(defcfun ("vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevicePresentRectanglesKHR) VkResult
+  (physical-device vk-physical-device)
+  (surface vk-surface-khr)
+  (count (:pointer :uint32))
+  (rects (:pointer (:struct vk-rect-2d))))
+
+(defcfun ("vkGetSwapchainStatusKHR" get-swapchain-status-khr) VkResult
+  (device vk-device)
+  (swapchain vk-swapchain-khr))
+
+(defcfun ("vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDurationGOOGLE) VkResult
+  (device vk-device)
+  (swapchain vk-swapchain-khr)
+  (properties (:pointer (:struct vk-refresh-cycle-duration-google))))
+
+(defcfun ("vkGetPastPresentationTimingGOOGLE" vkGetPastPresentationTimingGOOGLE) VkResult
+  (device vk-device)
+  (swapchain vk-swapchain-khr)
+  (count :uint32)
+  (timings (:pointer (:struct vk-past-presentation-timing-google))))
+
+(defcfun ("vkGetPhysicalDeviceMultisamplePropertiesEXT" vkGetPhysicalDeviceMultisamplePropertiesEXT) :void
+  (physical-device vk-physical-device)
+  (samples VkSampleCountFlagBits)
+  (properties (:pointer (:struct vk-multisample-properties-ext))))
+
+(defcfun ("vkGetPhysicalDeviceSurfaceCapabilities2KHR" vkGetPhysicalDeviceSurfaceCapabilities2KHR) VkResult
+  (physical-device vk-physical-device)
+  (surface-info (:pointer (:struct vk-physical-device-surface-info2-khr)))
+  (capabilities (:pointer (:struct vk-surface-capabilities2-khr))))
+
+(defcfun ("vkGetPhysicalDeviceSurfaceFormats2KHR" vkGetPhysicalDeviceSurfaceFormats2KHR) VKResult
+  (physical-device vk-physical-device)
+  (surface-info (:pointer (:struct vk-physical-device-surface-info2-khr)))
+  (count (:pointer :uint32))
+  (surface-format (:pointer (:struct vk-surface-format2-khr))))
+
+(defcfun ("vkGetPhysicalDeviceDisplayProperties2KHR" vkGetPhysicalDeviceDisplayProperties2KHR) VkResult
+  (physical-device vk-physical-device)
+  (count :uint32)
+  (properties (:pointer (:struct vk-display-properties2-khr))))
+
+(defcfun ("vkGetPhysicalDeviceDisplayPlaneProperties2KHR" vkGetPhysicalDeviceDisplayPlaneProperties2KHR) VKResult
+  (physical-device vk-physical-device)
+  (count :uint32)
+  (properties (:pointer (:struct vk-display-plane-properties2-khr))))
+
+(defcfun ("vkGetDisplayModeProperties2KHR" vkGetDisplayModeProperties2KHR) VkResult
+  (physical-device vk-physical-device)
+  (display vk-display-khr)
+  (count (:pointer :uint32))
+  (properties (:pointer (:struct vk-display-mode-properties2-khr))))
+
+(defcfun ("vkGetDisplayPlaneCapabilities2KHR" vkGetDisplayPlaneCapabilities2KHR) VkResult
+  (physical-device vk-physical-device)
+  (info (:pointer (:struct vk-display-plane-info2-khr)))
+  (capabilities (:pointer (:struct vk-display-plane-capabilities2-khr))))
+
+(defcfun ("vkGetBufferMemoryRequirements2" vkGetBufferMemoryRequirements2) :void
+  (device vk-device)
+  (info (:pointer (:struct vk-buffer-memory-requirements-info2)))
+  (requirements (:pointer (:struct vk-memory-requirements2))))
+
+(defcfun ("vkGetImageMemoryRequirements2" vkGetImageMemoryRequirements2) :void
+  (device vk-device)
+  (info (:pointer (:struct vk-image-memory-requirements-info2)))
+  (requirements (:pointer (:struct vk-memory-requirements2))))
+
+(defcfun ("vkGetImageSparseMemoryRequirements2" vkGetImageSparseMemoryRequirements2) :void
+  (device vk-device)
+  (info (:pointer (:struct vk-image-sparse-memory-requirements-info2)))
+  (count :uint32)
+  (requirements (:pointer (:struct vk-sparse-image-memory-requirements2))))
+
 (defcfun ("vkGetDeviceQueue" vkGetDeviceQueue) :void
   (device vk-device)
   (family-index :uint32)
   (index :uint32)
   (queue (:pointer vk-queue)))
 
+(defcfun ("vkGetDeviceQueue2" vkGetDeviceQueue2) :void
+  (device vk-device)
+  (info (:pointer (:struct vk-device-queue-info2)))
+  (queue (:pointer vk-queue)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;queue operation function area;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcfun ("vkQueueSubmit" vkQueueSubmit) VkResult
   (queue vk-queue)
   (count :uint32)
@@ -1049,6 +1320,50 @@ n	  get-event-status
   (pipeline-bind-point VkPipelineBindPoint)
   (pipeline vk-pipeline)
   (index :uint32))
+
+(defcfun ("vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR) :void
+  (command-buffer vk-command-buffer)
+  (pipeline-bind-point VkPipelineBindPoint)
+  (layout vk-pipeline-layout)
+  (set :uint32)
+  (write-count :uint32)
+  (writes (:pointer (:struct vk-write-descriptor-set))))
+
+(defcfun ("vkCmdSetDeviceMask" cmd-set-device-mask) :void
+  (command-buffer vk-command-buffer)
+  (device-mask :uint32))
+
+(defcfun ("vkCmdDispatchBase" cmd-dispatch-base) :void
+  (command-buffer vk-command-buffer)
+  (base-x :uint32)
+  (base-y :uint32)
+  (base-z :uint32)
+  (count-x :uint32)
+  (count-y :uint32)
+  (count-z :uint32))
+
+(defcfun ("vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptorSetWithTemplateKHR) :void
+  (commabd-buffer vk-command-buffer)
+  (template vk-descriptor-update-template)
+  (layout vk-pipeline-layout)
+  (set :uint32)
+  (data (:pointer :void)))
+
+(defcfun ("vkCmdSetViewportWScalingNV" vkCmdSetViewportWScalingNV) :void
+  (command-buffers vk-command-buffer)
+  (first-viewport :uint32)
+  (count :uint32)
+  (viewport-scalings (:pointer (:struct vk-viewport-w-scaling-nv))))
+
+(defcfun ("vkCmdSetDiscardRectangleEXT" vkCmdSetDiscardRectangleEXT) :void
+  (command-buffer vk-command-buffer)
+  (first-discard-rectangle :uint32)
+  (discard-rectangle-count :uint32)
+  (discard-rectangle (:pointer (:struct vk-rect-2d))))
+
+(defcfun ("vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT) :void
+  (command-buffer vk-command-buffer)
+  (info (:pointer (:struct vk-sample-locations-info-ext))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;normal function area;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1086,3 +1401,69 @@ n	  get-event-status
 (defcfun ("vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT) :void
   (command-buffer vk-command-buffer)
   (info (:pointer (:struct vk-debug-marker-marker-info-ext))))
+
+(defcfun ("vkTrimCommandPool" trim-command-pool) :void
+  (device vk-device)
+  (command-pool vk-command-pool)
+  (flags vk-command-pool-trim-flags))
+
+(defcfun ("vkImportSemaphoreFdKHR" vkImportSemaphoreFdKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-import-semaphore-fd-info-khr))))
+
+(defcfun ("vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-import-fence-win32-handle-info-khr))))
+
+(defcfun ("vkImportFenceFdKHR" vkImportFenceFdKHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-import-fence-fd-info-khr))))
+
+(defcfun ("vkReleaseDisplayEXT" release-display-ext) VkResult
+  (physical-device vk-physical-device)
+  (display vk-display-khr))
+#|
+(defcfun ("vkAcquireXlibDisplayEXT" vkAcquireXlibDisplayEXT) VkResult
+  (physical-device vk-physical-device)
+  (dpy (:pointer display))
+  (display vk-display-khr))
+|#
+(defcfun ("vkDisplayPowerControlEXT" vkDisplayPowerControlEXT) VkResult
+  (device vk-device)
+  (display vk-display-khr)
+  (info (:pointer (:struct vk-display-power-info-ext))))
+
+(defcfun ("vkBindBufferMemory2" vkBindBufferMemory2) VkResult
+  (device vk-device)
+  (count :uint32)
+  (info (:pointer (:struct vk-bind-buffer-memory-info))))
+
+(defcfun ("vkBindImageMemory2" vkBindImageMemory2) VkResult
+  (device vk-device)
+  (count :uint32)
+  (info (:pointer (:struct vk-bind-image-memory-info))))
+
+(defcfun ("vkAcquireNextImageKHR" vkAcquireNextImageKHR) VkResult
+  (device vk-device)
+  (swapchain vk-swapchain-khr)
+  (timeout :uint64)
+  (semaphore vk-semaphore)
+  (fence vk-fence)
+  (image-index (:pointer :uint32)))
+
+(defcfun ("vkAcquireNextImage2KHR" vkAcquireNextImage2KHR) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-acquire-next-image-info-khr)))
+  (index :uint32))
+
+(defcfun ("vkUpdateDescriptorSetWithTemplate" vkUpdateDescriptorSetWithTemplate) :void
+  (device vk-device)
+  (set vk-descriptor-set)
+  (template vk-descriptor-update-template)
+  (data (:pointer :void)))
+
+(defcfun ("vkSetHdrMetadataEXT" vkSetHdrMetadataEXT) :void
+  (device vk-device)
+  (count :uint32)
+  (swapchains (:pointer vk-swapchain-khr))
+  (metadata (:pointer (:struct vk-hdr-metadata-ext))))

@@ -188,7 +188,7 @@
   (:limits  (:struct vk-physical-device-limits))
   (:spare-properties (:struct vk-physical-device-sparse-properties)))
 
-(defcstruct vk-physical-device-properties-2
+(defcstruct vk-physical-device-properties2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:properties (:struct vk-physical-device-properties)))
@@ -305,7 +305,7 @@
   (:timestamp-valid-bits :uint32)
   (:min-image-transfer-granularity (:struct vk-extent-3d)))
 
-(defcstruct vk-queue-family-properties-2
+(defcstruct vk-queue-family-properties2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:queue-family-properties (:struct vk-queue-family-properties)))
@@ -441,7 +441,7 @@
   (:next (:pointer :void))
   (:global-priority VkQueueGlobalPriorityExt))
 
-(defcstruct vk-device-queue-info-2
+(defcstruct vk-device-queue-info2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:flags vk-device-queue-create-flags)
@@ -810,7 +810,7 @@
   (:aspect-reference-count :uint32)
   (:aspect-reference (:pointer (:struct vk-input-attachment-aspect-reference))))
 
-(defcstruct vk-attachment-description-2
+(defcstruct vk-attachment-description2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:flags vk-attachment-description-flags)
@@ -823,29 +823,29 @@
   (:initial-layout VkImageLayout)
   (:final-layout VkImageLayout))
 
-(defcstruct vk-attachment-reference-2
+(defcstruct vk-attachment-reference2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:attachment :uint32)
   (:layout VkImageLayout)
   (:aspect-mask vk-image-aspect-flags))
 
-(defcstruct vk-subpass-description-2
+(defcstruct vk-subpass-description2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:flags vk-subpass-description-flags)
   (:pipeline-bind-point VkPipelineBindpoint)
   (:view-mask :uint32)
   (:input-attachment-cout :uint32)
-  (:input-attachment (:pointer (:struct vk-attachment-reference-2)))
+  (:input-attachment (:pointer (:struct vk-attachment-reference2)))
   (:color-attachment-count :uint32)
-  (:color-attachments (:pointer (:struct vk-attachment-reference-2)))
-  (:reslove-attachments (:pointer (:struct vk-attachment-reference-2)))
-  (:depth-stencil-attachments (:pointer (:struct vk-attachment-reference-2)))
+  (:color-attachments (:pointer (:struct vk-attachment-reference2)))
+  (:reslove-attachments (:pointer (:struct vk-attachment-reference2)))
+  (:depth-stencil-attachments (:pointer (:struct vk-attachment-reference2)))
   (:reserve-attachment-count :uint32)
   (:preserve-attachments (:pointer :uint32)))
 
-(defcstruct vk-subpass-dependency-2
+(defcstruct vk-subpass-dependency2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:src-subpass :uint32)
@@ -857,16 +857,16 @@
   (:dependency-flags vk-dependency-flags)
   (:view-offset :uint32))
 
-(defcstruct vk-render-pass-create-info-2
+(defcstruct vk-render-pass-create-info2
   (:type VkStructureType)
   (:next (:pointer :void))
   (:flags vk-render-pass-create-flags)
   (:attachment-count :uint32)
-  (:attachment (:pointer (:struct vk-attachment-description-2)))
+  (:attachment (:pointer (:struct vk-attachment-description2)))
   (:subpass-count :uint32)
-  (:subpasses (:pointer (:struct vk-subpass-description-2)))
+  (:subpasses (:pointer (:struct vk-subpass-description2)))
   (:dependency-count :uint32)
-  (:dependenies (:pointer (:struct vk-subpass-dependency-2)))
+  (:dependenies (:pointer (:struct vk-subpass-dependency2)))
   (:correlate-view-mask-count :uint32)
   (:correlated-view-masks (:pointer :uint32)))
 
@@ -881,7 +881,7 @@
   (:next (:pointer :void))
   (:depth-reslove-mode VkResolveModeFlagbits)
   (:stencil-reslove-mode VkResolveModeFlagbits)
-  (:depth-stencil-resolve-attachment (:struct vk-attachment-reference-2)))
+  (:depth-stencil-resolve-attachment (:struct vk-attachment-reference2)))
 
 (defcstruct vk-attachment-reference-stencil-layout
   (:type VkStructureType)
@@ -2817,7 +2817,7 @@ i don't know how to set up android in lisp
   (:view-port-count :uint32)
   (:view-port-swizzles (:pointer (:struct vk-viewport-swizzle-nv))))
 
-(defcstruct vk-viewport-w-scaling
+(defcstruct vk-viewport-w-scaling-nv
   (:xcoeff :float)
   (:ycoeff :float))
 
@@ -2826,7 +2826,7 @@ i don't know how to set up android in lisp
   (:next (:pointer :void))
   (:view-port-w-scaling-enable vk-bool-32)
   (:view-port-count :uint32)
-  (:view-port-w-scalings (:pointer (:struct vk-viewport-w-scaling))))
+  (:view-port-w-scalings (:pointer (:struct vk-viewport-w-scaling-nv))))
 
 (defcstruct vk-pipeline-rasterization-depth-clip-state-create-info-ext
   (:type VkStructureType)
