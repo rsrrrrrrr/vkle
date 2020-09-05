@@ -2716,7 +2716,7 @@ i don't know how to set up android in lisp
   (:next (:pointer :void))
   (:type VkPerformanceConfigurationTypeINTEL))
 
-(defcstruct vk-clrear-rect
+(defcstruct vk-clear-rect
   (:rect (:struct vk-rect-2d))
   (:base-array-layer :uint32)
   (:layer-count :uint32))

@@ -27,7 +27,27 @@
 	  destroy-pipeline
 	  destroy-descriptor-set-layout
 	  destroy-descriptor-pool
-	  reset-descriptor-pool))
+	  reset-descriptor-pool
+	  destroy-framebuffer
+	  destroy-render-pass
+	  destroy-command-pool
+	  reset-command-pool
+	  end-command-buffer
+	  cmd-bind-pipeline
+	  cmd-set-line-width
+	  cmd-set-depth-bias
+	  cmd-set-depth-bounds
+	  cmd-set-stencil-cpmpare-mask
+	  cmd-set-stencil-write-mask
+	  cmd-set-stencil-reference
+	  cmd-bind-index-buffer
+	  cmd-draw
+	  cmd-draw-indexed
+	  cmd-draw-indirect
+	  cmd-draw-indexed-indirect
+	  cmd-dispatch
+	  cmd-dispatch-indirect
+	  cmd-fill-buffer))
 
 (defcfun ("glfwVulkanSupported" get-vulkan-support) :boolean
   "return true if vulkan is available")
@@ -189,6 +209,83 @@
   (device vk-device)
   (pipeline vk-pipeline)
   (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateFramebuffer" vkCreateFramebuffer) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-framebuffer-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (framebuffer (:pointer vk-framebuffer)))
+
+(defcfun ("vkDestroyFramebuffer" destroy-framebuffer) :void
+  (device vk-device)
+  (framebuffer vk-framebuffer)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateRenderPass" vkCreateRenderPass) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-render-pass-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (render-pass (:pointer vk-render-pass)))
+
+(defcfun ("vkDestroyRenderPass" destroy-render-pass) :void
+  (device vk-device)
+  (render-pass vk-render-pass)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreatePipelineLayout" vkCreatePipelineLayout) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-pipeline-layout-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (layout (:pointer vk-pipeline-layout)))
+
+(defcfun ("vkDestroyPipelineLayout" destroy-pipeline-layout) :void
+  (device vk-device)
+  (pipeline vk-pipeline)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateSampler" vkCreateSampler) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-sampler-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (sampler (:pointer vk-sampler)))
+
+(defcfun ("vkDestroySampler" destroy-sampler) :void
+  (device vk-device)
+  (sampler vk-sampler)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-descriptor-set-layout-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (layout (:pointer vk-descriptor-set-layout)))
+
+(defcfun ("vkDestroyDescriptorSetLayout" destroy-descriptor-set-layout) :void
+  (device vk-device)
+  (layout vk-descriptor-set-layout)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateDescriptorPool" vkCreateDescriptorPool) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-descriptor-pool-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pool (:pointer vk-descriptor-pool)))
+
+(defcfun ("vkDestroyDescriptorPool" destroy-descriptor-pool) :void
+  (device vk-device)
+  (pool vk-descriptor-pool)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateCommandPool" vkCreateCommandPool) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-command-pool-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pool (:pointer vk-command-pool)))
+
+(defcfun ("vkDestroyCommandPool" destroy-command-pool) :void
+  (device vk-device)
+  (pool vk-command-pool)
+  (allocator (:pointer (:struct vk-allocation-callback))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;get function area;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -312,49 +409,10 @@
   (size (:pointer :unsigned-int))
   (data (:pointer :void)))
 
-(defcfun ("vkCreatePipelineLayout" vkCreatePipelineLayout) VkResult
+(defcfun ("vkGetRenderAreaGranularity" vkGetRenderAreaGranularity) :void
   (device vk-device)
-  (info (:pointer (:struct vk-pipeline-layout-create-info)))
-  (allocator (:pointer (:struct vk-allocation-callback)))
-  (layout (:pointer vk-pipeline-layout)))
-
-(defcfun ("vkDestroyPipelineLayout" destroy-pipeline-layout) :void
-  (device vk-device)
-  (pipeline vk-pipeline)
-  (allocator (:pointer (:struct vk-allocation-callback))))
-
-(defcfun ("vkCreateSampler" vkCreateSampler) VkResult
-  (device vk-device)
-  (info (:pointer (:struct vk-sampler-create-info)))
-  (allocator (:pointer (:struct vk-allocation-callback)))
-  (sampler (:pointer vk-sampler)))
-
-(defcfun ("vkDestroySampler" destroy-sampler) :void
-  (device vk-device)
-  (sampler vk-sampler)
-  (allocator (:pointer (:struct vk-allocation-callback))))
-
-(defcfun ("vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout) VkResult
-  (device vk-device)
-  (info (:pointer (:struct vk-descriptor-set-layout-create-info)))
-  (allocator (:pointer (:struct vk-allocation-callback)))
-  (layout (:pointer vk-descriptor-set-layout)))
-
-(defcfun ("vkDestroyDescriptorSetLayout" destroy-descriptor-set-layout) :void
-  (device vk-device)
-  (layout vk-descriptor-set-layout)
-  (allocator (:pointer (:struct vk-allocation-callback))))
-
-(defcfun ("vkCreateDescriptorPool" vkCreateDescriptorPool) VkResult
-  (device vk-device)
-  (info (:pointer (:struct vk-descriptor-pool-create-info)))
-  (allocator (:pointer (:struct vk-allocation-callback)))
-  (pool (:pointer vk-descriptor-pool)))
-
-(defcfun ("vkDestroyDescriptorPool" destroy-descriptor-pool) :void
-  (device vk-device)
-  (pool vk-descriptor-pool)
-  (allocator (:pointer (:struct vk-allocation-callback))))
+  (render-pass vk-render-pass)
+  (granularity (:pointer (:struct vk-extent-2d))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;queue operation function area;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -496,6 +554,230 @@
   (count :uint32)
   (src-cache (:pointer vk-pipeline-cache)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;command pool function area;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcfun ("vkResetCommandPool" reset-command-pool) VkResult
+  (device vk-device)
+  (pool vk-command-pool)
+  (flags vk-command-pool-reset-flags))
+
+(defcfun ("vkAllocateCommandBuffers" vkAllocateCommandBuffers) VkResult
+  (device vk-device)
+  (allocator (:pointer (:struct vk-command-buffer-allocate-info)))
+  (command-buffers (:pointer vk-command-buffer)))
+
+(defcfun ("vkFreeCommandBuffers" vkFreeCommandBuffers) :void
+  (device vk-device)
+  (command-pool vk-command-pool)
+  (count :uint32)
+  (command-buffers (:pointer vk-command-buffer)))
+
+(defcfun ("vkBeginCommandBuffer" vkBeginCommandBuffer) VkResult
+  (command-buffer vk-command-buffer)
+  (info (:pointer (:struct vk-command-buffer-begin-info))))
+
+(defcfun ("vkEndCommandBuffer" end-command-buffer) VkResult
+  (command-buffer vk-command-buffer))
+
+(defcfun ("vkResetCommandBuffer" reset-command-buffer) VkResult
+  (command-buffer vk-command-buffer)
+  (flags vk-command-buffer-reset-flags))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;cmd function area;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcfun ("vkCmdBindPipeline" cmd-bind-pipeline) :void
+  (command-buffer vk-command-buffer)
+  (pipeline-bind-point VkPipelineBindPoint)
+  (pipeline vk-pipeline))
+
+(defcfun ("vkCmdSetViewport" vkCmdSetViewport) :void
+  (command-buffer vk-command-buffer)
+  (first-viewport :uint32)
+  (count :uint32)
+  (viewports (:pointer (:struct vk-viewport))))
+
+(defcfun ("vkCmdSetScissor" vkCmdSetScissor) :void
+  (command-buffer vk-command-buffer)
+  (first-scissor :uint32)
+  (count :uint32)
+  (scissors (:pointer (:struct vk-rect-2d))))
+
+(defcfun ("vkCmdSetLineWidth" cmd-set-line-width) :void
+  (command-buffer vk-command-buffer)
+  (width :float))
+
+(defcfun ("vkCmdSetDepthBias" cmd-set-depth-bias) :void
+  (command-buffer vk-command-buffer)
+  (constant-factor :float)
+  (clamp :float)
+  (slope-factor :float))
+
+(defcfun ("vkCmdSetBlendConstants" vkCmdSetBlendConstants) :void
+  (command-buffer vk-command-buffer)
+  (blend-constants :float :count 4))
+
+(defcfun ("vkCmdSetDepthBounds" cmd-set-depth-bounds) :void
+  (command-buffer vk-command-buffer)
+  (min :float)
+  (max :float))
+
+(defcfun ("vkCmdSetStencilCompareMask" cmd-set-stencil-cpmpare-mask) :void
+  (command-buffer vk-command-buffer)
+  (face-mask vk-stencil-face-flags)
+  (compare-mask :uint32))
+
+(defcfun ("vkCmdSetStencilWriteMask" cmd-set-stencil-write-mask) :void
+  (command-buffer vk-command-buffer)
+  (face-mask vk-stencil-face-flags)
+  (write-mask :uint32))
+
+(defcfun ("vkCmdSetStencilReference" cmd-set-stencil-reference) :void
+  (command-buffer vk-command-buffer)
+  (face-mask vk-stencil-face-flags)
+  (reference :uint32))
+
+(defcfun ("vkCmdBindDescriptorSets" vkCmdBindDescriptorSets) :void
+  (command-buffer vk-command-buffer)
+  (pipeline-bind-point VkPipelineBindPoint)
+  (layout vk-pipeline-layout)
+  (first :uint32)
+  (set-count :uint32)
+  (sets (:pointer vk-descriptor-set))
+  (offset-count :uint32)
+  (offsets (:pointer :uint32)))
+
+(defcfun ("vkCmdBindIndexBuffer" cmd-bind-index-buffer) :void
+  (command-buffer vk-command-buffer)
+  (buffer vk-buffer)
+  (offset vk-device-size)
+  (index-type VkIndexType))
+
+(defcfun ("vkCmdBindVertexBuffers" vkCmdBindVertexBuffers) :void
+  (command-buffer vk-command-buffer)
+  (first-binding :uint32)
+  (count :uint32)
+  (buffers (:pointer vk-buffer))
+  (offsets (:pointer vk-device-size)))
+
+(defcfun ("vkCmdDraw" cmd-draw) :void
+  (command-buffer vk-command-buffer)
+  (vertex-count :uint32)
+  (instance-count :uint32)
+  (first-vertex :uint32)
+  (first-instance :uint32))
+
+(defcfun ("vkCmdDrawIndexed" cmd-draw-indexed) :void
+  (command-buffer vk-command-buffer)
+  (index-count :uint32)
+  (instance-count :uint32)
+  (firset-index :uint32)
+  (vertex-offset :int32)
+  (firset-instance :uint32))
+
+(defcfun ("vkCmdDrawIndirect" cmd-draw-indirect) :void
+  (command-buffer vk-command-buffer)
+  (buffer vk-buffer)
+  (offset vk-device-size)
+  (draw-count :uint32)
+  (stride :uint32))
+
+(defcfun ("vkCmdDrawIndexedIndirect" cmd-draw-indexed-indirect) :void
+  (command-buffer vk-command-buffer)
+  (buffer vk-buffer)
+  (offset vk-device-size)
+  (draw-count :uint32)
+  (stride :uint32))
+
+(defcfun ("vkCmdDispatch" cmd-dispatch) :void
+  (command-buffer vk-command-buffer)
+  (count-x :uint32)
+  (count-y :uint32)
+  (count-z :uint32))
+
+(defcfun ("vkCmdDispatchIndirect" cmd-dispatch-indirect) :void
+  (command-buffer vk-command-buffer)
+  (buffer vk-buffer)
+  (offset vk-device-size))
+
+(defcfun ("vkCmdCopyBuffer" vkCmdCopyBuffer) :void
+  (command-buffer vk-command-buffer)
+  (src-buffer vk-buffer)
+  (dst-buffer vk-buffer)
+  (count :uint32)
+  (regions (:pointer (:struct vk-buffer-copy))))
+
+(defcfun ("vkCmdCopyImage" vkCmdCopyImage) :void
+  (command-buffer vk-command-buffer)
+  (src-image vk-image)
+  (src-image-layout VkImageLayout)
+  (dst-image vk-image)
+  (dst-image-layout VkImageLayout)
+  (count :uint32)
+  (regions (:pointer (:struct vk-image-copy))))
+
+(defcfun ("vkCmdBlitImage" vkCmdBlitImage) :void
+  (command-buffer vk-command-buffer)
+  (src-image vk-image)
+  (src-image-layout VkImageLayout)
+  (dst-image vk-image)
+  (dst-image-layout VkImageLayout)
+  (count :uint32)
+  (regions (:pointer (:struct vk-image-blit)))
+  (filter VkFilter))
+
+(defcfun ("vkCmdCopyBufferToImage" vkCmdCopyBufferToImage) :void
+  (command-buffer vk-command-buffer)
+  (src-buffer vk-buffer)
+  (dst-image vk-image)
+  (dst-image-layout VkImageLayout)
+  (count :uint32)
+  (regions (:pointer (:struct vk-buffer-image-copy))))
+
+(defcfun ("vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer) :void
+  (command-buffer vk-command-buffer)
+  (src-image vk-image)
+  (src-image-layout VkImageLayout)
+  (dst-buffer vk-buffer)
+  (count :uint32)
+  (regions (:pointer (:struct vk-buffer-image-copy))))
+
+(defcfun ("vkCmdUpdateBuffer" vkCmdUpdateBuffer) :void
+  (command-buffer vk-command-buffer)
+  (dst-buffer vk-buffer)
+  (dst-offset vk-device-size)
+  (data-size vk-device-size)
+  (data (:pointer :void)))
+
+(defcfun ("vkCmdFillBuffer" cmd-fill-buffer) :void
+  (command-buffer vk-command-buffer)
+  (dst-buffer vk-buffer)
+  (dst-offset vk-device-size)
+  (size vk-device-size)
+  (data :uint32))
+
+(defcfun ("vkCmdClearColorImage" vkCmdClearColorImage) :void
+  (command-buffer vk-command-buffer)
+  (image vk-image)
+  (image-layout VkImageLayout)
+  (color (:pointer (:union vk-clear-color-value)))
+  (count :uint32)
+  (ranges (:pointer (:struct vk-image-subresource-range))))
+
+(defcfun ("vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage) :void
+  (command-buffer vk-command-buffer)
+  (image vk-image)
+  (image-layout VkImageLayout)
+  (depth-stencil (:pointer (:struct vk-clear-depth-stencil-value)))
+  (count :uint32)
+  (ranges (:pointer (:struct vk-image-subresource-range))))
+
+(defcfun ("vkCmdClearAttachments" vkCmdClearAttachments) :void
+  (command-buffer vk-command-buffer)
+  (attachment-count :uint32)
+  (attachments (:pointer (:struct vk-clear-attachment)))
+  (rect-count :uint32)
+  (rects (:pointer (:struct vk-clear-rect))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;normal function area;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcfun ("vkQueueWaitIdle" queue-wait-idle) VkResult
@@ -503,24 +785,3 @@
 
 (defcfun ("vkDeviceWaitIdle" device-wait-idle) VkResult
   (device vk-device))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
