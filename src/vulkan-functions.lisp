@@ -16,7 +16,18 @@
 	  destroy-semaphore
 	  get-event-status
 	  set-event
-	  reset-event))
+	  reset-event
+	  reset-query-pool
+	  destroy-buffer
+	  destroy-buffer-view
+	  destroy-image
+	  destroy-image-view
+	  destroy-shader-module
+	  destroy-pipeline-cache
+	  destroy-pipeline
+	  destroy-descriptor-set-layout
+	  destroy-descriptor-pool
+	  reset-descriptor-pool))
 
 (defcfun ("glfwVulkanSupported" get-vulkan-support) :boolean
   "return true if vulkan is available")
@@ -79,6 +90,104 @@
 (defcfun ("vkDestroyEvent" destroy-event) :void
   (device vk-device)
   (event vk-event)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateQueryPool" vkCreateQueryPool) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-query-pool-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pool (:pointer vk-query-pool)))
+
+(defcfun ("vkDestroyQueryPool" destroy-query-pool) :void
+  (device vk-device)
+  (pool vk-query-pool)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateBuffer" vkCreateBuffer) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-buffer-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (buffer (:pointer vk-buffer)))
+
+(defcfun ("vkDestroyBuffer" destroy-buffer) :void
+  (device vk-device)
+  (buffer vk-bool-32)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateBufferView" vkCreateBufferView) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-buffer-view-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (buffer-view (:pointer vk-buffer-view)))
+
+(defcfun ("vkDestroyBufferView" destroy-buffer-view) :void
+  (device vk-device)
+  (buffer-view vk-buffer-view)
+  (allocator (:pointer vk-buffer-view)))
+
+(defcfun ("vkCreateImage" vkCreateImage) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-image-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (image (:pointer vk-image)))
+
+(defcfun ("vkDestroyImage" destroy-image) :void
+  (device vk-device)
+  (image vk-image)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateImageView" vkCreateImageView) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-image-view-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (image-view (:pointer vk-image-view)))
+
+(defcfun ("vkDestroyImageView" destroy-image-view) :void
+  (device vk-device)
+  (image-view vk-image-view)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateShaderModule" vkCreateShaderModule) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-shader-module-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (module (:pointer vk-shader-module)))
+
+(defcfun ("vkDestroyShaderModule" destroy-shader-module) :void
+  (device vk-device)
+  (module vk-shader-module)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreatePipelineCache" vkCreatePipelineCache) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-pipeline-cache-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pipeline-cache (:pointer vk-pipeline-cache)))
+
+(defcfun ("vkDestroyPipelineCache" destroy-pipeline-cache) :void
+  (device vk-device)
+  (pipeline-cache vk-pipeline-cache)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateGraphicsPipelines" vkCreateGraphicsPipelines) VKResult
+  (device vk-device)
+  (cache vk-pipeline-cache)
+  (info-count :uint32)
+  (infos (:pointer (:struct vk-graphics-pipeline-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pipeline (:pointer vk-pipeline)))
+
+(defcfun ("vkCreateComputePipelines" vkCreateComputePipelines) VkResult
+  (device vk-device)
+  (cache vk-pipeline-cache)
+  (info-count :uint32)
+  (infos (:pointer (:struct vk-compute-pipeline-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pipeline (:pointer vk-pipeline)))
+
+(defcfun ("vkDestroyPipeline" destroy-pipeline) :void
+  (device vk-device)
+  (pipeline vk-pipeline)
   (allocator (:pointer (:struct vk-allocation-callback))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;get function area;;;;;;;;;;;;;;;;;;;;;;
@@ -180,6 +289,72 @@
   (tiling VkImageTiling)
   (count (:pointer :uint32))
   (properties (:pointer (:struct vk-sparse-image-format-properties))))
+
+(defcfun ("vkGetQueryPoolResults" vkGetQueryPoolResults) VkResult
+  (device vk-device)
+  (pool vk-query-pool)
+  (fire-query :uint32)
+  (count :uint32)
+  (data-size :unsigned-int)
+  (data (:pointer :void))
+  (stride vk-device-size)
+  (flags vk-query-result-flags))
+
+(defcfun ("vkGetImageSubresourceLayout" vkGetImageSubresourceLayout) :void
+  (device vk-device)
+  (image vk-image)
+  (subresource (:pointer (:struct vk-image-subresource)))
+  (layout (:pointer (:struct vk-subresource-layout))))
+
+(defcfun ("vkGetPipelineCacheData" vkGetPipelineCacheData) VkResult
+  (device vk-device)
+  (pipeline-cache vk-pipeline-cache)
+  (size (:pointer :unsigned-int))
+  (data (:pointer :void)))
+
+(defcfun ("vkCreatePipelineLayout" vkCreatePipelineLayout) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-pipeline-layout-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (layout (:pointer vk-pipeline-layout)))
+
+(defcfun ("vkDestroyPipelineLayout" destroy-pipeline-layout) :void
+  (device vk-device)
+  (pipeline vk-pipeline)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateSampler" vkCreateSampler) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-sampler-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (sampler (:pointer vk-sampler)))
+
+(defcfun ("vkDestroySampler" destroy-sampler) :void
+  (device vk-device)
+  (sampler vk-sampler)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-descriptor-set-layout-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (layout (:pointer vk-descriptor-set-layout)))
+
+(defcfun ("vkDestroyDescriptorSetLayout" destroy-descriptor-set-layout) :void
+  (device vk-device)
+  (layout vk-descriptor-set-layout)
+  (allocator (:pointer (:struct vk-allocation-callback))))
+
+(defcfun ("vkCreateDescriptorPool" vkCreateDescriptorPool) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-descriptor-pool-create-info)))
+  (allocator (:pointer (:struct vk-allocation-callback)))
+  (pool (:pointer vk-descriptor-pool)))
+
+(defcfun ("vkDestroyDescriptorPool" destroy-descriptor-pool) :void
+  (device vk-device)
+  (pool vk-descriptor-pool)
+  (allocator (:pointer (:struct vk-allocation-callback))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;queue operation function area;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -247,6 +422,24 @@
   (image vk-image)
   (memory vk-device-memory)
   (offset vk-device-size))
+
+(defcfun ("vkAllocateDescriptorSets" vkAllocateDescriptorSets) VkResult
+  (device vk-device)
+  (info (:pointer (:struct vk-descriptor-set-allocate-info)))
+  (sets (:pointer vk-descriptor-set)))
+
+(defcfun ("vkFreeDescriptorSets" vkFreeDescriptorSets) VkResult
+  (device vk-device)
+  (pool vk-descriptor-pool)
+  (count :uint32)
+  (sets (:pointer vk-descriptor-set)))
+
+(defcfun ("vkUpdateDescriptorSets" vkUpdateDescriptorSets) VkResult
+  (device vk-device)
+  (wirte-count :uint32)
+  (write-sets (:pointer (:struct vk-write-descriptor-set)))
+  (copy-count :uint32)
+  (copy-sets (:pointer (:struct vk-copy-descriptor-set))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;fence function area;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -280,6 +473,29 @@
   (device vk-device)
   (event vk-event))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;query pool function area;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcfun ("vkResetQueryPool" reset-query-pool) :void
+  (device vk-device)
+  (pool vk-query-pool)
+  (first-query :uint32)
+  (count :uint32))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;descriptor pool function area;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcfun ("vkResetDescriptorPool" reset-descriptor-pool) VKResult
+  (device vk-device)
+  (pool vk-descriptor-pool)
+  (flags vk-descriptor-pool-reset-flags))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;pipeline cache function area;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcfun ("vkMergePipelineCaches" vkMergePipelineCaches) VkResult
+  (device vk-device)
+  (dst-cache vk-pipeline-cache)
+  (count :uint32)
+  (src-cache (:pointer vk-pipeline-cache)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;normal function area;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcfun ("vkQueueWaitIdle" queue-wait-idle) VkResult
@@ -287,3 +503,24 @@
 
 (defcfun ("vkDeviceWaitIdle" device-wait-idle) VkResult
   (device vk-device))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
