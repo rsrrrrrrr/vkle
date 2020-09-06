@@ -1,15 +1,4 @@
-(defpackage :vkle-demo
-  (:use :cl :cl-glfw3 :vkle)
-  (:export
-   :instance-demo
-   :print-physical-devices-info-demo
-   :surface-demo
-   :logic-device-demo
-   :get-surface-capabilities
-   :get-surface-formats
-   :get-surface-present-modes))
-
-(in-package :vkle-demo)                          
+(in-package :vkle)
 
 (def-key-callback key-callback (window key scancode action mod-keys)
   (declare (ignore window scancode mod-keys))
@@ -33,7 +22,8 @@
 
 (defun demo ()
   (init-basic-glfw ()
-		   (set-key-callback 'key-callback)
-		   (set-mouse-button-callback 'mouse-callback)
-		   (set-window-size-callback 'window-size-callback)
-		   (loop until (window-should-close-p) do (wait-events))))
+      (format t "~a ~%" (make-instance-info))
+      (set-key-callback 'key-callback)
+      (set-mouse-button-callback 'mouse-callback)
+      (set-window-size-callback 'window-size-callback)
+      (loop until (window-should-close-p) do (wait-events))))
