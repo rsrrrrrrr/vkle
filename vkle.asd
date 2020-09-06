@@ -8,4 +8,6 @@
 	       (:file "vulkan-struct-type")
 	       (:file "vkle-ext")
 	       (:file "vulkan-functions")
+	       (:file "info-maker")
+	       (:file "wrappers")
 	       (:file "vkle")))
