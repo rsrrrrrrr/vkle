@@ -21,12 +21,7 @@
     (check-reslute-type (vkEnumerateInstanceVersion version))
     (mem-ref version :uint32)))
 
-(defun create-instance (&key
-			  (allocator nil)
-			  (info-list nil))
+(defun create-instance (info &key (allocator nil))
   (with-foreign-object (instance 'vk-instance)
-    (let ((info (convert-to-pointer info-list)))
-      (check-reslute-type (vkCreateInstance info
-					    (null->null-pointer allocator)
-					    instance))
-      (mem-ref instance 'vk-instance))))
+    (check-reslute-type (vkCreateInstance info (null->null-pointer allocator) instance))
+    (mem-ref instance 'vk-instance)))

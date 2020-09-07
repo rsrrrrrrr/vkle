@@ -2,26 +2,6 @@
 
 (export '(check-instance-extesion-support-p))
 
-(defun convert-to-pointer (lst)
-  (cond ((null lst) nil)
-	((null (cadr lst))
-	 (progn
-	   (setf (cadr lst) (null-pointer))
-	   (convert-to-suitable (cddr lst))))
-	((listp (cadr lst))
-	 (let* ((sub-info (cadr lst))
-		(type (car sub-info))
-		(sinfo (cadr sub-info)))
-	   (cond ((member type '(:uint64 :uint32 :uint16 :uint8 :uint :unsigned-int
-				 :int64 :int32 :int16 :int8 :int :float :double :string))
-		  (loop for val in sinfo
-			collect (convert-to-foreign val type)))
-		 ((listp type) (progn
-				 (convert-to-suitable sinfo)
-				 (convert-to-foreign sinfo type))))
-	   (convert-to-suitable (cddr lst))))
-	(t (convert-to-suitable (cddr lst)))))
-
 (defun obj->list (obj count type)
   (loop for i upto (1- (mem-ref count :uint32))
 	collect (mem-aref obj type i)))
@@ -84,3 +64,16 @@
   "val is a type of uint32, mode is a enumerate type of VkQueueFlagBits"
   (when (/= (logand val (foreign-enum-value 'VkQueueFlagBits mode)) 0)
     t))
+
+(defun convert->foreign-pointers (lst type)
+  (when (null lst)
+    (null-pointer))
+  (with-foreign-object (obj type (length lst))
+    (loop for i upto (1- (length lst))
+	  do
+	     (setf (mem-aref obj type)
+		   (convert-to-foreign (nth i lst) type)))
+    (mem-aptr obj type)))
+
+(defun convert-nil->null-pointer (lst)
+  (subst-if (null-pointer) #'null lst))

@@ -22,8 +22,9 @@
 
 (defun demo ()
   (init-basic-glfw ()
-      (format t "~a ~%" (make-instance-info))
+    (let ((instance (create-instance (make-instance-info) :allocator (null-pointer))))
       (set-key-callback 'key-callback)
       (set-mouse-button-callback 'mouse-callback)
       (set-window-size-callback 'window-size-callback)
-      (loop until (window-should-close-p) do (wait-events))))
+      (loop until (window-should-close-p) do (wait-events))
+      (destroy-instance instance (null-pointer)))))
