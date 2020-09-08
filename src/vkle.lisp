@@ -1,12 +1,19 @@
 (in-package :vkle)
 
-(export '(check-instance-extesion-support-p))
+(export '(check-instance-extesion-support-p
+	  c-null))
+
+(defparameter c-null (null-pointer))
+
+(defun check-reslute-type (ret-val)
+  (when (not (eql ret-val :success))
+    (error ret-val)))
 
 (defun obj->list (obj count type)
   (loop for i upto (1- (mem-ref count :uint32))
 	collect (mem-aref obj type i)))
 
-(defun do-get-function (fp &rest args)  
+(defun do-get-function (fp &rest args)
   (check-reslute-type (apply fp args)))
 
 (defun c-char-array->string (point)
@@ -51,10 +58,6 @@
       val
       (null-pointer)))
 
-(defun check-reslute-type (ret-val)
-  (when (not (eql ret-val :success))
-    (error ret-val)))
-
 (defun make-vulkan-version (&optional (major 1) (minor 2) (patch 0))
   (logior (ash major 22)
 	  (ash minor 12)
@@ -77,3 +80,12 @@
 
 (defun convert-nil->null-pointer (lst)
   (subst-if (null-pointer) #'null lst))
+
+(defun fill-obj (obj lst type)
+  (when (null lst)
+    (null-pointer))
+  (loop for name in lst
+	for i from 0
+	do
+	   (setf (mem-aref obj type i)
+		 (convert-to-foreign (nth i lst) type))))

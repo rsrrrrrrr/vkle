@@ -1,5 +1,13 @@
 (in-package :vkle)
 
+(defparameter vk-info nil)
+
+(defun set-vk-info (key val)
+  (setf (getf vk-info key) val))
+
+(defun get-vk-info (key)
+  (getf vk-info key))
+
 (def-key-callback key-callback (window key scancode action mod-keys)
   (declare (ignore window scancode mod-keys))
   (when (and (eq key :escape) (eq action :press))
@@ -22,9 +30,19 @@
 
 (defun demo ()
   (init-basic-glfw ()
-    (let ((instance (create-instance (make-instance-info) :allocator (null-pointer))))
-      (set-key-callback 'key-callback)
-      (set-mouse-button-callback 'mouse-callback)
-      (set-window-size-callback 'window-size-callback)
-      (loop until (window-should-close-p) do (wait-events))
-      (destroy-instance instance (null-pointer)))))
+    (set-vk-info :instance (create-instance (make-instance-info)))
+    (set-vk-info :gpus (enumerate-physical-devices (getf vk-info :instance)))
+    (set-vk-info :gpu (car (get-vk-info :gpus)))
+    (set-vk-info :gpu-properties (get-physical-device-properties (get-vk-info :gpu)))
+    (set-vk-info :select-gpu-queue-family-properties (get-physical-device-queue-family-properties (get-vk-info :gpu)))
+    (set-vk-info :select-gpu-memory-properties (get-physical-device-memory-properties (get-vk-info :gpu)))
+    (set-vk-info :select-gpu-feautres (get-physical-device-properties (get-vk-info :gpu)))
+    
+    (format t "properties: ~a~%~%" (get-vk-info :select-gpu-feautres))
+    (format t "format properties :~a~%~%" (get-physical-device-format-properties (get-vk-info :gpu) :format-r4g4-unorm-pack8))
+    
+    (set-key-callback 'key-callback)
+    (set-mouse-button-callback 'mouse-callback)
+    (set-window-size-callback 'window-size-callback)
+    (loop until (window-should-close-p) do (wait-events))
+    (destroy-instance (get-vk-info :instance) c-null)))
