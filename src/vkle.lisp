@@ -1,6 +1,10 @@
 (in-package :vkle)
 
 (export '(check-instance-extesion-support-p
+	  check-reslute-type
+	  check-usable-instance-layers
+	  check-usable-instance-extensions
+	  queue-family-support-mode-p
 	  c-null))
 
 (defparameter c-null (null-pointer))
@@ -38,10 +42,6 @@
 	(t (append (list (car info)
 			 (cadr info))
 		   (convert (cddr info))))))
-
-(defun check-instance-extesion-support-p (name)
-  (let ((enable-extensions (get-instance-extensions)))
-    (member name enable-extensions :test #'string=)))
 
 (defun check-usable-instance-layers (layers)
   (let* ((all-usable-layers-struct (get-instance-layers))
