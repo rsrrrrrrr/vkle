@@ -35,7 +35,7 @@
 
 (defun convert (info)
   (cond ((null info) nil)
-	((member (car info) '(:description :layer-name))
+	((member (car info) '(:description :layer-name :extension-name))
 	 (append (list (car info)
 		       (c-char-array->string (getf info (car info))))
 		 (convert (cddr info))))
@@ -51,6 +51,20 @@
 
 (defun check-usable-instance-extensions (extensions)
   (let ((all-usable-extensions (get-instance-extensions)))
+    (intersection all-usable-extensions extensions :test #'string=)))
+
+(defun check-usable-device-layers (physical-device layers)
+  (let* ((all-usable-layers-struct (get-device-layers physical-device))
+	 (all-usable-layers (loop for struct in all-usable-layers-struct
+				  collect (getf struct :layer-name))))
+    (intersection all-usable-layers layers :test #'string=)))
+
+(defun check-usable-device-extensions (physical-device layers extensions)
+  (let* ((all-usable-layers (check-usable-device-layers physical-device layers))
+	 (all-usable-extensions-struct (loop for layer in all-usable-layers
+					     collect (get-device-extensions physical-device layer)))
+	 (all-usable-extensions (loop for struct in all-usable-extensions-struct
+				      collect (getf struct :extension-name))))
     (intersection all-usable-extensions extensions :test #'string=)))
 
 (defun null->null-pointer (val)
@@ -80,6 +94,17 @@
 
 (defun convert-nil->null-pointer (lst)
   (subst-if (null-pointer) #'null lst))
+
+(defun make-default-obj (type &rest info)
+  (with-foreign-object (obj type)
+    (let ((keys (foreign-slot-names type)))
+      (mapcar #'(lambda (key)
+		  (let ((c-type (foreign-slot-type type key)))
+		    (cond ((member key info) (setf (foreign-slot-value obj type key) (getf info key)))
+			  ((or (consp c-type) (eql :string c-type)) (null-pointer))
+			  (t (setf (foreign-slot-value obj type key) 0)))))
+	      keys))
+    obj))
 
 (defun fill-obj (obj lst type)
   (when (null lst)

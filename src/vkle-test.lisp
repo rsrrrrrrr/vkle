@@ -30,7 +30,7 @@
 
 (defun demo ()
   (init-basic-glfw ()
-    (set-vk-info :instance (create-instance (make-instance-info)))
+    (set-vk-info :instance (create-instance (make-instance-info :layers '("VK_LAYER_KHRONOS_validation"))))
     (set-vk-info :gpus (enumerate-physical-devices (getf vk-info :instance)))
     (set-vk-info :gpu (car (get-vk-info :gpus)))
     (set-vk-info :gpu-properties (get-physical-device-properties (get-vk-info :gpu)))
@@ -38,9 +38,7 @@
     (set-vk-info :select-gpu-memory-properties (get-physical-device-memory-properties (get-vk-info :gpu)))
     (set-vk-info :select-gpu-feautres (get-physical-device-properties (get-vk-info :gpu)))
     
-    (format t "properties: ~a~%~%" (get-vk-info :select-gpu-feautres))
-    (format t "format properties :~a~%~%" (get-physical-device-format-properties (get-vk-info :gpu) :format-r4g4-unorm-pack8))
-    
+
     (set-key-callback 'key-callback)
     (set-mouse-button-callback 'mouse-callback)
     (set-window-size-callback 'window-size-callback)

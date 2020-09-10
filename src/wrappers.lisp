@@ -2,7 +2,7 @@
 
 (export '(get-instance-extensions
 	  get-instance-layers
-	  get-device-layer-properties
+	  get-device-layers
 	  get-instance-version
 	  enumerate-physical-devices
 	  get-physical-device-properties
@@ -24,11 +24,18 @@
     (do-get-function #'vkEnumerateInstanceLayerProperties count properties)
     (convert-to-new-list (obj->list properties count '(:struct vk-layer-properties)))))
 
-(defun get-device-layer-properties (physical-device)
+(defun get-device-layers (physical-device)
   (with-foreign-objects ((count :uint32)
 			 (properties '(:struct vk-layer-properties)))
     (do-get-function #'vkEnumerateDeviceLayerProperties physical-device count (null-pointer))
     (do-get-function #'vkEnumerateDeviceLayerProperties physical-device count properties)
+    (convert-to-new-list (obj->list properties count '(:struct vk-layer-properties)))))
+
+(defun get-device-extensions (physical-device layer)
+  (with-foreign-objects ((count :uint32)
+			 (properties '(:struct vk-extension-properties)))
+    (do-get-function #'vkEnumerateDeviceExtensionProperties physical-device layer count (null-pointer))
+    (do-get-function #'vkEnumerateDeviceExtensionProperties physical-device layer count properties)
     (convert-to-new-list (obj->list properties count '(:struct vk-layer-properties)))))
 
 (defun get-instance-version ()
@@ -77,7 +84,31 @@
     (vkGetPhysicalDeviceImageFormatProperties physical-device format type tiling usage flags properties)
     (mem-ref properties '(:struct vk-image-format-properties))))
 
+(defun get-device-memory-commitment (device memory)
+  (with-foreign-object (bytes 'vk-device-size)
+    (vkGetDeviceMemoryCommitment device memory bytes)
+    (mem-ref bytes 'vk-device-size)))
+
+(defun get-buffer-memory-requirements (device buffer)
+  (with-foreign-object (requirements '(:struct vk-memory-requirements))
+    (vkGetBufferMemoryRequirements device buffer requirements)
+    (mem-ref requirements '(:struct vk-memory-requirements))))
+
+(defun get-image-memory-requirements (device image)
+  (with-foreign-object (requirements '(:struct vk-memory-requirements))
+    (vkGetImageMemoryRequirements device image requirements)
+    (mem-ref requirements '(:struct vk-memory-requirements))))
+
+(defun get-image-sparse-memory-requirements (device image)
+  (with-foreign-objects ((count :uint32)
+			 (requirements '(:struct vk-sparse-image-memory-requirements)))
+    (do-get-function #'vkGetImageSparseMemoryRequirements device image count (null-pointer))
+    (do-get-function #'vkGetImageSparseMemoryRequirements device image count requirements)
+    (obj->list requirements count '(:struct vk-sparse-image-memory-requirements))))
+
 (defun create-instance (info &key (allocator c-null))
   (with-foreign-object (instance 'vk-instance)
     (check-reslute-type (vkCreateInstance info (null->null-pointer allocator) instance))
     (mem-ref instance 'vk-instance)))
+
+
