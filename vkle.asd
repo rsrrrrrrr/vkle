@@ -7,7 +7,6 @@
 	       (:file "vulkan-basic-type")
 	       (:file "vulkan-struct-type")
 	       (:file "vulkan-functions")
-	       (:file "info-maker")
 	       (:file "wrappers")
 	       (:file "vkle-test")
 	       (:file "vkle")))

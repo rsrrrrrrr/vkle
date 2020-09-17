@@ -27,7 +27,7 @@
   `(with-init-window (:title ,title :width ,w :height ,h :client-api :no-gl-api)
      ,@body))
 
-
+#|
 (defun demo ()
   (init-basic-glfw ()
     (set-vk-info :instance (create-instance (make-instance-info :layers '("VK_LAYER_KHRONOS_validation"))))
@@ -44,3 +44,4 @@
     (set-window-size-callback 'window-size-callback)
     (loop until (window-should-close-p) do (wait-events))
     (destroy-instance (get-vk-info :instance) c-null)))
+|#
