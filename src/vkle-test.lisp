@@ -27,10 +27,11 @@
   `(with-init-window (:title ,title :width ,w :height ,h :client-api :no-gl-api)
      ,@body))
 
-#|
+
 (defun demo ()
   (init-basic-glfw ()
-    (set-vk-info :instance (create-instance (make-instance-info :layers '("VK_LAYER_KHRONOS_validation"))))
+    (set-vk-info :instance (create-instance :info-layers '("VK_LAYER_KHRONOS_validation")
+					    :info-extensions (get-instance-extensions)))
     (set-vk-info :gpus (enumerate-physical-devices (getf vk-info :instance)))
     (set-vk-info :gpu (car (get-vk-info :gpus)))
     (set-vk-info :gpu-properties (get-physical-device-properties (get-vk-info :gpu)))
@@ -44,4 +45,4 @@
     (set-window-size-callback 'window-size-callback)
     (loop until (window-should-close-p) do (wait-events))
     (destroy-instance (get-vk-info :instance) c-null)))
-|#
+

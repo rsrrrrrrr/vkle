@@ -43,13 +43,13 @@
 			 (cadr info))
 		   (convert (cddr info))))))
 
-(defun check-usable-instance-layers (layers)
+(defun get-all-usable-instance-layers (layers)
   (let* ((all-usable-layers-struct (get-instance-layers))
 	 (all-usable-layers (loop for struct in all-usable-layers-struct
 				  collect (getf struct :layer-name))))
     (intersection all-usable-layers layers :test #'string=)))
 
-(defun check-usable-instance-extensions (extensions)
+(defun get-all-usable-instance-extensions (extensions)
   (let ((all-usable-extensions (get-instance-extensions)))
     (intersection all-usable-extensions extensions :test #'string=)))
 
@@ -102,6 +102,9 @@
 		  (cond ((or (consp c-type) (eql :string c-type)) (null-pointer))
 			(t (setf (foreign-slot-value obj type key) 0)))))
 	    keys)))
+
+(defun set-struct-val (obj type key val)
+  (setf (foreign-slot-value obj type key) val))
 
 (defun fill-obj (obj lst type)
   (when (null lst)
