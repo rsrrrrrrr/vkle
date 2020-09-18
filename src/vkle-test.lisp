@@ -38,11 +38,16 @@
     (set-vk-info :select-gpu-queue-family-properties (get-physical-device-queue-family-properties (get-vk-info :gpu)))
     (set-vk-info :select-gpu-memory-properties (get-physical-device-memory-properties (get-vk-info :gpu)))
     (set-vk-info :select-gpu-feautres (get-physical-device-properties (get-vk-info :gpu)))
+    (set-vk-info :logic-device (create-device (get-vk-info :gpu)
+					      :info-queue-infos '((:queue-family-index 0
+								   :queue-count 1
+								   :queue-properties 1.0))))
     
 
     (set-key-callback 'key-callback)
     (set-mouse-button-callback 'mouse-callback)
     (set-window-size-callback 'window-size-callback)
     (loop until (window-should-close-p) do (wait-events))
+    (when (check-reslute-type (device-wait-idle (get-vk-info :logic-device)))
+      (destroy-device (get-vk-info :logic-device) c-null))
     (destroy-instance (get-vk-info :instance) c-null)))
-

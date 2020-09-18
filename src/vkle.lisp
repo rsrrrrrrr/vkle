@@ -53,14 +53,14 @@
   (let ((all-usable-extensions (get-instance-extensions)))
     (intersection all-usable-extensions extensions :test #'string=)))
 
-(defun check-usable-device-layers (physical-device layers)
+(defun get-all-usable-device-layers (physical-device layers)
   (let* ((all-usable-layers-struct (get-device-layers physical-device))
 	 (all-usable-layers (loop for struct in all-usable-layers-struct
 				  collect (getf struct :layer-name))))
     (intersection all-usable-layers layers :test #'string=)))
 
-(defun check-usable-device-extensions (physical-device layers extensions)
-  (let* ((all-usable-layers (check-usable-device-layers physical-device layers))
+(defun get-all-usable-device-extensions (physical-device layers extensions)
+  (let* ((all-usable-layers (get-all-usable-device-layers physical-device layers))
 	 (all-usable-extensions-struct (loop for layer in all-usable-layers
 					     collect (get-device-extensions physical-device layer)))
 	 (all-usable-extensions (loop for struct in all-usable-extensions-struct
@@ -104,7 +104,8 @@
 	    keys)))
 
 (defun set-struct-val (obj type key val)
-  (setf (foreign-slot-value obj type key) val))
+  (when val
+    (setf (foreign-slot-value obj type key) val)))
 
 (defun fill-obj (obj lst type)
   (when (null lst)
@@ -114,3 +115,9 @@
 	do
 	   (setf (mem-aref obj type i)
 		 (convert-to-foreign (nth i lst) type))))
+
+(defun auto-set-struct-val (obj type info)
+  (when info
+    (set-struct-val obj type (car info) (cadr info))
+    (auto-set-struct-val obj type (cddr info))))
+
