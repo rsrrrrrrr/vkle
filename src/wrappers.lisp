@@ -11,7 +11,8 @@
 	  get-physical-device-features
 	  get-physical-device-format-properties
 	  get-physical-device-image-format-properties
-	  create-instance))
+	  create-instance
+	  create-device))
 
 (defun get-instance-extensions ()
   (with-foreign-object (count :uint32)
