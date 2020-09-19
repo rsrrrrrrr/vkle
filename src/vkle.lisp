@@ -2,9 +2,8 @@
 
 (export '(check-instance-extesion-support-p
 	  check-reslute-type
-	  check-usable-instance-layers
-	  check-usable-instance-extensions
 	  queue-family-support-mode-p
+	  get-properity-queue-families
 	  c-null))
 
 (defparameter c-null (null-pointer))
@@ -59,12 +58,10 @@
 				  collect (getf struct :layer-name))))
     (intersection all-usable-layers layers :test #'string=)))
 
-(defun get-all-usable-device-extensions (physical-device layers extensions)
-  (let* ((all-usable-layers (get-all-usable-device-layers physical-device layers))
-	 (all-usable-extensions-struct (loop for layer in all-usable-layers
-					     collect (get-device-extensions physical-device layer)))
+(defun get-all-usable-device-extensions (physical-device extensions)
+  (let* ((all-usable-extensions-struct (get-device-extensions physical-device))
 	 (all-usable-extensions (loop for struct in all-usable-extensions-struct
-				      collect (getf struct :extension-name))))
+				  collect (getf struct :extension-name))))
     (intersection all-usable-extensions extensions :test #'string=)))
 
 (defun null->null-pointer (val)
@@ -81,6 +78,20 @@
   "val is a type of uint32, mode is a enumerate type of VkQueueFlagBits"
   (when (/= (logand val (foreign-enum-value 'VkQueueFlagBits mode)) 0)
     t))
+
+(defun get-properity-queue-families (physical-device mode)
+  (let ((properties (get-physical-device-queue-family-properties physical-device)))
+    (loop for prop in properties
+	  for i from 0
+	  when (/= (logand (getf prop :queue-flags) (foreign-enum-value 'VkQueueFlagBits mode)) 0)
+	    collect i)))
+
+(defun get-present-queue-familues (instance physical-device)
+  (let ((properties (get-physical-device-queue-family-properties physical-device)))
+    (loop for prop in properties
+	  for i from 0
+	  when (queue-family-index-support-present-p instance physical-device i)
+	    collect i)))
 
 (defun convert->foreign-pointers (lst type)
   (when (null lst)

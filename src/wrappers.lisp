@@ -12,7 +12,8 @@
 	  get-physical-device-format-properties
 	  get-physical-device-image-format-properties
 	  create-instance
-	  create-device))
+	  create-device
+	  create-surface-khr))
 
 (defun get-instance-extensions ()
   (with-foreign-object (count :uint32)
@@ -33,12 +34,13 @@
     (do-get-function #'vkEnumerateDeviceLayerProperties physical-device count properties)
     (convert-to-new-list (obj->list properties count '(:struct vk-layer-properties)))))
 
-(defun get-device-extensions (physical-device layer)
-  (with-foreign-objects ((count :uint32)
-			 (properties '(:struct vk-extension-properties)))
-    (do-get-function #'vkEnumerateDeviceExtensionProperties physical-device layer count (null-pointer))
-    (do-get-function #'vkEnumerateDeviceExtensionProperties physical-device layer count properties)
-    (convert-to-new-list (obj->list properties count '(:struct vk-layer-properties)))))
+(defun get-device-extensions (physical-device)
+  (with-foreign-object (count :uint32)
+    (vkEnumerateDeviceExtensionProperties physical-device c-null count c-null)
+    (unless (zerop (mem-ref count :uint32))
+      (with-foreign-object (properties '(:struct vk-extension-properties) (mem-ref count :uint32))
+	(vkEnumerateDeviceExtensionProperties physical-device c-null count properties)
+	(convert-to-new-list (obj->list properties count '(:struct vk-extension-properties)))))))
 
 (defun get-instance-version ()
   (with-foreign-object (version :uint32)
@@ -256,7 +258,7 @@
     (auto-set-struct-val features '(:struct vk-physical-device-features) info-features)
     ;;initialize create info
     (setf info-layers (get-all-usable-device-layers physical-device info-layers)
-	  info-extensions (get-all-usable-device-extensions physical-device info-layers info-extensions))
+	  info-extensions (get-all-usable-device-extensions physical-device info-extensions))
     (with-foreign-objects ((layers :string (length info-layers))
 			   (extensions :string (length info-extensions)))
       (loop for ext in info-extensions
@@ -307,3 +309,33 @@
 		      features)
       (check-reslute-type (vkCreateDevice physical-device create-info allocator device))
       (mem-ref device 'vk-device))))
+
+(defun create-surface-khr (instance &key
+				      (window *window*)
+				      (allocator c-null))
+  (with-foreign-object (surface 'vk-surface-khr)
+    (check-reslute-type (glfwCreateWindowSurface instance window allocator surface))
+    (mem-ref surface 'vk-surface-khr)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
