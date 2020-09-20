@@ -4,6 +4,7 @@
 	  check-reslute-type
 	  queue-family-support-mode-p
 	  get-properity-queue-families
+	  make-vulkan-version
 	  c-null))
 
 (defparameter c-null (null-pointer))
@@ -13,6 +14,7 @@
     (error ret-val)))
 
 (defun obj->list (obj count type)
+  "conver multi obj to list"
   (loop for i upto (1- (mem-ref count :uint32))
 	collect (mem-aref obj type i)))
 
@@ -20,6 +22,7 @@
   (check-reslute-type (apply fp args)))
 
 (defun c-char-array->string (point)
+  "conver the char[] to lisp string"
   (loop for i upto 255
 	for c = (code-char (mem-aref point :char i))
 	until (not (or (alpha-char-p c) (char= #\Space c) (char= #\_ c)))

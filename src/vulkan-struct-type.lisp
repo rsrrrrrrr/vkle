@@ -3327,7 +3327,7 @@ i don't know how to set up android in lisp
   (:image-color-space VkColorSpaceKHR)
   (:image-extent (:struct vk-extent-2d))
   (:image-array-layers :uint32)
-  (:image-usage vk-image-usage-flags)
+  (:image-usage vkImageUsageFlagBits)
   (:image-sharing-mode VkSharingMode)
   (:queue-family-index-count :uint32)
   (:queue-family-indices (:pointer :uint32))
