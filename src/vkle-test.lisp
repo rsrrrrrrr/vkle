@@ -59,7 +59,7 @@
   (set-vk-info :graphics-queues (get-properity-queue-families (get-vk-info :gpu) :queue-graphics-bit))
   (set-vk-info :transfer-queues (get-properity-queue-families (get-vk-info :gpu) :queue-transfer-bit))
   (set-vk-info :compute-queues (get-properity-queue-families (get-vk-info :gpu) :queue-compute-bit))
-  (set-vk-info :present-queues (get-present-queue-familues (get-vk-info :instance)
+  (set-vk-info :present-queues (get-present-queue-families (get-vk-info :instance)
 							   (get-vk-info :gpu)))
   (set-vk-info :queue-use (intersection (get-vk-info :graphics-queues)
 					(get-vk-info :present-queues)))
@@ -96,9 +96,14 @@
 						:info-composite-alpha :composite-alpha-opaque-bit-khr
 						:info-present-mode (get-vk-info :select-present-mode)
 						:info-clipped 1
-						:info-old-swapchain c-null)))
+						:info-old-swapchain c-null))
+  (set-vk-info :images (get-swapchain-image-khr (get-vk-info :logic-device) (get-vk-info :swapchain)))
+  (set-vk-info :image-views (loop for image in (get-vk-info :images)
+				  collect (create-image-view (get-vk-info :logic-device) image))))
 
 (defun vulkan-destroy ()
+  (loop for image-view in (get-vk-info :image-views)
+	do (destroy-image-view (get-vk-info :logic-device) image-view c-null))
   (destroy-swapchain-khr (get-vk-info :logic-device) (get-vk-info :swapchain) c-null)
   (destroy-surface-khr (get-vk-info :instance) (get-vk-info :surface) c-null)
   (when (check-reslute-type (device-wait-idle (get-vk-info :logic-device)))
@@ -108,6 +113,8 @@
 (defun demo ()
   (init-basic-glfw ()
     (vulkan-initialize)
+    (format t "~a~%" (get-vk-info :images))
+    (format t "~a~%" (get-vk-info :image-views))
     (set-key-callback 'key-callback)
     (set-mouse-button-callback 'mouse-callback)
     (set-window-size-callback 'window-size-callback)

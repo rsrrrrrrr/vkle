@@ -141,6 +141,13 @@
     (vkGetDeviceQueue device queue-family-index queue-index queue)
     (mem-ref queue 'vk-queue)))
 
+(defun get-swapchain-image-khr (device swapchain)
+  (with-foreign-object (count :uint32)
+    (vkGetSwapchainImagesKHR device swapchain count c-null)
+    (with-foreign-object (images 'vk-image (mem-ref count :uint32))
+      (vkGetSwapchainImagesKHR device swapchain count images)
+      (obj->list images count 'vk-image))))
+
 (defun create-instance (&key
 			  (app-next c-null) 
 			  (app-name "vkle-test")
@@ -304,24 +311,30 @@
     (check-reslute-type (vkCreateSwapchainKHR device create-info allocator swapchain))
     (mem-ref swapchain 'vk-swapchain-khr)))
 
-(defun create-image-views (device &key
-				    (infos nil)
-				    (allocator c-null))
-  (with-foreign-objects ((image-views 'vk-image-view (length infos))
-			 (create-infos '(:struct vk-image-view-create-info) (length infos)))
-    (loop for info in infos
-	  for i from 0
-	  for create-info = (mem-aptr create-infos '(:struct vk-image-view-create-info) i)
-	  for image-view = (mem-aptr image-views 'vk-image-view i)
-	  do
-	     (progn
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :type :structure-type-image-view-create-info)
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :next (getf info :next))
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :flags (getf info :next))
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :image (getf info :image))
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :image-view-type (getf info :image-view-type))
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :format (getf info :format))
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :components (getf info :components))
-	       (set-struct-val create-info '(:struct vk-image-view-create-info) :sub-resource-range (getf info :sub-resource-range))
-	       (check-reslute-type (vkCreateImageView device create-info allocator image-view))))
-    (mem-ref image-views 'vk-image-view)))
+(defun create-image-view (device image &key
+					 (info-next c-null)
+					 (info-flags 0)
+					 (info-view-type :image-view-type-2d)
+					 (info-format :format-r8g8b8a8-srgb)
+					 (info-compoents '(:r :component-swizzle-identity
+							   :g :component-swizzle-identity
+							   :b :component-swizzle-identity
+							   :a :component-swizzle-identity))
+					 (info-subresource-range '(:aspect-mask :image-aspect-color-bit
+								   :base-mip-level 0
+								   :level-count 1
+								   :base-array-layer 0
+								   :layer-count 1))
+					 (allocator c-null))
+  (with-foreign-objects ((create-info '(:struct vk-image-view-create-info))
+			 (image-view 'vk-image-view))
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :type :structure-type-image-view-create-info)
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :next info-next)
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :flags info-flags)
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :image image)
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :view-type info-view-type)
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :format info-format)
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :components (convert-to-foreign info-compoents '(:struct vk-component-mapping)))
+    (set-struct-val create-info '(:struct vk-image-view-create-info) :subresource-range (convert-to-foreign info-subresource-range '(:struct vk-image-subresource-range)))
+    (check-reslute-type (vkCreateImageView device create-info allocator image-view))
+    (mem-ref image-view 'vk-image-view)))

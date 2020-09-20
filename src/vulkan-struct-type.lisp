@@ -714,7 +714,7 @@
   (:size vk-device-size))
 
 (defcstruct vk-image-subresource-range
-  (:aspect-mask vk-image-aspect-flags)
+  (:aspect-mask VkImageAspectFlagBits)
   (:base-mip-level :uint32)
   (:level-count :uint32)
   (:base-array-layer :uint32)
