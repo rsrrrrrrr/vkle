@@ -3,7 +3,12 @@
 (export '(get-instance-extensions
 	  get-instance-layers
 	  get-device-layers
+	  get-device-extensions
 	  get-instance-version
+	  get-physical-device-surface-formats
+	  get-physical-device-surface-present-mode-khr
+	  get-physical-device-surface-capabilities-khr
+	  get-device-queue
 	  enumerate-physical-devices
 	  get-physical-device-properties
 	  get-physical-device-queue-family-properties
@@ -13,7 +18,9 @@
 	  get-physical-device-image-format-properties
 	  create-instance
 	  create-device
-	  create-surface-khr))
+	  create-surface-khr
+	  create-swapchain-khr
+	  create-image-views))
 
 (defun get-instance-extensions ()
   (with-foreign-object (count :uint32)

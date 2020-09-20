@@ -4,6 +4,7 @@
 	  check-reslute-type
 	  queue-family-support-mode-p
 	  get-properity-queue-families
+	  get-present-queue-families
 	  make-vulkan-version
 	  c-null))
 
@@ -89,7 +90,7 @@
 	  when (/= (logand (getf prop :queue-flags) (foreign-enum-value 'VkQueueFlagBits mode)) 0)
 	    collect i)))
 
-(defun get-present-queue-familues (instance physical-device)
+(defun get-present-queue-families (instance physical-device)
   (let ((properties (get-physical-device-queue-family-properties physical-device)))
     (loop for prop in properties
 	  for i from 0
