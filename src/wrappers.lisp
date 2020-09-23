@@ -16,7 +16,9 @@
 	  get-physical-device-features
 	  get-physical-device-format-properties
 	  get-physical-device-image-format-properties
+	  get-swapchain-image-khr
 	  create-instance
+	  destroy-instance
 	  create-device
 	  create-surface-khr
 	  create-swapchain-khr
@@ -159,7 +161,8 @@
 			  (info-flags 0)
 			  (info-extensions nil)
 			  (info-layers nil)
-			  (allocator c-null))
+			  (allocator c-null)
+			  (with-debug nil))
   (with-foreign-objects ((app-info '(:struct vk-application-info))
 			 (create-info '(:struct vk-instance-create-info))
 			 (instance 'vk-instance))
@@ -176,6 +179,19 @@
     ;;fill struct of instance create info
     (setf info-extensions (get-all-usable-instance-extensions info-extensions)
 	  info-layers (get-all-usable-instance-layers info-layers))
+    (when with-debug
+      (setf *debug-status* t
+	    *instance-dbg-create-info* (foreign-alloc '(:struct vk-debug-report-callback-create-info-ext)))
+      (push "VK_EXT_debug_report" info-extensions)
+      (set-struct-val *instance-dbg-create-info* '(:struct vk-debug-report-callback-create-info-ext) :type :structure-type-debug-report-callback-create-info-ext)
+      (set-struct-val *instance-dbg-create-info* '(:struct vk-debug-report-callback-create-info-ext) :next c-null)
+      (set-struct-val *instance-dbg-create-info* '(:struct vk-debug-report-callback-create-info-ext) :user-data c-null)
+      (set-struct-val *instance-dbg-create-info* '(:struct vk-debug-report-callback-create-info-ext) :flags
+		      (logior (foreign-enum-value 'VkDebugReportFlagBitsEXT :debug-report-warning-bit-ext )
+			      (foreign-enum-value 'VkDebugReportFlagBitsEXT :debug-report-performance-warning-bit-ext)
+			      (foreign-enum-value 'VkDebugReportFlagBitsEXT :debug-report-error-bit-ext)
+			      (foreign-enum-value 'VkDebugReportFlagBitsEXT :debug-report-debug-bit-ext)))
+      (set-struct-val *instance-dbg-create-info* '(:struct vk-debug-report-callback-create-info-ext) :pfn-callback (callback debug-message)))
     (with-foreign-objects ((extensions :string (length info-extensions))
 			   (layers :string (length info-layers)))
       (loop for i upto (1- (length info-extensions))
@@ -183,7 +199,9 @@
       (loop for i upto (1- (length info-layers))
 	    do (setf (mem-aref layers :string i) (convert-to-foreign (nth i info-layers) :string)))
       (set-struct-val create-info '(:struct vk-instance-create-info) :type :structure-type-instance-create-info)
-      (set-struct-val create-info '(:struct vk-instance-create-info) :next info-next)
+      (if with-debug
+	  (set-struct-val create-info '(:struct vk-instance-create-info) :next *instance-dbg-create-info*)
+	  (set-struct-val create-info '(:struct vk-instance-create-info) :next info-next))
       (set-struct-val create-info '(:struct vk-instance-create-info) :flags info-flags)
       (set-struct-val create-info '(:struct vk-instance-create-info) :info app-info)
       (set-struct-val create-info '(:struct vk-instance-create-info) :layer-count (length info-layers))
@@ -191,7 +209,15 @@
       (set-struct-val create-info '(:struct vk-instance-create-info) :extension-count(length info-extensions))
       (set-struct-val create-info '(:struct vk-instance-create-info) :extensions extensions)
       (check-reslute-type (vkCreateInstance create-info allocator instance))
+      (when with-debug
+	(create-debug-callback (mem-ref instance 'vk-instance))
+	(foreign-free *instance-dbg-create-info*))
       (mem-ref instance 'vk-instance))))
+
+(defun destroy-instance (instance &optional (allocator c-null))
+  (when *debug-status*
+    (destroy-debug-callback instance))
+  (vkDestroyInstance instance allocator))
 
 (defun fill-queue-infos (objs properties infos)
   (loop for info in infos

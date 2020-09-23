@@ -9,4 +9,5 @@
 	       (:file "vulkan-functions")
 	       (:file "wrappers")
 	       (:file "vkle-test")
+	       (:file "vkle-debug")
 	       (:file "vkle")))

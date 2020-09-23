@@ -2,7 +2,6 @@
 
 (export '(get-vulkan-support
 	  queue-family-index-support-present-p
-	  destroy-instance
 	  get-device-proc-addr
 	  get-instance-proc-addr
 	  destroy-device
@@ -107,7 +106,7 @@
   (allocator (:pointer (:struct vk-allocation-callback)))
   (position vk-instance))
 
-(defcfun ("vkDestroyInstance" destroy-instance) :void
+(defcfun ("vkDestroyInstance" vkDestroyInstance) :void
   (instance vk-instance)
   (allocator (:pointer (:struct vk-allocation-callback))))
 
@@ -511,11 +510,11 @@
   (count (:pointer :uint32))
   (physical-devices (:pointer vk-physical-device)))
 
-(defcfun ("vkGetDeviceProcAddr" get-device-proc-addr) (:pointer :void)
+(defcfun ("vkGetDeviceProcAddr" get-device-proc-addr) :pointer
   (device vk-device)
   (name :string))
 
-(defcfun ("vkGetInstanceProcAddr" get-instance-proc-addr) (:pointer :void)
+(defcfun ("vkGetInstanceProcAddr" get-instance-proc-addr) :pointer
   (instance vk-instance)
   (name :string))
 

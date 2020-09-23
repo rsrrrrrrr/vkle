@@ -114,7 +114,9 @@
   (let ((keys (foreign-slot-names type)))
     (mapcar #'(lambda (key)
 		(let ((c-type (foreign-slot-type type key)))
-		  (cond ((or (consp c-type) (eql :string c-type)) (null-pointer))
+		  (cond ((or (consp c-type)
+			     (eql :string c-type)
+			     (eql :pointer c-type)) (null-pointer))
 			(t (setf (foreign-slot-value obj type key) 0)))))
 	    keys)))
 
