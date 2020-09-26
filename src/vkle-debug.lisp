@@ -26,7 +26,7 @@
 	 (format t "[debug performance waring] -> message: ~a~%" msg)
 	 (not (zerop (logand flags (foreign-enum-value 'VkDebugReportFlagBitsEXT :debug-report-debug-bit-ext))))
 	 (format t "[debug] -> message: ~a~%" msg)
-	 t 0)))
+	 t +vk-false+)))
 
 (defun create-debug-callback (instance &optional (allocator c-null))
   (setf *instance-dbg-callback-handle* (foreign-alloc 'vk-debug-utils-messenger-ext))
